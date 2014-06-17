@@ -439,3 +439,79 @@ input[type="radio"], input[type="checkbox"] {
 .olImageLoadError {
     display: none !important;
 }
+
+/* Modal popups */
+.modal-popup {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    width: 0px;
+    overflow: hidden;
+
+    -webkit-transition: width .25s;
+    transition: width .25s;
+
+    z-index: 10000;
+    background-color: #FFFFFF;
+    /*background-color: rgba(255, 255, 255, .95);*/
+}
+.modal-popup-active {
+    width: 100%;
+}
+.modal-popup-close {
+    float: left;
+    color: #428bca; /*#007AFF;*/
+    font-size: 16px;
+    padding: 15px;
+    display: block;
+    width: 90px;
+    height: 55px;
+}
+.modal-popup-close:hover {
+    text-decoration: none;
+}
+.modal-popup-title {
+    height: 55px;
+    padding: 15px;
+    overflow: hidden;
+    font-size: 16px;
+}
+.modal-popup-view {
+    padding: 0 15px 15px 15px;
+    overflow: auto;
+    position: absolute;
+    top: 55px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+}
+/* Some search popup fixes */
+.modal-popup .input-group {
+    width: 100%;
+}
+.modal-popup .twitter-typeahead {
+    float: left;
+    width: 100%;
+    height: 46px;
+}
+.modal-popup .twitter-typeahead #search_input {
+    height: 46px;
+    font-size: 18px;
+    max-width: none !important;
+    width: 100%;
+}
+.modal-popup .tt-dropdown-menu {
+    left: 0px;
+    margin-left: -46px;
+    border: 0;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    width: 100%;
+}
+.modal-popup .tt-suggestion {
+    padding: 15px 5px;
+}
