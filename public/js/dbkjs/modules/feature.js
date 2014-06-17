@@ -249,29 +249,44 @@ dbkjs.modules.feature = {
                 if (e.feature.cluster.length === 1) {
                     _obj.zoomToFeature(e.feature.cluster[0]);
                 } else {
-                    $('#infopanel_f').append('<ul id="Pagination" class="pagination"></ul>');
-                    $('#infopanel_f').show();
                     _obj.currentCluster = e.feature.cluster;
-                    $("#Pagination").pagination(e.feature.cluster.length, {
-                        items_per_page: 10,
-                        callback: function(page_index, jq) {
-                            var items_per_page = 10;
-                            var max_elem = Math.min((page_index + 1) * items_per_page, _obj.currentCluster.length);
-                            var item_ul = $('<ul class="nav nav-pills nav-stacked"></ul>');
-                            $('#infopanel_b').html('');
-                            for (var i = page_index * items_per_page; i < max_elem; i++) {
-                                item_ul.append(_obj.featureInfohtml(_obj.currentCluster[i]));
-                            }
-                            $('#infopanel_b').append(item_ul);
+                    if(dbkjs.viewmode == 'fullscreen') {
+                        var item_ul = $('<ul class="nav nav-pills nav-stacked"></ul>');
+                        $('#infopanel_b').html('');
+                        for(var i = 0; i < _obj.currentCluster.length; i++) {
+                            item_ul.append(_obj.featureInfohtml(_obj.currentCluster[i]));
                         }
-                    });
-                    $('#infopanel').show(true);
+                        $('#infopanel_b').append(item_ul);
+                        dbkjs.util.getModalPopup('infopanel').show();
+                    } else {
+                        $('#infopanel_f').append('<ul id="Pagination" class="pagination"></ul>');
+                        $('#infopanel_f').show();
+
+                        $("#Pagination").pagination(e.feature.cluster.length, {
+                            items_per_page: 10,
+                            callback: function(page_index, jq) {
+                                var items_per_page = 10;
+                                var max_elem = Math.min((page_index + 1) * items_per_page, _obj.currentCluster.length);
+                                var item_ul = $('<ul class="nav nav-pills nav-stacked"></ul>');
+                                $('#infopanel_b').html('');
+                                for (var i = page_index * items_per_page; i < max_elem; i++) {
+                                    item_ul.append(_obj.featureInfohtml(_obj.currentCluster[i]));
+                                }
+                                $('#infopanel_b').append(item_ul);
+                            }
+                        });
+                        $('#infopanel').show();
+                    }
                 }
             } else {
                 _obj.currentCluster = [];
                 dbkjs.protocol.jsonDBK.process(e.feature);
                 _obj.zoomToFeature(e.feature);
-                $('#infopanel').hide();
+                if(dbkjs.viewmode == 'fullscreen') {
+                    dbkjs.util.getModalPopup('infopanel').hide();
+                } else {
+                    $('#infopanel').hide();
+                }
             }
         }
     }

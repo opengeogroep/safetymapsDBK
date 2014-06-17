@@ -360,6 +360,7 @@ OpenLayers.Renderer.SVG.prototype.drawText = function(featureId, style, location
 
 dbkjs.util = {
     layersLoading: [],
+    modalPopupStore: {},
     /**
      * script voor updaten zichtbaarheid van overlays 
      * @param {<OpenLayers.Layer>} obj
@@ -882,5 +883,77 @@ dbkjs.util = {
         } else { 
             return angle;
         }
+    },
+    createModalPopup: function(options) {
+        // Init default options
+        if(options === undefined) {
+            options = {};
+        }
+        if(!options.name) {
+            options.name = 'modal' + (this.modalPopupStore.length + 1);
+        }
+
+        // Create the popup
+        var popup = $('<div></div>')
+            .attr({
+                'class': 'modal-popup'
+            })
+            .appendTo('body');
+        $('<a></a>')
+            .attr({
+                'class': 'modal-popup-close',
+                'href': '#'
+            })
+            .html('<i class="icon-angle-left"></i> Terug')
+            .on('click', function(e) {
+                e.preventDefault();
+                hideFunction();
+            })
+            .appendTo(popup);
+        $('<div></div>')
+            .addClass('modal-popup-title')
+            .html(options.title || '')
+            .appendTo(popup);
+        var view = $('<div></div>')
+            .addClass('modal-popup-view')
+            .appendTo(popup);
+
+        function hideFunction() {
+            //popup.hide();
+            popup.removeClass('modal-popup-active');
+            /*setTimeout(function() {
+                popup.show();
+            }, 1000);*/
+        }
+
+        // Return object to handle popup related functions
+        this.modalPopupStore[options.name] = {
+            getView: function() {
+                return view;
+            },
+            show: function() {
+                var me = this;
+                // request css property to force layout computation, making animation possible
+                // see http://stackoverflow.com/questions/7069167/css-transition-not-firing
+                popup.css('width');
+                popup.addClass('modal-popup-active');
+            },
+            hide: function() {
+                hideFunction();
+            }
+        };
+
+        return this.modalPopupStore[options.name];
+    },
+    getModalPopup: function(name) {
+        if(!this.modalPopupStore.hasOwnProperty(name)) {
+            // Return 'fake' popup object so no errors arise
+            return {
+                getView: function() { return $([]); },
+                show: function() {},
+                hide: function() {}
+            };
+        }
+        return this.modalPopupStore[name];
     }
 };

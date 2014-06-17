@@ -25,6 +25,8 @@ dbkjs.overlays = dbkjs.overlays || [];
 
 dbkjs.map = dbkjs.map || null;
 
+dbkjs.viewmode = 'fullscreen';
+
 dbkjs.init = function() {
     dbkjs.map = new OpenLayers.Map(dbkjs.options.map.options);
     dbkjs.options.organisation = {
@@ -165,7 +167,7 @@ dbkjs.successAuth = function() {
     $.each(dbkjs.modules, function(mod_index, module) {
         if ($.inArray(mod_index, dbkjs.options.organisation.modules) > -1) {
             if (module.register) {
-                module.register({namespace: dbkjs.options.organisation.workspace, url: 'geoserver/', visible: true});
+                module.register({namespace: dbkjs.options.organisation.workspace, url: 'geoserver/', visible: true, viewmode: dbkjs.viewmode });
             }
         }
     });
@@ -288,7 +290,12 @@ $(document).ready(function() {
             lng: "nl", debug: false 
     }, function(t) {
         document.title = dbkjs.options.APPLICATION + ' ' + dbkjs.options.VERSION;
-        $('body').append(dbkjs.util.createDialog('infopanel', '<i class="icon-info-sign"></i> ' + t("dialogs.info"), 'right:0;bottom:0;'));
+        if(dbkjs.viewmode !== 'fullscreen') {
+            $('body').append(dbkjs.util.createDialog('infopanel', '<i class="icon-info-sign"></i> ' + t("dialogs.info"), 'right:0;bottom:0;'));
+        } else {
+            var infopanelPopup = dbkjs.util.createModalPopup({ name: 'infopanel' });
+            infopanelPopup.getView().append($('<div></div>').attr({ 'id': 'infopanel_b' }));
+        }
         $('body').append(dbkjs.util.createDialog('wmsclickpanel', '<i class="icon-info-sign"></i> ' + t("dialogs.clickinfo"), 'right:0;bottom:0;'));
         $('body').append(dbkjs.util.createDialog('vectorclickpanel', '<i class="icon-info-sign"></i> ' + t("dialogs.clickinfo"), 'left:0;bottom:0;'));
         $('body').append(dbkjs.util.createModal('printpanel', '<i class="icon-print"></i> ' + t("app.print"), ''));
@@ -300,10 +307,15 @@ $(document).ready(function() {
         dbkjs.util.setModalTitle('overlaypanel', i18n.t('map.overlays'));
         dbkjs.util.setModalTitle('baselayerpanel', i18n.t('map.baselayers'));
         dbkjs.init();
+
         $('#infopanel_b').html(dbkjs.options.info);
         $('.btn').click(function() {
             if (this.id === "tb03") {
-                $('#infopanel').toggle();
+                if(dbkjs.viewmode !== 'fullscreen') {
+                    $('#infopanel').toggle();
+                } else {
+                    dbkjs.util.getModalPopup('infopanel').show();
+                }
             } else if (this.id === "c_minimap") {
                 $('#minimappanel').toggle();
             }

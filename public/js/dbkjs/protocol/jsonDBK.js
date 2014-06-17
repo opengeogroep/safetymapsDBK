@@ -126,7 +126,11 @@ dbkjs.protocol.jsonDBK = {
         if (feature && feature.attributes && feature.attributes.typeFeature) {
             if (!dbkjs.options.feature || feature.id !== dbkjs.options.feature.id) {
                 if (!dbkjs.protocol.jsonDBK.processing) {
-                    $('#infopanel').hide();
+                    if(dbkjs.viewmode == 'fullscreen') {
+                        dbkjs.util.getModalPopup('infopanel').hide();
+                    } else {
+                        $('#infopanel').hide();
+                    }
                     dbkjs.protocol.jsonDBK.processing = true;
                     dbkjs.util.alert('<i class="icon-spinner icon-spin"></i>', i18n.t('dialogs.running'), 'alert-info');
                         if(feature.attributes.typeFeature === 'Object'){
@@ -140,7 +144,11 @@ dbkjs.protocol.jsonDBK = {
                 if (!dbkjs.protocol.jsonDBK.processing) {
                     $('#infopanel_b').html(dbkjs.options.feature.div);
                     $('#infopanel_f').html('');
-                    $('#infopanel').show();
+                    if(dbkjs.viewmode == 'fullscreen') {
+                        // dbkjs.util.getModalPopup('infopanel').show();
+                    } else {
+                        $('#infopanel').show();
+                    }
                 }
             }
         }
@@ -303,7 +311,11 @@ dbkjs.protocol.jsonDBK = {
                 _obj.layerTekstobject.addFeatures(features);
                 _obj.activateSelect(_obj.layerTekstobject);
             }
-            $('#infopanel').show();
+            if(dbkjs.viewmode == 'fullscreen') {
+                //dbkjs.util.getModalPopup('infopanel').show();
+            } else {
+                $('#infopanel').show();
+            }
             _obj.processing = false;
         } else {
             dbkjs.options.feature = null;

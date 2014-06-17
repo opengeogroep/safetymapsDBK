@@ -40,30 +40,81 @@ dbkjs.modules.search = {
         fillOpacity: 0.1
     },
     layer: null,
-    register: function() {
+    searchPopup: null,
+    viewmode: 'fullscreen',
+    register: function(options) {
+        if(options && options.viewmode) {
+            this.viewmode = options.viewmode;
+        }
+        if(this.viewmode === 'fullscreen') {
+            this.fullscreenLayout();
+        } else {
+            this.inlineLayout();
+        }
+        this.layer = new OpenLayers.Layer.Vector('search');
+        dbkjs.map.addLayer(this.layer);
+    },
+    inlineLayout: function() {
         var search_div = $('#btn-grp-search');
-        var search_group = $('<div class="input-group navbar-btn"></div>');
+        search_div.append(this.createSearchGroup());
+        search_div.show();
+        this.activate();
+    },
+    fullscreenLayout: function() {
+        var _obj = dbkjs.modules.search;
+        $('<a></a>')
+            .attr({
+                'id': 'btn_opensearch',
+                'class': 'btn btn-default navbar-btn',
+                'href': '#',
+                'title': i18n.t('map.search.search')
+            })
+            .append('<i class="icon-search"></i>')
+            .click(function(e) {
+                e.preventDefault();
+                _obj.showSearchPopup();
+            })
+            .appendTo('#btngrp_3');
+    },
+    showSearchPopup: function() {
+        var _obj = dbkjs.modules.search;
+        if(_obj.searchPopup === null) {
+            _obj.initSearchPopup();
+        }
+        _obj.searchPopup.show();
+    },
+    initSearchPopup: function() {
+        var _obj = dbkjs.modules.search;
+        _obj.searchPopup = dbkjs.util.createModalPopup({
+            title: 'Zoeken'
+        });
+        _obj.searchPopup.getView().append(_obj.createSearchGroup());
+        _obj.activate();
+    },
+    createSearchGroup: function() {
+        var search_group = $('<div></div>').addClass('input-group');
+        if(this.viewmode === 'fullscreen') {
+            search_group.addClass('input-group-lg');
+        } else {
+            search_group.addClass('navbar-btn');
+        }
         var search_pre = $('<span id="search-add-on" class="input-group-addon"><i class="icon-building"></i></span>');
         var search_input = $('<input id="search_input" name="search_input" type="text" class="form-control" placeholder="' + i18n.t("search.dbkplaceholder") + '">');
         var search_btn_grp = $(
-                '<div class="input-group-btn pull-right">' +
+            '<div class="input-group-btn">' +
                 '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">' + i18n.t("search.search") + ' <span class="caret"></span></button>' +
-                '<ul class="dropdown-menu pull-right">' +
-                '<li><a href="#" id="s_dbk"><i class="icon-building"></i> ' + i18n.t("search.dbk") + '</a></li>' +
-                '<li><a href="#" id="s_oms"><i class="icon-bell"></i> ' + i18n.t("search.oms") + '</a></li>' +
-                '<li><a href="#" id="s_adres"><i class="icon-home"></i> ' + i18n.t("search.address") + '</a></li>' +
-                '<li><a href="#" id="s_coord"><i class="icon-pushpin"></i> ' + i18n.t("search.coordinates") + '</a></li>' +
+                '<ul class="dropdown-menu pull-right" id="search_dropdown">' +
+                    '<li><a href="#" id="s_dbk"><i class="icon-building"></i> ' + i18n.t("search.dbk") + '</a></li>' +
+                    '<li><a href="#" id="s_oms"><i class="icon-bell"></i> ' + i18n.t("search.oms") + '</a></li>' +
+                    '<li><a href="#" id="s_adres"><i class="icon-home"></i> ' + i18n.t("search.address") + '</a></li>' +
+                    '<li><a href="#" id="s_coord"><i class="icon-pushpin"></i> ' + i18n.t("search.coordinates") + '</a></li>' +
                 '</ul>' +
-                '</div>'
-                );
+            '</div>'
+        );
         search_group.append(search_pre);
         search_group.append(search_input);
         search_group.append(search_btn_grp);
-        search_div.append(search_group);
-        this.layer = new OpenLayers.Layer.Vector('search');
-        dbkjs.map.addLayer(this.layer);
-        this.activate();
-        search_div.show();
+        return search_group;
     },
     zoomAndPulse: function(lonlat){
         var _obj = dbkjs.modules.search;
@@ -96,6 +147,9 @@ dbkjs.modules.search = {
         ]);
         dbkjs.map.zoomToExtent(_obj.layer.getDataExtent());
         _obj.pulsate(circle);
+        if(_obj.viewmode === 'fullscreen' && _obj.searchPopup) {
+            _obj.searchPopup.hide();
+        }
     },
     pulsate: function(feature) {
         var _obj = dbkjs.modules.search;
@@ -170,7 +224,7 @@ dbkjs.modules.search = {
                 //    $(this).val('');
                 //}
         );
-        $('div.btn-group ul.dropdown-menu li a').click(function(e) {
+        $('#search_dropdown a').click(function(e) {
             $('#search_input').typeahead('destroy');
             $('#search_input').val('');
             var mdiv = $(this).parent().parent().parent();
@@ -227,5 +281,8 @@ dbkjs.modules.search = {
             //e.preventDefault();
             return false;
         });
+
+        // default handler
+        dbkjs.modules.feature.search_dbk();
     }
 };
