@@ -440,6 +440,11 @@ input[type="radio"], input[type="checkbox"] {
     display: none !important;
 }
 
+/* Toggles */
+.layertoggle-btn-group {
+    margin-right: 15px;
+}
+
 /* Modal popups */
 .modal-popup {
     position: absolute;

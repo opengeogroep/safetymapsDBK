@@ -29,6 +29,7 @@ dbkjs.protocol.jsonDBK = {
     panel_tabs: null,
     panel_algemeen: null,
     active_tab:'algemeen',
+    layersVisible: false,
     init: function() {
         var _obj = dbkjs.protocol.jsonDBK;
         _obj.layerPandgeometrie = new OpenLayers.Layer.Vector("Pandgeometrie",{
@@ -94,14 +95,28 @@ dbkjs.protocol.jsonDBK = {
     },
     hideLayers: function(){
         var _obj = dbkjs.protocol.jsonDBK;
+        _obj.layersVisible = false;
         $.each(_obj.layers, function(lindex, lyr) {
             lyr.setVisibility(false);
         });
     },
     showLayers: function(){
         var _obj = dbkjs.protocol.jsonDBK;
+        _obj.layersVisible = true;
         $.each(_obj.layers, function(lindex, lyr) {
-            lyr.setVisibility(true);
+            if(dbkjs.modules.layertoggle.isLayerEnabled(lyr.name)) {
+                lyr.setVisibility(true);
+            }
+        });
+    },
+    resetLayers: function() {
+        var _obj = dbkjs.protocol.jsonDBK;
+        $.each(_obj.layers, function(lindex, lyr) {
+            var currentVisibility = _obj.layersVisible;
+            if(currentVisibility && !dbkjs.modules.layertoggle.isLayerEnabled(lyr.name)) {
+                currentVisibility = false;
+            }
+            lyr.setVisibility(currentVisibility);
         });
     },
     getfeatureinfo: function(e){

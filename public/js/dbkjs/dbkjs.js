@@ -153,7 +153,7 @@ dbkjs.successAuth = function() {
         {
             clickout: true, 
             toggle: true,
-            multiple: false 
+            multiple: false
         }
     );
     dbkjs.selectControl.handlers.feature.stopDown = false;
@@ -171,6 +171,7 @@ dbkjs.successAuth = function() {
             }
         }
     });
+    dbkjs.modules.layertoggle.register();
     
     if(dbkjs.options.organisation.wms){
         dbkjs.loadingcapabilities = 0;

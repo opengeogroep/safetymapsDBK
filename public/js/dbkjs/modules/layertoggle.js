@@ -28,15 +28,24 @@ dbkjs.modules.layertoggle = {
      */
     availableToggles: {
         'togglePreventive': {
+            'icon': 'icon-ban-circle',
+            'layers': [ 'Brandcompartiment' ]
+        },
+        'togglePreparative': {
             'icon': 'icon-check-sign',
-            'layers': [ 'Pandgeometrie', 'Brandcompartiment' ]
+            'layers': [ 'Brandweervoorziening', 'Toegang terrein', 'Hulplijn' ]
+        },
+        'toggleDanger': {
+            'icon': 'icon-warning-sign',
+            'layers': [ 'Gevaarlijke stoffen' ]
         }
     },
-    enabledLayers: [],
+    disabledLayers: [],
     enabled: false,
     register: function(options) {
         var _obj = dbkjs.modules.layertoggle;
         _obj.enabled = true;
+        var buttonGroup = $('<div></div>').addClass('btn-group pull-right layertoggle-btn-group').insertAfter('#btngrp_3');
         $.each(_obj.availableToggles, function(toggleKey, toggleOptions) {
             // Create a button for the required toggle and append the button to buttongroup
             var toggle = $('<a></a>')
@@ -56,28 +65,29 @@ dbkjs.modules.layertoggle = {
                         toggle.addClass('active');
                         _obj.enableLayers(toggleOptions.layers);
                     }
+                    dbkjs.protocol.jsonDBK.resetLayers();
                 })
-                .appendTo('#btngrp_3');
+                .appendTo(buttonGroup);
             // Enable layers by default (by adding them all to enabledLayers)
             _obj.enableLayers(toggleOptions.layers);
         });
     },
-    disableLayers: function(layers) {
+    enableLayers: function(layers) {
         var _obj = dbkjs.modules.layertoggle;
         // Temp array
-        var enabledLayers = [].concat(_obj.enabledLayers);
+        var disabledLayers = [].concat(_obj.disabledLayers);
         // Filter layers
-        _obj.enabledLayers = enabledLayers.filter(function(elem, pos) {
+        _obj.disabledLayers = disabledLayers.filter(function(elem, pos) {
             return layers.indexOf(elem) === -1;
         });
     },
-    enableLayers: function(layers) {
+    disableLayers: function(layers) {
         var _obj = dbkjs.modules.layertoggle;
         // Add all layers
-        var enabledLayers = _obj.enabledLayers.concat(layers);
+        var disabledLayers = _obj.disabledLayers.concat(layers);
         // Remove duplicates
-        _obj.enabledLayers = enabledLayers.filter(function(elem, pos) {
-            return enabledLayers.indexOf(elem) == pos;
+        _obj.disabledLayers = disabledLayers.filter(function(elem, pos) {
+            return disabledLayers.indexOf(elem) == pos;
         });
     },
     isLayerEnabled: function(layerName) {
@@ -86,6 +96,6 @@ dbkjs.modules.layertoggle = {
             // When not used, always return true
             return true;
         }
-        return _obj.enabledLayers.indexOf(layerName) !== -1;
+        return _obj.disabledLayers.indexOf(layerName) === -1;
     }
 };
