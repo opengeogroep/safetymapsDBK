@@ -21,31 +21,31 @@
 var dbkjs = dbkjs || {};
 window.dbkjs = dbkjs;
 dbkjs.modules = dbkjs.modules || {};
-dbkjs.modules.notepad = {
-    id: "dbk.module.notepad",
-    notepadPopup: null,
+dbkjs.modules.gms = {
+    id: "dbk.module.gms",
+    gmsPopup: null,
     register: function(options) {
-        var _obj = dbkjs.modules.notepad;
+        var _obj = dbkjs.modules.gms;
         _obj.createPopup();
         $('<a></a>')
             .attr({
-                'id': 'btn_opennotepad',
+                'id': 'btn_opengms',
                 'class': 'btn btn-default navbar-btn',
                 'href': '#',
-                'title': i18n.t('map.notepad.button')
+                'title': i18n.t('map.gms.button')
             })
             .append('<i class="icon-align-justify"></i>')
             .click(function(e) {
                 e.preventDefault();
-                _obj.notepadPopup.show();
+                _obj.gmsPopup.show();
             })
             .appendTo('#btngrp_3');
     },
     createPopup: function() {
-        var _obj = dbkjs.modules.notepad;
-        _obj.notepadPopup = dbkjs.util.createModalPopup({
+        var _obj = dbkjs.modules.gms;
+        _obj.gmsPopup = dbkjs.util.createModalPopup({
             title: 'Kladblokregels'
         });
-        _obj.notepadPopup.getView().append($('<div>Hier komen de kladblokregels</div>'));
+        _obj.gmsPopup.getView().append($('<div>Hier komen de kladblokregels</div>'));
     }
 };
