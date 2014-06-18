@@ -28,15 +28,15 @@ dbkjs.modules.layertoggle = {
      */
     availableToggles: {
         'togglePreventive': {
-            'icon': 'icon-ban-circle',
+            'icon': 'icon-home',
             'layers': [ 'Brandcompartiment' ]
         },
         'togglePreparative': {
-            'icon': 'icon-check-sign',
+            'icon': 'icon-home',
             'layers': [ 'Brandweervoorziening', 'Toegang terrein', 'Hulplijn' ]
         },
         'toggleDanger': {
-            'icon': 'icon-warning-sign',
+            'icon': 'icon-home',
             'layers': [ 'Gevaarlijke stoffen' ]
         }
     },
@@ -45,13 +45,13 @@ dbkjs.modules.layertoggle = {
     register: function(options) {
         var _obj = dbkjs.modules.layertoggle;
         _obj.enabled = true;
-        var buttonGroup = $('<div></div>').addClass('btn-group pull-right layertoggle-btn-group').insertAfter('#btngrp_3');
+        var buttonGroup = $('.layertoggle-btn-group');
         $.each(_obj.availableToggles, function(toggleKey, toggleOptions) {
             // Create a button for the required toggle and append the button to buttongroup
             var toggle = $('<a></a>')
                 .attr({
                     'id': 'btn_' + toggleKey,
-                    'class': 'btn btn-default navbar-btn active',
+                    'class': 'btn btn-default navbar-btn active ' + toggleKey,
                     'href': '#',
                     'title': i18n.t('map.toggle.' + toggleKey)
                 })

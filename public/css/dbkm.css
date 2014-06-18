@@ -14,7 +14,56 @@ html, body {
 .dialog{
     width: 100%;
 }
-.btn, .close, #infopanel_h {
+.main-button-group {
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+}
+.main-button-group .btn {
+    font-size: 2.5em !important;
+}
+.main-button-group .btn.dbk-title {
+    margin-top: 8px;
+    margin-left: 100px;
+    float: left;
+    visibility: hidden;
+    font-size: 16px !important;
+    line-height: 50px;
+    max-width: 450px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#tb03 {
+    background-color: #4cae4c;
+    text-shadow: -4px 0 white, 0 4px white, 4px 0 white, 0 -4px white;
+}
+.togglePreventive {
+    background-color: #ffff4f !important;
+}
+.togglePreparative {
+    background-color: #0e90d2 !important;
+}
+.toggleDanger {
+    background-color: #b92c28 !important;
+}
+.layertoggle-btn-group .btn {
+    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
+    position: relative;
+}
+.layertoggle-btn-group .active:after {
+    content: ' ';
+    position: absolute;
+    display: block;
+    right: 3px;
+    top: 3px;
+    height: 10px;
+    width: 10px;
+    border-radius: 5px;
+    background-color: #4cd964;
+    border: 2px solid #FFF;
+}
+.close, #infopanel_h {
     font-size: 2em !important;
 }
 #btn-grp-search {

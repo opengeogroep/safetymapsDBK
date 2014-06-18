@@ -161,6 +161,9 @@ dbkjs.Layer = dbkjs.Class({
             $('#baselayerpanel_ul').append(_li);
             _li.click(function() {
                 dbkjs.toggleBaseLayer($(this).index());
+                if(dbkjs.viewmode === 'fullscreen') {
+                    dbkjs.util.getModalPopup('baselayerpanel').hide();
+                }
             });
         }
     },
