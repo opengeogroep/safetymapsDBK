@@ -506,17 +506,12 @@ input[type="radio"], input[type="checkbox"] {
     max-width: none !important;
     width: 100%;
 }
-.modal-popup .tt-dropdown-menu {
-    left: 0px;
-    margin-left: -46px;
-    border: 0;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
-    -moz-border-radius: 0;
-    border-radius: 0;
-    width: 100%;
+.modal-popup #search_input {
+    max-width: none !important;
 }
-.modal-popup .tt-suggestion {
-    padding: 15px 5px;
+.modal-popup .btn {
+    font-size: 18px !important;
+}
+.modal-popup .input-group-addon, .modal-popup .input-group-btn {
+    width: 1% !important;
 }
