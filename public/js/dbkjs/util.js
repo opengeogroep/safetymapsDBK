@@ -892,7 +892,6 @@ dbkjs.util = {
         if(!options.name) {
             options.name = 'modal' + (this.modalPopupStore.length + 1);
         }
-
         // Create the popup
         var popup = $('<div></div>')
             .attr({
@@ -907,7 +906,7 @@ dbkjs.util = {
             .html('<i class="icon-angle-left"></i> Terug')
             .on('click', function(e) {
                 e.preventDefault();
-                hideFunction();
+                popup.removeClass('modal-popup-active');
             })
             .appendTo(popup);
         $('<div></div>')
@@ -918,28 +917,19 @@ dbkjs.util = {
             .addClass('modal-popup-view')
             .appendTo(popup);
 
-        function hideFunction() {
-            //popup.hide();
-            popup.removeClass('modal-popup-active');
-            /*setTimeout(function() {
-                popup.show();
-            }, 1000);*/
-        }
-
         // Return object to handle popup related functions
         this.modalPopupStore[options.name] = {
             getView: function() {
                 return view;
             },
             show: function() {
-                var me = this;
                 // request css property to force layout computation, making animation possible
                 // see http://stackoverflow.com/questions/7069167/css-transition-not-firing
                 popup.css('width');
                 popup.addClass('modal-popup-active');
             },
             hide: function() {
-                hideFunction();
+                popup.removeClass('modal-popup-active');
             }
         };
 

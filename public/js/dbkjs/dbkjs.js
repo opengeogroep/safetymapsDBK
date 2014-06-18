@@ -181,7 +181,6 @@ dbkjs.successAuth = function() {
             }
         }
     });
-    dbkjs.modules.layertoggle.register();
     
     if(dbkjs.options.organisation.wms){
         dbkjs.loadingcapabilities = 0;

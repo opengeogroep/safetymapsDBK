@@ -48,6 +48,7 @@ dbkjs.modules.feature = {
 //            zIndexing: true
 //        }
 //    }),
+    caches: {},
     getActive: function() {
         var _obj = dbkjs.modules.feature;
         var feature;
@@ -177,18 +178,8 @@ dbkjs.modules.feature = {
         return ret_title;
     },
     search_dbk: function() {
-        var _obj = dbkjs.modules.feature;
-        //Voeg de DBK objecten toe aan de typeahead set..
-        var dbk_naam_array = [];
-
-        $.each(_obj.features, function(key, value) {
-            dbk_naam_array.push({
-                value: value.attributes.formeleNaam + ' ' + value.attributes.informeleNaam,
-                geometry: value.geometry,
-                id: value.attributes.identificatie,
-                attributes: value.attributes
-            });
-        });
+        var _obj = dbkjs.modules.feature,
+            dbk_naam_array = _obj.getDbkSearchValues();
         $('#search_input').typeahead('destroy');
         $('#search_input').val('');
         $('#search_input').typeahead({
@@ -197,19 +188,47 @@ dbkjs.modules.feature = {
             limit: 10
         });
         $('#search_input').bind('typeahead:selected', function(obj, datum) {
-            //dbkjs.options.dbk = datum.id;
-            dbkjs.modules.updateFilter(datum.id);
-            //@todo select the feature based on the datum
-            dbkjs.protocol.jsonDBK.process(datum);
-            _obj.zoomToFeature(datum);
+            _obj.handleDbkOmsSearch(datum);
         });
     },
     search_oms: function() {
-        var _obj = dbkjs.modules.feature;
-        var dbk_naam_array = [];
-
+        var _obj = dbkjs.modules.feature,
+            dbk_naam_array = _obj.getOmsSearchValues();
+        $('#search_input').typeahead('destroy');
+        $('#search_input').val('');
+        $('#search_input').typeahead({
+            name: 'oms',
+            local: dbk_naam_array,
+            limit: 10
+        });
+        $('#search_input').bind('typeahead:selected', function(obj, datum) {
+            _obj.handleDbkOmsSearch(datum);
+        });
+    },
+    getDbkSearchValues: function() {
+        var _obj = dbkjs.modules.feature,
+            dbk_naam_array = [];
+        if(_obj.caches.hasOwnProperty('dbk')) {
+            return _obj.caches.dbk;
+        }
         $.each(_obj.features, function(key, value) {
-            //alert(value.properties.formeleNaam + ' (' + value.properties.identificatie_id + ')');
+            dbk_naam_array.push({
+                value: value.attributes.formeleNaam + ' ' + value.attributes.informeleNaam,
+                geometry: value.geometry,
+                id: value.attributes.identificatie,
+                attributes: value.attributes
+            });
+        });
+        _obj.caches.dbk = dbk_naam_array;
+        return _obj.caches.dbk;
+    },
+    getOmsSearchValues: function() {
+        var _obj = dbkjs.modules.feature,
+            dbk_naam_array = [];
+        if(_obj.caches.hasOwnProperty('oms')) {
+            return _obj.caches.oms;
+        }
+        $.each(_obj.features, function(key, value) {
             if (!dbkjs.util.isJsonNull(value.attributes.OMSNummer)) {
                 dbk_naam_array.push({
                     value: value.attributes.OMSNummer + ' - ' + value.attributes.formeleNaam,
@@ -219,18 +238,14 @@ dbkjs.modules.feature = {
                 });
             }
         });
-        $('#search_input').typeahead('destroy');
-        $('#search_input').val('');
-        $('#search_input').typeahead({
-            name: 'oms',
-            local: dbk_naam_array,
-            limit: 10
-        });
-        $('#search_input').bind('typeahead:selected', function(obj, datum) {
-            dbkjs.modules.updateFilter(datum.id);
-            dbkjs.protocol.jsonDBK.process(datum);
-            _obj.zoomToFeature(datum);
-        });
+        _obj.caches.oms = dbk_naam_array;
+        return _obj.caches.oms;
+    },
+    handleDbkOmsSearch: function(object) {
+        var _obj = dbkjs.modules.feature;
+        dbkjs.modules.updateFilter(object.id);
+        dbkjs.protocol.jsonDBK.process(object);
+        _obj.zoomToFeature(object);
     },
     zoomToFeature: function(feature) {
         dbkjs.options.dbk = feature.attributes.identificatie;
