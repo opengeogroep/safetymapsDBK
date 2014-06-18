@@ -27,6 +27,10 @@ dbkjs.modules.layertoggle = {
      * Toggle layers based on type
      */
     availableToggles: {
+        'toggleObject': {
+            'icon': 'icon-home',
+            'layers': [ 'Brandcompartiment' ]
+        },
         'togglePreventive': {
             'icon': 'icon-home',
             'layers': [ 'Brandcompartiment' ]

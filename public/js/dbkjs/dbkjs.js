@@ -66,10 +66,7 @@ dbkjs.init = function() {
     
     var baselayer_ul = $('<ul id="baselayerpanel_ul" class="nav nav-pills nav-stacked">');
     $.each(dbkjs.options.baselayers, function(bl_index, bl) {
-        var _li = $('<li class="bl"><a href="#">' + bl.name + '</a></li>');
-        if(bl.getVisibility()) {
-            _li.addClass('active');
-        }
+        var _li = $('<li class="bl" id="bl' + bl_index + '"><a href="#">' + bl.name + '</a></li>');
         baselayer_ul.append(_li);
         bl.events.register("loadstart", bl, function() {
             dbkjs.util.loadingStart(bl);
@@ -78,7 +75,7 @@ dbkjs.init = function() {
             dbkjs.util.loadingEnd(bl);
         });
         dbkjs.map.addLayer(bl);
-        _li.click(function() {
+        _li.on('click', function() {
             dbkjs.toggleBaseLayer(bl_index);
             if(dbkjs.viewmode === 'fullscreen') {
                 dbkjs.util.getModalPopup('baselayerpanel').hide();
@@ -262,6 +259,8 @@ dbkjs.successAuth = function() {
         } else {
             dbkjs.finishMap();
         }
+
+    $(dbkjs).trigger('dbkjs_init_complete');
 };
 
 dbkjs.finishMap = function(){
@@ -304,8 +303,6 @@ dbkjs.finishMap = function(){
 };
 
 $(document).ready(function() {
-    // FastClick
-    FastClick.attach(document.body);
     // Make sure i18n is initialized
     i18n.init({
             lng: "nl", debug: false 
@@ -328,7 +325,15 @@ $(document).ready(function() {
 
             $('#tb01, #tb02').on('click', function(e) {
                 e.preventDefault();
-                dbkjs.util.getModalPopup($(this).attr('href').replace('#', '')).show();
+                var panelId = $(this).attr('href').replace('#', '');
+                if(panelId === 'baselayerpanel') {
+                    $.each(dbkjs.options.baselayers, function(bl_index, bl) {
+                        if(bl.getVisibility()) {
+                            $('#bl' + bl_index).addClass('active');
+                        }
+                    });
+                }
+                dbkjs.util.getModalPopup(panelId).show();
             });
 
         }
@@ -384,6 +389,26 @@ $(document).ready(function() {
                     dbkjs.map.zoomToExtent(areaGeometry.getBounds());
                 }
             }
+        });
+
+        $(dbkjs).bind('dbkjs_init_complete', function() {
+            FastClick.attach(document.body);
+            (function() {
+                function calcMaxWidth() {
+                    // Calculate the max width for dbk title so other buttons are never pushed down when name is too long
+                    var childWidth = 0;
+                    $('.main-button-group .btn-group').each(function() {
+                        childWidth += $(this).outerWidth();
+                    });
+                    var maxWidth = $('.main-button-group').outerWidth() - childWidth;
+                    $('.dbk-title').css('max-width', (maxWidth - 120) + 'px');
+                }
+                // Listen for orientation changes
+                window.addEventListener("orientationchange", function() {
+                    calcMaxWidth();
+                }, false);
+                calcMaxWidth();
+            }());
         });
     });
 });
