@@ -304,7 +304,10 @@ dbkjs.modules.search = {
     },
     handleAddressSearch: function(searchText) {
         var _obj = dbkjs.modules.search,
-            url = 'api/autocomplete/' + encodeURI(searchText);
+            url = (dbkjs.options.urls && dbkjs.options.urls.autocomplete
+                   ? dbkjs.options.urls.autocomplete
+                   : dbkjs.basePath + 'api/autocomplete/')
+                 + encodeURI(searchText);
         $.ajax(url, {
             dataType: 'json',
             success: function(parsedResponse) {
