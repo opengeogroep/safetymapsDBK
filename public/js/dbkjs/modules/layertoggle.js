@@ -29,17 +29,17 @@ dbkjs.modules.layertoggle = {
     availableToggles: {
         'toggleObject': {
             'icon': 'icon-home',
-            'layers': [ 'Brandcompartiment' ],
+            'layers': [ ],
             'category': 'objectinformatie'
         },
         'togglePreventive': {
             'icon': 'icon-home',
-            'layers': [ 'Brandcompartiment' ],
+            'layers': [ ],
             'category': 'preparatief'
         },
         'togglePreparative': {
             'icon': 'icon-home',
-            'layers': [ 'Brandweervoorziening', 'Toegang terrein', 'Hulplijn' ],
+            'layers': [ 'Brandcompartiment' ],
             'category': 'preventief',
         },
         'toggleDanger': {
@@ -69,11 +69,11 @@ dbkjs.modules.layertoggle = {
                     if (toggle.hasClass('active')) {
                         toggle.removeClass('active');
                         dbkjs.setDbkCategoryVisibility(toggleOptions.category, false);
-                        //_obj.disableLayers(toggleOptions.layers);
+                        _obj.disableLayers(toggleOptions.layers);
                     } else {
                         toggle.addClass('active');
                         dbkjs.setDbkCategoryVisibility(toggleOptions.category, true);
-                        //_obj.enableLayers(toggleOptions.layers);
+                        _obj.enableLayers(toggleOptions.layers);
                     }
                     dbkjs.protocol.jsonDBK.resetLayers();
                 })

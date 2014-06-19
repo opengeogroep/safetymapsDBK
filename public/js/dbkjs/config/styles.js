@@ -539,7 +539,6 @@ dbkjs.config.styles = {
                     if(dbkjs.options.visibleCategories
                     && feature.attributes.category
                     && dbkjs.options.visibleCategories[feature.attributes.category] === false) {
-                        console.log("feature %s with category %s not visible", feature.attributes.name, feature.attributes.category);
                         return "none";
                     } else {
                         // any string except "none" works here
