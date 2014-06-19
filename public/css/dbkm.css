@@ -38,6 +38,9 @@ html, body {
     background-color: #4cae4c;
     text-shadow: -4px 0 white, 0 4px white, 4px 0 white, 0 -4px white;
 }
+.toggleObject {
+    background-color: #4cae4c !important;
+}
 .togglePreventive {
     background-color: #ffff4f !important;
 }
@@ -65,6 +68,20 @@ html, body {
 }
 .close, #infopanel_h {
     font-size: 2em !important;
+}
+.modal-popup .panel-heading {
+    display: block;
+    padding: 10px 15px;
+    cursor: pointer;
+    color: #428bca;
+}
+.modal-popup .panel-heading .panel-title {
+    font-weight: normal;
+    font-size: 1em;
+}
+.modal-popup .panel-heading.active {
+    background-color: #428bca;
+    color: #FFF;
 }
 #btn-grp-search {
     line-height: 0 !important;
