@@ -35,7 +35,6 @@ html, body {
     overflow: hidden;
 }
 #tb03 {
-    background-color: #4cae4c;
     text-shadow: -4px 0 white, 0 4px white, 4px 0 white, 0 -4px white;
 }
 .toggleObject {
