@@ -29,19 +29,23 @@ dbkjs.modules.layertoggle = {
     availableToggles: {
         'toggleObject': {
             'icon': 'icon-home',
-            'layers': [ 'Brandcompartiment' ]
+            'layers': [ 'Brandcompartiment' ],
+            'category': 'objectinformatie'
         },
         'togglePreventive': {
             'icon': 'icon-home',
-            'layers': [ 'Brandcompartiment' ]
+            'layers': [ 'Brandcompartiment' ],
+            'category': 'preparatief'
         },
         'togglePreparative': {
             'icon': 'icon-home',
-            'layers': [ 'Brandweervoorziening', 'Toegang terrein', 'Hulplijn' ]
+            'layers': [ 'Brandweervoorziening', 'Toegang terrein', 'Hulplijn' ],
+            'category': 'preventief',
         },
         'toggleDanger': {
             'icon': 'icon-home',
-            'layers': [ 'Gevaarlijke stoffen' ]
+            'layers': [ 'Gevaarlijke stoffen' ],
+            'category': 'repressief'
         }
     },
     disabledLayers: [],
@@ -64,10 +68,12 @@ dbkjs.modules.layertoggle = {
                     e.preventDefault();
                     if (toggle.hasClass('active')) {
                         toggle.removeClass('active');
-                        _obj.disableLayers(toggleOptions.layers);
+                        dbkjs.setDbkCategoryVisibility(toggleOptions.category, false);
+                        //_obj.disableLayers(toggleOptions.layers);
                     } else {
                         toggle.addClass('active');
-                        _obj.enableLayers(toggleOptions.layers);
+                        dbkjs.setDbkCategoryVisibility(toggleOptions.category, true);
+                        //_obj.enableLayers(toggleOptions.layers);
                     }
                     dbkjs.protocol.jsonDBK.resetLayers();
                 })

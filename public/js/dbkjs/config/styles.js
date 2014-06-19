@@ -514,7 +514,8 @@ dbkjs.config.styles = {
         "default": new OpenLayers.Style({
             pointRadius: "${myradius}",
             externalGraphic: "${myicon}",
-            rotation: "${myrotation}"
+            rotation: "${myrotation}",
+            display: "${mydisplay}"
         }, {
             context: {
                 myicon: function(feature) {
@@ -532,6 +533,17 @@ dbkjs.config.styles = {
                         return feature.attributes.radius;
                     } else {
                         return 12;
+                    }
+                },
+                mydisplay: function(feature) {
+                    if(dbkjs.options.visibleCategories
+                    && feature.attributes.category
+                    && dbkjs.options.visibleCategories[feature.attributes.category] === false) {
+                        console.log("feature %s with category %s not visible", feature.attributes.name, feature.attributes.category);
+                        return "none";
+                    } else {
+                        // any string except "none" works here
+                        return "true";
                     }
                 }
             }

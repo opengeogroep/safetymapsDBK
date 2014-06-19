@@ -131,6 +131,14 @@ dbkjs.toggleBaseLayer = function(nr) {
     }
 };
 
+dbkjs.setDbkCategoryVisibility = function(category, visible) {
+    if(!dbkjs.options.visibleCategories) {
+        dbkjs.options.visibleCategories = {};
+    }
+    dbkjs.options.visibleCategories[category] = visible;
+    dbkjs.protocol.jsonDBK.layerBrandweervoorziening.redraw();
+}
+
 dbkjs.activateClick = function() {
     dbkjs.map.events.register('click', dbkjs.map, dbkjs.util.onClick);
     dbkjs.map.events.register('touchend', dbkjs.map, dbkjs.util.onClick);

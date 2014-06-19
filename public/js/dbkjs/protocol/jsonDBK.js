@@ -513,6 +513,7 @@ dbkjs.protocol.jsonDBK = {
                     "name": myGeometry.naamVoorziening,
                     "information": myGeometry.aanvullendeInformatie,
                     "rotation": myGeometry.hoek,
+                    "category": myGeometry.categorie,
                     "namespace": myGeometry.namespace,
                     "radius": myGeometry.radius,
                     "fid": "brandweervoorziening_ft_" + idx 
