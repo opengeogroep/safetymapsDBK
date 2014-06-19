@@ -400,7 +400,7 @@ $(document).ready(function() {
         });
 
         $(dbkjs).bind('dbkjs_init_complete', function() {
-            FastClick.attach(document.body);
+            //FastClick.attach(document.body);
             (function() {
                 function calcMaxWidth() {
                     // Calculate the max width for dbk title so other buttons are never pushed down when name is too long
