@@ -1,0 +1,244 @@
+<?xml-stylesheet type='text/xsl' href='symbols.xsl'?>
+<symbols>
+    <symbol>
+        <type>Tb1.001</type>
+        <naam>Brandweeringang</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb1.002</type>
+        <naam>Overige ingangen</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb1.003</type>
+        <naam>Sleutelkluis</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb1.004</type>
+        <naam>Brandweerpaneel</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb1.004a</type>
+        <naam>Brandmeldcentrale</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb1.005</type>
+        <naam>Nevenbrandweerpaneel</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb1.007</type>
+        <naam>Droge blusleiding</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb1.008</type>
+        <naam>Opstelplaats eerste blusvoertuig</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb1.009</type>
+        <naam>Opstelplaats overige blusvoertuigen</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb2.001</type>
+        <naam>Noodschakelaar neon</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb2.002</type>
+        <naam>Noodschakelaar CV</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb2.003</type>
+        <naam>Schakelaar elektriciteit</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb2.004</type>
+        <naam>Schakelaar luchtbehandeling</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb2.005</type>
+        <naam>Schakelaar rook-/warmteafvoer</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb2.021</type>
+        <naam>Afsluiter gas</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb2.022</type>
+        <naam>Afsluiter water</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb2.023</type>
+        <naam>Afsluiter sprinkler</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb2.041</type>
+        <naam>Activering blussysteem</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb2.042</type>
+        <naam>Schakelkast elektriciteit</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb4.001</type>
+        <naam>Hydrant</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb4.002</type>
+        <naam>Ondergrondse brandkraan</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb4.003</type>
+        <naam>Geboorde put</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb4.021</type>
+        <naam>Blussysteem AFFF</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb4.022</type>
+        <naam>Blussysteem schuim</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb4.023</type>
+        <naam>Blussysteem water</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb4.024</type>
+        <naam>Blussysteem kooldioxide</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tb4.025</type>
+        <naam>Blussysteem Hi Fog</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tbk5.001</type>
+        <naam>Brandweerlift</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tbk5.002</type>
+        <naam>Brandwerende scheiding van 60 minuten</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tbk5.003</type>
+        <naam>Brandwerende scheiding van 30 minuten</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tbk5.004</type>
+        <naam>Rookwerende scheiding</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <type>Tbk7.004</type>
+        <naam>Lift</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>objectinformatie</categorie>
+    </symbol>
+    <symbol>
+        <type>Tn06</type>
+        <naam>Verzamelplaats</naam>
+        <namespace>NEN1414</namespace>
+        <omschrijving>Bij meer dan een verzamelplaats voorzien van nummer</omschrijving>
+    </symbol>
+    <symbol>
+        <type>Tw01</type>
+        <naam>Algemeen gevaar</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>repressief</categorie>
+    </symbol>
+    <symbol>
+        <type>C2000</type>
+        <naam>C2000</naam>
+        <namespace>Other</namespace>
+        <omschrijving>(Geen officieel NEN1414 object)</omschrijving>
+    </symbol>
+    <symbol>
+        <type>CAI</type>
+        <naam>Aansluiting CAI</naam>
+        <namespace>Other</namespace>
+        <omschrijving>(Geen officieel NEN1414 object)</omschrijving>
+    </symbol>
+    <symbol>
+        <type>Openwater</type>
+        <naam>Open water</naam>
+        <namespace>Other</namespace>
+        <omschrijving>(Geen officieel NEN1414 object)</omschrijving>
+    </symbol>
+    <symbol>
+        <type>Sewer</type>
+        <naam>Toegang riool</naam>
+        <namespace>Other</namespace>
+        <omschrijving>(Geen officieel NEN1414 object)</omschrijving>
+    </symbol>
+    <symbol>
+        <type>Signal</type>
+        <naam>Signaal</naam>
+        <namespace>Other</namespace>
+        <omschrijving>(Geen officieel NEN1414 object)</omschrijving>
+    </symbol>
+    <symbol>
+        <type>Trap2</type>
+        <naam>Trap</naam>
+        <namespace>Other</namespace>
+        <categorie>objectinformatie</categorie>
+        <omschrijving>(Geen officieel NEN1414 object)</omschrijving>
+    </symbol>
+</symbols>
