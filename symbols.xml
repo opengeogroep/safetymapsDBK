@@ -23,14 +23,14 @@
         <categorie>preparatief</categorie>
     </symbol>
     <symbol>
-        <gid>1004</gid>
+        <gid>1050</gid>
         <type>Tb1.004</type>
         <naam>Brandweerpaneel</naam>
         <namespace>NEN1414</namespace>
         <categorie>preventief</categorie>
     </symbol>
     <symbol>
-        <gid>9000</gid>
+        <gid>1004</gid>
         <type>Tb1.004a</type>
         <naam>Brandmeldcentrale</naam>
         <namespace>NEN1414</namespace>
@@ -51,18 +51,25 @@
         <categorie>preventief</categorie>
     </symbol>
     <symbol>
+        <gid>1051</gid>
+        <type>Tb.1007a</type>
+        <naam>Afname Droge Buisleiding</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
         <gid>1011</gid>
         <type>Tb1.008</type>
         <naam>Opstelplaats eerste blusvoertuig</naam>
         <namespace>NEN1414</namespace>
-        <categorie>preparatief</categorie>
+        <categorie>repressief</categorie>
     </symbol>
     <symbol>
         <gid>1012</gid>
         <type>Tb1.009</type>
         <naam>Opstelplaats overige blusvoertuigen</naam>
         <namespace>NEN1414</namespace>
-        <categorie>preparatief</categorie>
+        <categorie>repressief</categorie>
     </symbol>
     <symbol>
         <gid>1019</gid>
@@ -131,6 +138,13 @@
         <gid>1024</gid>
         <type>Tb2.042</type>
         <naam>Schakelkast elektriciteit</naam>
+        <namespace>NEN1414</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <gid>1048</gid>
+        <type>Tb2.043</type>
+        <naam>Noodstop</naam>
         <namespace>NEN1414</namespace>
         <categorie>preparatief</categorie>
     </symbol>
@@ -230,6 +244,7 @@
         <type>Tn06</type>
         <naam>Verzamelplaats</naam>
         <namespace>NEN1414</namespace>
+        <categorie>preventief</categorie>
         <omschrijving>Bij meer dan een verzamelplaats voorzien van nummer</omschrijving>
     </symbol>
     <symbol>
@@ -244,6 +259,7 @@
         <type>C2000</type>
         <naam>C2000</naam>
         <namespace>Other</namespace>
+        <categorie>preparatief</categorie>
         <omschrijving>(Geen officieel NEN1414 object)</omschrijving>
     </symbol>
     <symbol>
@@ -254,10 +270,60 @@
         <omschrijving>(Geen officieel NEN1414 object)</omschrijving>
     </symbol>
     <symbol>
+        <gid>1045</gid>
+        <type>Falck11</type>
+        <naam>Schacht of kanaal</naam>
+        <namespace>Other</namespace>
+        <categorie>objectinformatie</categorie>
+    </symbol>
+    <symbol>
+        <gid>1046</gid>
+        <type>Falck12</type>
+        <naam>Rook Warmte Afvoerluiken</naam>
+        <namespace>Other</namespace>
+        <categorie>preventief</categorie>
+    </symbol>
+    <symbol>
+        <gid>1047</gid>
+        <type>Falck13</type>
+        <naam>Flitslicht</naam>
+        <namespace>Other</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <gid>1052</gid>
+        <type>Falck14</type>
+        <naam>Brandweervoorziening</naam>
+        <namespace>Other</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <gid>1049</gid>
+        <type>Falck15</type>
+        <naam>PGS 15 Kluis</naam>
+        <namespace>Other</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <gid>1053</gid>
+        <type>Falck16</type>
+        <naam>Trap standaard</naam>
+        <namespace>Other</namespace>
+        <categorie>objectinformatie</categorie>
+    </symbol>
+    <symbol>
+        <gid>1054</gid>
+        <type>Falck17</type>
+        <naam>Trap wokkel</naam>
+        <namespace>Other</namespace>
+        <categorie>objectinformatie</categorie>
+    </symbol>
+    <symbol>
         <gid>1015</gid>
         <type>Openwater</type>
         <naam>Open water</naam>
         <namespace>Other</namespace>
+        <categorie>preparatief</categorie>
         <omschrijving>(Geen officieel NEN1414 object)</omschrijving>
     </symbol>
     <symbol>

@@ -34,13 +34,13 @@ dbkjs.modules.layertoggle = {
         },
         'togglePreventive': {
             'icon': 'icon-home',
-            'layers': [ ],
-            'category': 'preparatief'
+            'layers': [ 'Brandcompartiment' ],
+            'category': 'preventief'
         },
         'togglePreparative': {
             'icon': 'icon-home',
-            'layers': [ 'Brandcompartiment' ],
-            'category': 'preventief',
+            'layers': [  ],
+            'category': 'preparatief',
         },
         'toggleDanger': {
             'icon': 'icon-home',

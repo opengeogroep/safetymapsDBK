@@ -81,8 +81,8 @@
 	<xsl:template name="bgcol">
 	    <xsl:choose>
 		    <xsl:when test="categorie='objectinformatie'">2B941E</xsl:when>
-		    <xsl:when test="categorie='preparatief'">F1FA4B</xsl:when>
-		    <xsl:when test="categorie='preventief'">558AED</xsl:when>
+		    <xsl:when test="categorie='preparatief'">558AED</xsl:when>
+		    <xsl:when test="categorie='preventief'">F1FA4B</xsl:when>
 		    <xsl:when test="categorie='repressief'">E62525</xsl:when>
 	    </xsl:choose>
 	</xsl:template>
