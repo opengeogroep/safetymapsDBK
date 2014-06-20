@@ -569,7 +569,7 @@ dbkjs.config.styles = {
         }, {
             context: {
                 myicon: function(feature) {
-                    return dbkjs.basePath + "images/eughs/" + feature.attributes.type + ".png";
+                    return dbkjs.basePath + "images/" + feature.attributes.namespace + "/" + feature.attributes.type + ".png";
                 }
             }
         }), 'select': new OpenLayers.Style({

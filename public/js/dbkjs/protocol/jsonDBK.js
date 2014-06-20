@@ -563,6 +563,7 @@ dbkjs.protocol.jsonDBK = {
                 myFeature.attributes = { 
                     "type" : myGeometry.symboolCode, 
                     "name": myGeometry.naamStof,
+                    "namespace": myGeometry.namespace,
                     "quantity": myGeometry.hoeveelheid,
                     "indication": myGeometry.gevaarsindicatienummer,
                     "information": myGeometry.aanvullendeInformatie,
@@ -570,7 +571,7 @@ dbkjs.protocol.jsonDBK = {
                     "fid": "gevaarlijkestof_ft_" + idx
                 };
                 var myrow = $('<tr>' +
-                        '<td><img class="thumb" src="' + dbkjs.basePath + 'images/eughs/' +
+                        '<td><img class="thumb" src="' + dbkjs.basePath + 'images/' + myFeature.attributes.namespace + '/' +
                             myFeature.attributes.type + '.png" alt="'+ 
                             myFeature.attributes.type +'" title="'+ 
                             myFeature.attributes.type+'"></td>' +
