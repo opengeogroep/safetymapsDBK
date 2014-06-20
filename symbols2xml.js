@@ -44,30 +44,52 @@ var dbk = require('./controllers/dbk.js');
 var anyDB = require('any-db');
 global.pool = anyDB.createPool(dbURL, {min: 2, max: 20});
 
-var query_str = 'select brandweervoorziening_symbool as type, naam, namespace, categorie, omschrijving from dbk.type_brandweervoorziening order by namespace,  brandweervoorziening_symbool';
-global.pool.query(query_str,
-    function(err, result){
-        if(err) {
-            console.log(err);
-        } else {
-            var s = "<?xml-stylesheet type='text/xsl' href='symbols.xsl'?>\n";
-            var xo = { symbols: []};
-            for(var i in result.rows) {
-                var r = result.rows[i];
-                var ro = { symbol: []};
-                for(var k in r) {
-                    if(r[k]) {
-                        var o = {};
-                        o[k] = r[k];
-                        ro.symbol.push(o);
-                    }
-                }
-                xo.symbols.push(ro);
+function rowsToXml(rows, element, groupElement) {
+    var xo = { };
+    xo[groupElement] = [];
+    for(var i in rows) {
+        var r = rows[i];
+        var ro = { };
+        ro[element] = [];
+        for(var k in r) {
+            if(r[k]) {
+                var o = {};
+                o[k] = r[k];
+                ro[element].push(o);
             }
-            s += xml(xo, true);
-            s += "\n";
-            fs.writeFileSync('symbols.xml', s);
         }
-		process.exit(0);            
+        xo[groupElement].push(ro);
     }
-);
+    return xml(xo, true) + "\n";
+}
+
+function getQueryXml(query, element, groupElement, cb) {
+    global.pool.query(query,
+        function(err, result){
+            if(err) {
+                console.log(err);
+                process.exit(1);
+            } else {
+                cb(rowsToXml(result.rows, element, groupElement));
+            }
+        }
+    );
+}
+
+var myxml = "<?xml-stylesheet type='text/xsl' href='symbols.xsl'?>\n<data>\n";
+
+var query1 = 'select gid,brandweervoorziening_symbool as type, naam, namespace, categorie, omschrijving from dbk.type_brandweervoorziening order by namespace,  brandweervoorziening_symbool';
+var query2 = 'select gid,gevaarlijkestof_symbool as type, naam, namespace, \'repressief\' as categorie from dbk.type_gevaarlijkestof order by namespace, gevaarlijkestof_symbool';
+
+getQueryXml(query1, 'symbol', 'symbols', function(s1) {
+    myxml += s1;
+    
+    getQueryXml(query2, 'stof', 'stoffen', function(s2) {
+        myxml += s2;
+        
+        myxml += "</data>\n";
+        fs.writeFileSync('symbols.xml', myxml);
+        process.exit(0);
+    });
+});
+
