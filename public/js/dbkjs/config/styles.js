@@ -564,7 +564,7 @@ dbkjs.config.styles = {
     }),
     gevaarlijkestof: new OpenLayers.StyleMap({
         "default": new OpenLayers.Style({
-            pointRadius: 10,
+            pointRadius: 12,
             externalGraphic: "${myicon}"
         }, {
             context: {
