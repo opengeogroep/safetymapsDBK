@@ -309,14 +309,14 @@
         <type>Falck16</type>
         <naam>Trap standaard</naam>
         <namespace>Other</namespace>
-        <categorie>objectinformatie</categorie>
+        <categorie>preventief</categorie>
     </symbol>
     <symbol>
         <gid>1054</gid>
         <type>Falck17</type>
         <naam>Trap wokkel</naam>
         <namespace>Other</namespace>
-        <categorie>objectinformatie</categorie>
+        <categorie>preventief</categorie>
     </symbol>
     <symbol>
         <gid>1015</gid>
@@ -345,7 +345,7 @@
         <type>Trap2</type>
         <naam>Trap</naam>
         <namespace>Other</namespace>
-        <categorie>objectinformatie</categorie>
+        <categorie>preventief</categorie>
         <omschrijving>(Geen officieel NEN1414 object)</omschrijving>
     </symbol>
 </symbols>
