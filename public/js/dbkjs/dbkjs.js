@@ -319,8 +319,10 @@ $(document).ready(function() {
         if(dbkjs.viewmode !== 'fullscreen') {
             $('body').append(dbkjs.util.createDialog('infopanel', '<i class="icon-info-sign"></i> ' + t("dialogs.info"), 'right:0;bottom:0;'));
         } else {
-            var infopanelPopup = dbkjs.util.createModalPopup({ name: 'infopanel' });
-            infopanelPopup.getView().append($('<div></div>').attr({ 'id': 'infopanel_b' }));
+            // Create the infopanel
+            dbkjs.util.createModalPopup({ name: 'infopanel' }).getView().append($('<div></div>').attr({ 'id': 'infopanel_b' }));
+            // Create the DBK infopanel
+            dbkjs.util.createModalPopup({ name: 'dbkinfopanel' }).getView().append($('<div></div>').attr({ 'id': 'dbkinfopanel_b' }));
 
             // We are removing / moving some existing DIVS from HTML to convert prev. popups to fullscreen modal popups
             $('#baselayerpanel').remove();
@@ -363,7 +365,7 @@ $(document).ready(function() {
                 if(dbkjs.viewmode !== 'fullscreen') {
                     $('#infopanel').toggle();
                 } else {
-                    dbkjs.util.getModalPopup('infopanel').show();
+                    dbkjs.util.getModalPopup('dbkinfopanel').show();
                 }
             } else if (this.id === "c_minimap") {
                 $('#minimappanel').toggle();

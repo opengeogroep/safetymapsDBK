@@ -124,11 +124,8 @@ dbkjs.modules.feature = {
         dbkjs.selectControl.activate();
         _obj.layer.events.on({
             "featureselected": _obj.getfeatureinfo,
-            "featuresadded": function() {
-            },
-            "featureunselected": function(e) {
-               // $('#infopanel').hide();
-            }
+            "featuresadded": function() {},
+            "featureunselected": function(e) {}
         });
         
         _obj.get();
@@ -268,6 +265,14 @@ dbkjs.modules.feature = {
                             item_ul.append(_obj.featureInfohtml(_obj.currentCluster[i]));
                         }
                         $('#infopanel_b').append(item_ul);
+                        dbkjs.util.getModalPopup('infopanel').setHideCallback(function() {
+                            if(_obj.layer.selectedFeatures.length === 0) {
+                                return;
+                            }
+                            for(var i = 0; i < _obj.layer.features.length; i++) {
+                                dbkjs.selectControl.unselect(_obj.layer.features[i]);
+                            }
+                        });
                         dbkjs.util.getModalPopup('infopanel').show();
                     } else {
                         $('#infopanel_f').append('<ul id="Pagination" class="pagination"></ul>');
