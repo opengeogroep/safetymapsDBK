@@ -8,7 +8,7 @@ html, body {
     width: 33%;
     height: auto;
 }
-#c_minimap, #c_settings, #zoom_prev, #zoom_next, #zoom_in, #zoom_out, #permalink, #btn_refresh,  #btn_measure_distance, #btn_measure_area, #footer, .drag-handle{
+#c_minimap, #zoom_prev, #zoom_next, #zoom_in, #zoom_out, #permalink, #btn_refresh,  #btn_measure_distance, #btn_measure_area, #footer, .drag-handle{
     display: none !important;
 }
 .dialog{

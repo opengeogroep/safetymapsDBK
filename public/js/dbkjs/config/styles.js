@@ -38,6 +38,12 @@ dbkjs.getStyleScaleFactor = function() {
     return dbkjs.config.originalScale / dbkjs.map.getScale();
 };
 
+dbkjs.redrawScaledLayers = function() {
+    dbkjs.protocol.jsonDBK.layerBrandweervoorziening.redraw();
+    dbkjs.protocol.jsonDBK.layerBrandweervoorziening.redraw();
+    dbkjs.protocol.jsonDBK.layerTekstobject.redraw();
+}
+
 // Return a styling value with user size adjustment and scaled according to map
 // map scale (if style scaling is enabled). If featureAttributeValue is not
 // undefined use that instead of the first argument. If attributeScaleFactor

@@ -27,7 +27,7 @@ dbkjs.layout = {
         _obj.settingsDialog('#settingspanel_b');
     },
     settingsDialog: function(parent) {
-        $(parent).append('<h4>' + i18n.t('app.contrast') +'</h4><p>' + i18n.t('app.selectContrast') + '</p>');
+        /*$(parent).append('<h4>' + i18n.t('app.contrast') +'</h4><p>' + i18n.t('app.selectContrast') + '</p>');
         $(parent).append('<p><div class="row"><div class="col-xs-6">' +
                 '<div class="input-group">' +
                 '<input id="input_contrast" type="text" class="form-control">' +
@@ -37,12 +37,36 @@ dbkjs.layout = {
                 '<button id="click_contrast_up" class="btn btn-default" type="button"><i class="icon-plus">&nbsp;<i class="icon-adjust"></i></button>' +
                 '</span></div></div></p><hr>'
                 );
-        $(parent).append('<hr>');
+        $(parent).append('<hr>');*/
+        
+        $(parent).append("<h4>" + i18n.t('app.layout') + "</h4>");
+        $(parent).append('<p><div class="row"><div class="col-xs-12">' +
+                '<input type="checkbox" id="click_scaleStyle" checked="checked">' + i18n.t('app.scaleStyle') +
+                '</div></div></p>' +
+                '<p><hr/><div class="row"><div class="col-xs-12">' +
+                '<p style="padding-bottom: 15px">' + i18n.t('app.styleSizeAdjust') + '</p>' +
+                '<input id="slider_styleSizeAdjust" style="width: 210px" data-slider-id="styleSizeAdjustSlider" type="text" data-slider-min="-10" ' +
+                'data-slider-max="10" data-slider-step="1" data-slider-value="0" value="0"/>' +
+                '</div></div></p><hr>'
+                );
+        
+        $("#slider_styleSizeAdjust").slider({ tooltip: "always" });
+        $("#slider_styleSizeAdjust").on('slide', function(e) {
+            dbkjs.config.styleSizeAdjust = e.value;
+            dbkjs.redrawScaledLayers();
+        });
+        
+        $("#click_scaleStyle").on('change', function(e) {
+            dbkjs.config.styleScaleAdjust = e.target.checked;
+            dbkjs.redrawScaledLayers();
+        });        
+        
+        /*
         $(parent).append(
                 '<p><strong>' + dbkjs.options.APPLICATION + '</strong> ' + dbkjs.options.VERSION + ' (' + dbkjs.options.RELEASEDATE + ')' + '</p>' +
                 '<p>' + dbkjs.options.REMARKS + '</p>'
                 );
-
+*/
         $('#input_contrast').val(parseFloat(dbkjs.map.baseLayer.opacity).toFixed(1));
         $('#input_contrast').keypress(function(event) {
             if (event.keyCode === 13) {

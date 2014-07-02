@@ -23,6 +23,8 @@
         "refresh": "app.refresh",
         "contrast": "app.contrast",
         "selectContrast": "app.selectContrast",
+        "scaleStyle": "app.scaleStyle",
+        "styleSizeAdjust": "app.styleSizeAdjust",
         "next": "app.next",
         "map": "app.map",
         "correctBuildings": "app.correctBuildings",
