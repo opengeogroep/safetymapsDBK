@@ -22,6 +22,7 @@ html, body {
 }
 .main-button-group .btn {
     font-size: 2.5em !important;
+    line-height: 50px;
 }
 .main-button-group .btn.dbk-title {
     margin-top: 8px;
@@ -34,11 +35,16 @@ html, body {
     text-overflow: ellipsis;
     overflow: hidden;
 }
-#tb03 {
-    text-shadow: -4px 0 white, 0 4px white, 4px 0 white, 0 -4px white;
+.main-button-group .btn.layer-toggle-btn {
+    text-shadow: -1px -1px 0 #ffffff, 1px -1px 0 #ffffff, -1px 1px 0 #ffffff, 1px 1px 0 #ffffff;
+    font-size: 1em !important;
+}
+.main-button-group .btn.layer-toggle-btn span {
+    line-height: normal;
 }
 .toggleObject {
     background-color: #4cae4c !important;
+    line-height: 25px !important; /* double text line */
 }
 .togglePreventive {
     background-color: #ffff4f !important;
@@ -50,7 +56,6 @@ html, body {
     background-color: #b92c28 !important;
 }
 .layertoggle-btn-group .btn {
-    text-shadow: -2px 0 white, 0 2px white, 2px 0 white, 0 -2px white;
     position: relative;
 }
 .layertoggle-btn-group .active:after {
