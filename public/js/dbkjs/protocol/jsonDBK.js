@@ -151,6 +151,7 @@ dbkjs.protocol.jsonDBK = {
                 if (!dbkjs.protocol.jsonDBK.processing) {
                     if(dbkjs.viewmode == 'fullscreen') {
                         dbkjs.util.getModalPopup('infopanel').hide();
+                        dbkjs.util.getModalPopup('dbkinfopanel').hide();
                     } else {
                         $('#infopanel').hide();
                     }
@@ -165,11 +166,12 @@ dbkjs.protocol.jsonDBK = {
             } else {
                 //Check if processing is finished
                 if (!dbkjs.protocol.jsonDBK.processing) {
-                    $('#infopanel_b').html(dbkjs.options.feature.div);
-                    $('#infopanel_f').html('');
-                    if(dbkjs.viewmode == 'fullscreen') {
-                        // dbkjs.util.getModalPopup('infopanel').show();
+
+                    if(dbkjs.viewmode === 'fullscreen') {
+                        $('#dbkinfopanel_b').html(dbkjs.options.feature.div);
                     } else {
+                        $('#infopanel_b').html(dbkjs.options.feature.div);
+                        $('#infopanel_f').html('');
                         $('#infopanel').show();
                     }
                 }
@@ -210,7 +212,11 @@ dbkjs.protocol.jsonDBK = {
                 _obj.constructGevaarlijkestof(dbkjs.options.feature.gevaarlijkestof);
                 div.append(_obj.panel_group);
                 div.append(_obj.panel_tabs);
-                $('#infopanel_b').html(div);
+                if(dbkjs.viewmode === 'fullscreen') {
+                    $('#dbkinfopanel_b').html(div);
+                } else {
+                    $('#infopanel_b').html(div);
+                }
                 $('#systeem_meldingen').hide();
             }
             if(dbkjs.options.feature.pandgeometrie){

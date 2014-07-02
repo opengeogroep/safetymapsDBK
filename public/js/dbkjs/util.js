@@ -906,7 +906,7 @@ dbkjs.util = {
             .html('<i class="icon-angle-left"></i> Terug')
             .on('click', function(e) {
                 e.preventDefault();
-                popup.removeClass('modal-popup-active');
+                hidingFunction();
             })
             .appendTo(popup);
         $('<div></div>')
@@ -916,6 +916,18 @@ dbkjs.util = {
         var view = $('<div></div>')
             .addClass('modal-popup-view')
             .appendTo(popup);
+
+        var hideCallback = function() {};
+        if(options.hideCallback) {
+            hideCallback = options.hideCallback;
+        }
+
+        var hidingFunction = function() {
+            popup.removeClass('modal-popup-active');
+            if(hideCallback) {
+                hideCallback();
+            }
+        }
 
         // Return object to handle popup related functions
         this.modalPopupStore[options.name] = {
@@ -929,7 +941,10 @@ dbkjs.util = {
                 popup.addClass('modal-popup-active');
             },
             hide: function() {
-                popup.removeClass('modal-popup-active');
+                hidingFunction();
+            },
+            setHideCallback: function(fn) {
+                hideCallback = fn;
             }
         };
 
@@ -941,7 +956,8 @@ dbkjs.util = {
             return {
                 getView: function() { return $([]); },
                 show: function() {},
-                hide: function() {}
+                hide: function() {},
+                setHideCallback: function() {}
             };
         }
         return this.modalPopupStore[name];
