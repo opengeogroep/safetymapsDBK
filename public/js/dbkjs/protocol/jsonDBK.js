@@ -141,7 +141,7 @@ dbkjs.protocol.jsonDBK = {
         if (feature && feature.attributes && feature.attributes.typeFeature) {
             if(feature.data && feature.data.hasOwnProperty('formeleNaam') && feature.data.hasOwnProperty('informeleNaam')) {
                 $('.dbk-title')
-                    .text(feature.data.informeleNaam || feature.data.formeleNaam)
+                    .text(feature.data.formeleNaam + ' ' + feature.data.informeleNaam)
                     .css('visibility', 'visible')
                     .on('click', function() {
                         dbkjs.modules.feature.zoomToFeature(feature);
