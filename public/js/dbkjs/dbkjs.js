@@ -413,7 +413,7 @@ $(document).ready(function() {
                         childWidth += $(this).outerWidth();
                     });
                     var maxWidth = $('.main-button-group').outerWidth() - childWidth;
-                    $('.dbk-title').css('max-width', (maxWidth - 120) + 'px');
+                    $('.dbk-title').css('max-width', (maxWidth - 25) + 'px');
                 }
                 // Listen for orientation changes
                 window.addEventListener("orientationchange", function() {
