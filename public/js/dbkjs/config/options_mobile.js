@@ -39,7 +39,16 @@ dbkjs.options = {
     REMARKS: "",
     INFO: "",
     zoom: 13,
+
+    // Set to true to enable style scaling according to map scale
+    styleScaleAdjust: true,
+    // Scale at which scaled values are returned as original
+    originalScale: 595.2744,
+    // User style value adjustment (before scaling)
+    styleSizeAdjust: 0,
+
     alwaysShowDbkFeature: true,
+
     /**
      * PDOK settings, particular for the Netherlands national geodata services
      *

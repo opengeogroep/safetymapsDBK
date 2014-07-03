@@ -23,19 +23,12 @@ window.dbkjs = dbkjs;
 dbkjs.config = dbkjs.config || {};
 OpenLayers.Renderer.symbol.arrow = [0,2, 1,0, 2,2, 1,0, 0,2];
 
-// Set to true to enable style scaling according to map scale
-dbkjs.config.styleScaleAdjust = true;
-// Scale at which scaled values are returned as original
-dbkjs.config.originalScale = 595.2744;
-// User style value adjustment (before scaling)
-dbkjs.config.styleSizeAdjust = 0;
-
 // Factor to scale styling elements with
 dbkjs.getStyleScaleFactor = function() {
-    if(!dbkjs.config.styleScaleAdjust) {
+    if(!dbkjs.options.styleScaleAdjust) {
         return 1;
     }
-    return dbkjs.config.originalScale / dbkjs.map.getScale();
+    return dbkjs.options.originalScale / dbkjs.map.getScale();
 };
 
 dbkjs.redrawScaledLayers = function() {
@@ -53,7 +46,7 @@ dbkjs.scaleStyleValue = function(value, featureAttributeValue, attributeScaleFac
         attributeScaleFactor = attributeScaleFactor ? attributeScaleFactor : 1;
         value = featureAttributeValue * attributeScaleFactor;
     }
-    value = value + dbkjs.config.styleSizeAdjust;
+    value = value + (dbkjs.options.styleSizeAdjust ? dbkjs.options.styleSizeAdjust : 0);
     return value * dbkjs.getStyleScaleFactor();
 }
 
