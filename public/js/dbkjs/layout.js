@@ -41,13 +41,16 @@ dbkjs.layout = {
         
         $(parent).append("<h4>" + i18n.t('app.layout') + "</h4>");
         $(parent).append('<p><div class="row"><div class="col-xs-12">' +
-                '<input type="checkbox" id="checkbox_scaleStyle">' + i18n.t('app.scaleStyle') +
-                '</div></div></p>' +
+                '<label><input type="checkbox" id="checkbox_scaleStyle">' + i18n.t('app.scaleStyle') +
+                '</label></div></div></p>' +
                 '<p><hr/><div class="row"><div class="col-xs-12">' +
                 '<p style="padding-bottom: 15px">' + i18n.t('app.styleSizeAdjust') + '</p>' +
                 '<input id="slider_styleSizeAdjust" style="width: 210px" data-slider-id="styleSizeAdjustSlider" type="text" ' +
                 ' data-slider-min="-4" data-slider-max="10" data-slider-step="1"/>' +
-                '</div></div></p><hr>'
+                '</div></div></p><hr>' +
+                '<p><hr/><div class="row"><div class="col-xs-12">' +
+                '<label><input type="checkbox" id="checkbox_showInformationLabels">' + i18n.t('app.alwaysShowInformationLabels') +
+                '</label></div></div></p>'
                 );
 
         $("#slider_styleSizeAdjust").slider({
@@ -62,6 +65,12 @@ dbkjs.layout = {
         $("#checkbox_scaleStyle").prop("checked", dbkjs.options.styleScaleAdjust);
         $("#checkbox_scaleStyle").on('change', function(e) {
             dbkjs.options.styleScaleAdjust = e.target.checked;
+            dbkjs.redrawScaledLayers();
+        });
+
+        $("#checkbox_showInformationLabels").prop("checked", dbkjs.options.alwaysShowInformationLabels);
+        $("#checkbox_showInformationLabels").on('change', function(e) {
+            dbkjs.options.alwaysShowInformationLabels = e.target.checked;
             dbkjs.redrawScaledLayers();
         });        
         
