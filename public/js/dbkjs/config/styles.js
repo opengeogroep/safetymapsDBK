@@ -60,6 +60,7 @@ dbkjs.scaleStyleValue = function(value, featureAttributeValue, attributeScaleFac
 dbkjs.config.styles = {
     dbkfeature: new OpenLayers.StyleMap({
        "default" : new OpenLayers.Style({
+        display: "${mydisplay}",
         graphicWidth: "${mygraphicwidth}",
         graphicHeight: "${mygraphicheight}",
         fontColor: "${myfontcolor}",
@@ -73,6 +74,25 @@ dbkjs.config.styles = {
         labelYOffset: "${mylabelyoffset}"
     }, {
         context: {
+            mydisplay: function(feature) {
+                if(dbkjs.map.getResolution() > 1) {
+                    // pandgeometrie not visible above resolution 1, always show feature icon
+                    return "true";
+                } else {
+                    if(dbkjs.options.alwaysShowDbkFeature) {
+                        // Always show feature except the active feature
+                        var activeFeature = dbkjs.modules.feature.getActive();
+                        if(activeFeature && feature.id == activeFeature.id) {
+                            return "none";
+                        } else {
+                            return "true";
+                        }
+                    } else {
+                        // User should switch layer "Naburige DBK's" on (if configured)
+                        return "none";
+                    }
+                }
+            },
             mygraphicheight: function(feature) {
                 if (feature.cluster) {
                     if (feature.cluster.length < 10) {
