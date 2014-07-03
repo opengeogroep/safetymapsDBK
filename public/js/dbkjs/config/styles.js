@@ -60,6 +60,7 @@ dbkjs.scaleStyleValue = function(value, featureAttributeValue, attributeScaleFac
 dbkjs.config.styles = {
     dbkfeature: new OpenLayers.StyleMap({
        "default" : new OpenLayers.Style({
+        cursor: "pointer",
         display: "${mydisplay}",
         graphicWidth: "${mygraphicwidth}",
         graphicHeight: "${mygraphicheight}",
