@@ -40,7 +40,7 @@ dbkjs.getStyleScaleFactor = function() {
 
 dbkjs.redrawScaledLayers = function() {
     dbkjs.protocol.jsonDBK.layerBrandweervoorziening.redraw();
-    dbkjs.protocol.jsonDBK.layerBrandweervoorziening.redraw();
+    dbkjs.protocol.jsonDBK.layerGevaarlijkestof.redraw();
     dbkjs.protocol.jsonDBK.layerTekstobject.redraw();
 }
 
