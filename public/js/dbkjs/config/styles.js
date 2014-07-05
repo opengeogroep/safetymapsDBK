@@ -672,7 +672,6 @@ dbkjs.config.styles = {
                 },
                 mylabel: function(feature) {
                     if(dbkjs.options.alwaysShowInformationLabels) {
-                        console.log("always show " + feature.attributes.information);
                         return feature.attributes.information ? feature.attributes.information : "";
                     } else {
                         return "";
