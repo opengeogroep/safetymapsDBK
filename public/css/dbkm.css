@@ -8,9 +8,6 @@ html, body {
     width: 33%;
     height: auto;
 }
-#c_minimap, #zoom_prev, #zoom_next, #zoom_in, #zoom_out, #permalink, #btn_refresh,  #btn_measure_distance, #btn_measure_area, #footer, .drag-handle{
-    display: none !important;
-}
 .dialog{
     width: 100%;
 }
@@ -472,6 +469,13 @@ input[type="radio"], input[type="checkbox"] {
 
     .panel {
         z-index: 302;
+    }
+
+    .btn#zoom_in, .btn#zoom_out {
+        display: none;
+    }
+    #c_minimap, #zoom_prev, #zoom_next, #permalink, #btn_refresh,  #btn_measure_distance, #btn_measure_area, #footer, .drag-handle.btn {
+        display: none !important;
     }
 }
 @media screen and (max-width: 600px) {

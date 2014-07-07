@@ -345,8 +345,16 @@ $(document).ready(function() {
                 }
                 dbkjs.util.getModalPopup(panelId).show();
             });
-
         }
+
+        /**
+         * Here we can detect if the browser has touch (and is not IE(<11) or Firefox?)
+
+        if(!dbkjs.util.isMultitouchCapableBrowser()) {
+            $('#zoom_in, #zoom_out').show();
+        }
+         */
+
         // $('body').append(dbkjs.util.createDialog('wmsclickpanel', '<i class="icon-info-sign"></i> ' + t("dialogs.clickinfo"), 'right:0;bottom:0;'));
         // $('body').append(dbkjs.util.createDialog('vectorclickpanel', '<i class="icon-info-sign"></i> ' + t("dialogs.clickinfo"), 'left:0;bottom:0;'));
         // $('body').append(dbkjs.util.createModal('printpanel', '<i class="icon-print"></i> ' + t("app.print"), ''));
