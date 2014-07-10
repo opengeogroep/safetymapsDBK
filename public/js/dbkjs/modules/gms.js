@@ -67,7 +67,8 @@ dbkjs.modules.gms = {
                     var oldSequence = me.gms ? me.gms.Sequence : null;
                     me.gms = jqXHR.responseJSON.EAL2OGG;
                     if(me.gms.Sequence !== oldSequence) {
-                        me.updated = moment();
+                        var lastModified = moment(jqXHR.getResponseHeader("Last-Modified"));
+                        me.updated = lastModified.isValid() ? lastModified : moment();
                         me.viewed = false;
                     }
                     me.displayGms();
