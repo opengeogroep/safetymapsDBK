@@ -173,7 +173,7 @@ dbkjs.modules.gms = {
         var m = moment(g.Tijd);
         row(m.format("DD MMMM YYYY HH:mm:ss") + " (" + m.fromNow() + ")", "Tijd");
         row(e(g.Prioriteit), "Prioriteit");
-        row(e(g.Classificatie ? g.Classificatie.replace(/,/, ", ") : null), "Classificatie");
+        row(e(g.Classificatie ? g.Classificatie.replace(/,/g, ", ") : null), "Classificatie");
         row(e(g.Karakterestiek), "Karakteristiek"); // sic
         var a = g.IncidentAdres;
         if(a && a.Adres) {
