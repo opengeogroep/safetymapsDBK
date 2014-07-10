@@ -27,6 +27,8 @@ dbkjs.modules.gms = {
     gms: null,
     updated: null,
     viewed: false,
+    markers: null,
+    gmsMarker: null,
     register: function(options) {
         var _obj = dbkjs.modules.gms;
         _obj.createPopup();
@@ -45,6 +47,10 @@ dbkjs.modules.gms = {
                 $("#btn_opengms").removeClass("unread");
             })
             .appendTo('#btngrp_3');
+
+        this.markers = new OpenLayers.Layer.Markers("GMS Marker");
+        dbkjs.map.addLayer(this.markers);
+
         this.loadGms();
     },
     createPopup: function() {
@@ -65,11 +71,22 @@ dbkjs.modules.gms = {
             complete: function(jqXHR, textStatus) {
                 if(textStatus === "success") {
                     var oldSequence = me.gms ? me.gms.Sequence : null;
+                    var oldNummer = me.gms ? me.gms.Gms.Nummer : null;
                     me.gms = jqXHR.responseJSON.EAL2OGG;
                     if(me.gms.Sequence !== oldSequence) {
                         var lastModified = moment(jqXHR.getResponseHeader("Last-Modified"));
                         me.updated = lastModified.isValid() ? lastModified : moment();
-                        me.viewed = false;
+
+                        // Alleen unread bij nieuw meldingsnummer
+                        if(oldNummer === null || me.gms.Gms.Nummer !== oldNummer) {
+                            me.viewed = false;
+                        }
+
+                        // Eventueel gewijzigde X en Y doorvoeren
+                        if(me.gmsMarker) {
+                            me.markers.removeMarker(me.gmsMarker);
+                            me.gmsMarker = null;
+                        }
                     }
                     me.displayGms();
                 } else if(textStatus !== "notmodified") {
@@ -106,16 +123,21 @@ dbkjs.modules.gms = {
             }
         }
         if(melding) {
-            $("#btn_opengms").html('<i class="icon-exclamation-sign"></i>');
             if(this.viewed) {
                 $("#btn_opengms").removeClass("unread");
             } else {
                 $("#btn_opengms").addClass("unread");
             }
-            $("#gmsUpdate").addClass("melding");
+            if(this.gmsMarker === null && this.gms.Gms.IncidentAdres && this.gms.Gms.IncidentAdres.Positie) {
+                var p = this.gms.Gms.IncidentAdres.Positie;
+                var size = new OpenLayers.Size(21,25);
+                var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+                this.gmsMarker = new OpenLayers.Marker(
+                        new OpenLayers.LonLat(p.X, p.Y),
+                        new OpenLayers.Icon("images/marker-red.png", size, offset));
+                this.markers.addMarker(this.gmsMarker);
+            }
         } else {
-            $("#btn_opengms").html('<i class="icon-align-justify"></i>');
-            $("#gmsUpdate").removeClass("melding");
             $("#btn_opengms").removeClass("unread");
         }
         $("#gmsUpdate").text(text);
@@ -151,23 +173,26 @@ dbkjs.modules.gms = {
         var m = moment(g.Tijd);
         row(m.format("DD MMMM YYYY HH:mm:ss") + " (" + m.fromNow() + ")", "Tijd");
         row(e(g.Prioriteit), "Prioriteit");
-        row(e(g.Classificatie), "Classificatie");
+        row(e(g.Classificatie ? g.Classificatie.replace(/,/, ", ") : null), "Classificatie");
         row(e(g.Karakterestiek), "Karakteristiek"); // sic
         var a = g.IncidentAdres;
         if(a && a.Adres) {
             var s = en(a.Adres.Straat) + " " + en(a.Adres.Huisnummer) + en(a.Adres.HuisnummerToevg) + ", " +
                     en(a.Adres.Postcode) + " " + en(a.Adres.Plaats);
             row(s, "Adres");
-            row(e(a.Aanduiding), "Aanduiding");
-            if(a.Positie) {
-                c = e(a.Positie.X + ", " + a.Positie.Y);
-                table.append('<tr><td>Coördinaten</a></td>' +
-                        '<td><a href="#" onclick="dbkjs.modules.gms.zoom();">' + c + '</a></td></tr>');
-            }
         }
-        row(e(g.Kladblok), "Kladblok");
+        row(e(a.Aanduiding), "Aanduiding");
+        if(a.Positie) {
+            c = e(a.Positie.X + ", " + a.Positie.Y);
+            table.append('<tr><td>Coördinaten</a></td>' +
+                    '<td><a href="#" onclick="dbkjs.modules.gms.zoom();">' + c + '</a></td></tr>');
+        } else {
+        }
+        row(e(dbkjs.util.nl2br(g.Kladblok)), "Kladblok");
 
         $("#gms").replaceWith(table_div);
+
+
     },
     zoom: function() {
         if(this.gms && this.gms.Gms && this.gms.Gms.IncidentAdres && this.gms.Gms.IncidentAdres.Positie) {
