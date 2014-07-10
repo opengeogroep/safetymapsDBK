@@ -594,5 +594,5 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 .unread {
-    color: red !important;
+    color: #AA0009 !important;
 }
