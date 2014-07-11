@@ -50,6 +50,34 @@ dbkjs.scaleStyleValue = function(value, featureAttributeValue, attributeScaleFac
     return value * dbkjs.getStyleScaleFactor();
 }
 
+dbkjs.config.styleUtils = {
+    gevaarlijkestofLabel: function(f) {
+        var a = f.attributes;
+        console.log(a);
+        var s = (a.information !== "0" && a.information !== "" ? a.information + "\n": "" );
+        if(a.indication || a.quantity || a.name) {
+            s += "(";
+            if(a.indication && a.indication !== 0) {
+                s += a.indication + "/" + a.unnumber;
+            }
+            if(a.quantity && a.quantity !== 0) {
+                if(!s.endsWith("(")) {
+                    s += ", ";
+                }
+                s += a.quantity;
+            }
+            if(a.name) {
+                if(!s.endsWith("(")) {
+                    s += ", ";
+                }
+                s += a.name;
+            }
+            s += ")";
+        }
+        return s;
+    }
+}
+
 dbkjs.config.styles = {
     dbkfeature: new OpenLayers.StyleMap({
        "default" : new OpenLayers.Style({
@@ -672,8 +700,7 @@ dbkjs.config.styles = {
                 },
                 mylabel: function(feature) {
                     if(dbkjs.options.alwaysShowInformationLabels) {
-                        return feature.attributes.information + "\n(" + feature.attributes.indication + "/" + feature.attributes.unnumber +
-                                ", " + feature.attributes.quantity + " " + feature.attributes.name + ")";
+                        return dbkjs.config.styleUtil.gevaarlijkestofLabel(feature);
                     } else {
                         return "";
                     }
@@ -696,8 +723,7 @@ dbkjs.config.styles = {
                     return dbkjs.scaleStyleValue(20);
                 },
                 mylabel: function(feature) {
-                    return feature.attributes.information + "\n(" + feature.attributes.indication + "/" + feature.attributes.unnumber +
-                            ", " + feature.attributes.quantity + " " + feature.attributes.name + ")";
+                    return dbkjs.config.styleUtils.gevaarlijkestofLabel(feature);
                 },
                 myfontsize: function(feature) {
                     return dbkjs.scaleStyleValue(20);
@@ -717,9 +743,7 @@ dbkjs.config.styles = {
                     return dbkjs.scaleStyleValue(25);
                 },
                 mylabel: function(feature) {
-                    return feature.attributes.information + "\n(" + feature.attributes.indication + "/" + feature.attributes.unnumber +
-                            ", " + feature.attributes.quantity + " " + feature.attributes.name + ")";
-
+                    return dbkjs.config.styleUtils.gevaarlijkestofLabel(feature);
                 },
                 myfontsize: function(feature) {
                     return dbkjs.scaleStyleValue(25);
