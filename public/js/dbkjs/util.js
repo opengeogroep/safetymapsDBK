@@ -863,6 +863,9 @@ dbkjs.util = {
     nl2br: function(s) {
         return s === null ? null : s.replace(/\n/g, "<br>");
     },
+    endsWith: function(str, suffix) {
+        return str.indexOf(suffix, str.length - suffix.length) !== -1;
+    },
     renderHTML: function(text) {
         var rawText = this.strip(text);
         var urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
