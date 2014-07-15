@@ -188,7 +188,9 @@ dbkjs.modules.gms = {
                     '<td><a href="#" onclick="dbkjs.modules.gms.zoom();">' + c + '</a></td></tr>');
         } else {
         }
-        row(e(dbkjs.util.nl2br(g.Kladblok)), "Kladblok");
+        if(g.Kladblok) {
+            row(e(dbkjs.util.nl2br(g.Kladblok)), "Kladblok");
+        }
 
         $("#gms").replaceWith(table_div);
 
