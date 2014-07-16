@@ -414,18 +414,22 @@ $(document).ready(function() {
         $(dbkjs).bind('dbkjs_init_complete', function() {
             FastClick.attach(document.body);
             (function() {
+                var timer;
+                function throttleCalc() {
+                    window.clearTimeout(timer);
+                    timer = window.setTimeout(calcMaxWidth, 150);
+                }
                 function calcMaxWidth() {
                     // Calculate the max width for dbk title so other buttons are never pushed down when name is too long
-                    var childWidth = 0;
-                    $('.main-button-group .btn-group').each(function() {
-                        childWidth += $(this).outerWidth();
-                    });
-                    var maxWidth = $('.main-button-group').outerWidth() - childWidth;
-                    $('.dbk-title').css('max-width', (maxWidth - 25) + 'px');
+                    var maxWidth = $('body').outerWidth();
+                    $('.dbk-title').css('max-width', (maxWidth - 70) + 'px');
                 }
                 // Listen for orientation changes
                 window.addEventListener("orientationchange", function() {
                     calcMaxWidth();
+                }, false);
+                window.addEventListener("resize", function() {
+                    throttleCalc();
                 }, false);
                 calcMaxWidth();
             }());
