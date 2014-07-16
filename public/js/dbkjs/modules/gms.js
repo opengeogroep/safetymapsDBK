@@ -137,6 +137,8 @@ dbkjs.modules.gms = {
                         new OpenLayers.Icon("images/marker-red.png", size, offset));
                 this.markers.addMarker(this.gmsMarker);
 
+                this.selectDbk();
+
                 this.zoom();
             }
         } else {
@@ -196,6 +198,40 @@ dbkjs.modules.gms = {
 
         $("#gms").replaceWith(table_div);
 
+
+    },
+    selectDbk: function() {
+        if(this.gms && this.gms.Gms && this.gms.Gms.IncidentAdres && this.gms.Gms.IncidentAdres.Adres) {
+            var a = this.gms.Gms.IncidentAdres.Adres;
+
+            var dbk = null;
+
+            $.each(dbkjs.modules.feature.features, function(index, f) {
+
+                var fas = f.attributes.adres;
+
+                $.each(fas, function(index, fa) {
+                    if(fa) {
+                        var matchPostcode = a.Postcode && fa.postcode && a.Postcode === fa.postcode;
+                        var matchWoonplaats = a.Plaats && fa.woonplaatsNaam && fa.woonplaatsNaam.toLowerCase().indexOf(a.Plaats.toLowerCase()) != -1;
+                        var matchStraat = a.Straat && fa.openbareRuimteNaam && fa.openbareRuimteNaam.toLowerCase().indexOf(a.Straat.toLowerCase()) != -1;
+                        var matchHuisnummer = a.Huisnummer && fa.huisnummer && Number(a.Huisnummer) === fa.huisnummer;
+
+                        if(matchHuisnummer) {
+                            if(matchPostcode || (matchWoonplaats && matchStraat)) {
+                                console.log("selecting dbk " + f.attributes.formeleNaam);
+                                dbk = f;
+                                return false;
+                            }
+                        }
+                    }
+                });
+            });
+
+            if(dbk) {
+                dbkjs.modules.feature.handleDbkOmsSearch(dbk);
+            }
+        }
 
     },
     zoom: function() {
