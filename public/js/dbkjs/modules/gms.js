@@ -213,13 +213,12 @@ dbkjs.modules.gms = {
                 $.each(fas, function(index, fa) {
                     if(fa) {
                         var matchPostcode = a.Postcode && fa.postcode && a.Postcode === fa.postcode;
-                        var matchWoonplaats = a.Plaats && fa.woonplaatsNaam && fa.woonplaatsNaam.toLowerCase().indexOf(a.Plaats.toLowerCase()) != -1;
-                        var matchStraat = a.Straat && fa.openbareRuimteNaam && fa.openbareRuimteNaam.toLowerCase().indexOf(a.Straat.toLowerCase()) != -1;
+                        var matchWoonplaats = a.Plaats && fa.woonplaatsNaam && fa.woonplaatsNaam.toLowerCase().indexOf(a.Plaats.toLowerCase()) !== -1;
+                        var matchStraat = a.Straat && fa.openbareRuimteNaam && fa.openbareRuimteNaam.toLowerCase().indexOf(a.Straat.toLowerCase()) !== -1;
                         var matchHuisnummer = a.Huisnummer && fa.huisnummer && Number(a.Huisnummer) === fa.huisnummer;
 
                         if(matchHuisnummer) {
                             if(matchPostcode || (matchWoonplaats && matchStraat)) {
-                                console.log("selecting dbk " + f.attributes.formeleNaam);
                                 dbk = f;
                                 return false;
                             }
