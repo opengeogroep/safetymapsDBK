@@ -136,6 +136,8 @@ dbkjs.modules.gms = {
                         new OpenLayers.LonLat(p.X, p.Y),
                         new OpenLayers.Icon("images/marker-red.png", size, offset));
                 this.markers.addMarker(this.gmsMarker);
+
+                this.zoom();
             }
         } else {
             $("#btn_opengms").removeClass("unread");
@@ -185,7 +187,7 @@ dbkjs.modules.gms = {
         if(a.Positie) {
             c = e(a.Positie.X + ", " + a.Positie.Y);
             table.append('<tr><td>Coördinaten</a></td>' +
-                    '<td><a href="#" onclick="dbkjs.modules.gms.zoom();">' + c + '</a></td></tr>');
+                    '<td><a href="#" onclick="dbkjs.modules.gms.zoom(); dbkjs.modules.gms.gmsPopup.hide();">' + c + '</a></td></tr>');
         } else {
         }
         if(g.Kladblok) {
@@ -201,7 +203,6 @@ dbkjs.modules.gms = {
             var x = Number(this.gms.Gms.IncidentAdres.Positie.X);
             var y = Number(this.gms.Gms.IncidentAdres.Positie.Y);
             dbkjs.map.setCenter(new OpenLayers.LonLat(x, y), dbkjs.options.zoom);
-            dbkjs.modules.gms.gmsPopup.hide();
         }
     }
 };
