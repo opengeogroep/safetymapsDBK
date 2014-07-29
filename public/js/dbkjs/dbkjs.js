@@ -1,8 +1,8 @@
 /*!
  *  Copyright (c) 2014 Milo van der Linden (milo@dogodigi.net)
- * 
+ *
  *  This file is part of safetymapDBK
- *  
+ *
  *  safetymapDBK is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -63,7 +63,7 @@ dbkjs.init = function() {
     dbkjs.naviHis = new OpenLayers.Control.NavigationHistory();
     dbkjs.map.addControl(dbkjs.naviHis);
     dbkjs.naviHis.activate();
-    
+
     var baselayer_ul = $('<ul id="baselayerpanel_ul" class="nav nav-pills nav-stacked">');
     $.each(dbkjs.options.baselayers, function(bl_index, bl) {
         var _li = $('<li class="bl" id="bl' + bl_index + '"><a href="#">' + bl.name + '</a></li>');
@@ -98,7 +98,7 @@ dbkjs.init = function() {
             $('#zoom_prev').addClass('disabled');
         }
     });
-    
+
     dbkjs.overview = new OpenLayers.Control.OverviewMap({
         theme: null,
         div: document.getElementById('minimappanel_b'),
@@ -161,7 +161,7 @@ dbkjs.successAuth = function() {
     dbkjs.hoverControl = new OpenLayers.Control.SelectFeature(
         [],
         {
-            hover: true, 
+            hover: true,
             highlightOnly: true,
             renderIntent: "temporary"
         }
@@ -172,7 +172,7 @@ dbkjs.successAuth = function() {
     dbkjs.selectControl = new OpenLayers.Control.SelectFeature(
         [],
         {
-            clickout: true, 
+            clickout: true,
             toggle: true,
             multiple: false
         }
@@ -192,7 +192,7 @@ dbkjs.successAuth = function() {
             }
         }
     });
-    
+
     if(dbkjs.options.organisation.wms){
         dbkjs.loadingcapabilities = 0;
             $.each(dbkjs.options.organisation.wms, function (wms_k, wms_v){
@@ -200,10 +200,10 @@ dbkjs.successAuth = function() {
                 if(wms_v.getcapabilities === true){
                     dbkjs.loadingcapabilities = dbkjs.loadingcapabilities + 1;
                     var options = {
-                        url: wms_v.url, 
-                        title: wms_v.name, 
-                        proxy: wms_v.proxy, 
-                        index: index, 
+                        url: wms_v.url,
+                        title: wms_v.name,
+                        proxy: wms_v.proxy,
+                        index: index,
                         parent: wms_v.parent
                     };
                     if (!dbkjs.util.isJsonNull(wms_v.pl)){
@@ -276,7 +276,7 @@ dbkjs.finishMap = function(){
         dbkjs.layout.activate();
     }
     dbkjs.activateClick();
-    
+
     dbkjs.selectControl.activate();
     var hrefzoom = dbkjs.util.getQueryVariable('zoom');
     var hreflat = dbkjs.util.getQueryVariable('lat');
@@ -313,7 +313,7 @@ dbkjs.finishMap = function(){
 $(document).ready(function() {
     // Make sure i18n is initialized
     i18n.init({
-            lng: "nl", debug: false 
+            lng: "nl", debug: false
     }, function(t) {
         document.title = dbkjs.options.APPLICATION + ' ' + dbkjs.options.VERSION;
         if(dbkjs.viewmode !== 'fullscreen') {
@@ -424,13 +424,15 @@ $(document).ready(function() {
                     var maxWidth = $('body').outerWidth();
                     $('.dbk-title').css('max-width', (maxWidth - 70) + 'px');
                 }
-                // Listen for orientation changes
-                window.addEventListener("orientationchange", function() {
-                    calcMaxWidth();
-                }, false);
-                window.addEventListener("resize", function() {
-                    throttleCalc();
-                }, false);
+                if(window.addEventListener) {
+                    // Listen for orientation changes
+                    window.addEventListener("orientationchange", function() {
+                        calcMaxWidth();
+                    }, false);
+                    window.addEventListener("resize", function() {
+                        throttleCalc();
+                    }, false);
+                }
                 calcMaxWidth();
             }());
         });
