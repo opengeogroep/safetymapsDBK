@@ -312,9 +312,19 @@ dbkjs.finishMap = function(){
 
 $(document).ready(function() {
     // Make sure i18n is initialized
+
     i18n.init({
-            lng: "nl", debug: false
+            lng: "nl", debug: false, postProcess: "doReplacements"
     }, function(t) {
+        i18n.addPostProcessor("doReplacements", function(val, key, options) {
+            if(dbkjs.options.i18nReplacements) {
+                var lngReplacements = dbkjs.options.i18nReplacements[i18n.lng()];
+                if(lngReplacements && lngReplacements[key]) {
+                    return lngReplacements[key];
+                }
+            }
+            return val;
+        });
         document.title = dbkjs.options.APPLICATION + ' ' + dbkjs.options.VERSION;
         if(dbkjs.viewmode !== 'fullscreen') {
             $('body').append(dbkjs.util.createDialog('infopanel', '<i class="icon-info-sign"></i> ' + t("dialogs.info"), 'right:0;bottom:0;'));
