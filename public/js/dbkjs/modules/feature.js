@@ -1,8 +1,8 @@
 /*!
  *  Copyright (c) 2014 Milo van der Linden (milo@dogodigi.net)
- * 
+ *
  *  This file is part of safetymapDBK
- *  
+ *
  *  safetymapDBK is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -126,7 +126,7 @@ dbkjs.modules.feature = {
             "featuresadded": function() {},
             "featureunselected": function(e) {}
         });
-        
+
         _obj.get();
     },
     get: function() {
@@ -244,13 +244,32 @@ dbkjs.modules.feature = {
     zoomToFeature: function(feature) {
         dbkjs.options.dbk = feature.attributes.identificatie;
         dbkjs.modules.updateFilter(feature.attributes.identificatie);
-        if (dbkjs.map.zoom < dbkjs.options.zoom) {
-            dbkjs.map.setCenter(feature.geometry.getBounds().getCenterLonLat(), dbkjs.options.zoom);
+        if(!dbkjs.options.zoomToPandgeometrie) {
+            if (dbkjs.map.zoom < dbkjs.options.zoom) {
+                dbkjs.map.setCenter(feature.geometry.getBounds().getCenterLonLat(), dbkjs.options.zoom);
+            } else {
+                dbkjs.map.setCenter(feature.geometry.getBounds().getCenterLonLat());
+            }
         } else {
-            dbkjs.map.setCenter(feature.geometry.getBounds().getCenterLonLat());
+            this.zoomToPandgeometrie();
         }
         // getActive() changed, hide it
         this.layer.redraw();
+    },
+    zoomToPandgeometrie: function() {
+        // Pandgeometrie layer must be loaded
+
+        var bounds = dbkjs.protocol.jsonDBK.layerPandgeometrie.getDataExtent();
+        if(bounds) {
+            var margin = dbkjs.options.zoomToPandgeometrieMargin || 50;
+            var boundCoords = bounds.toArray();
+            var extendedBounds = OpenLayers.Bounds.fromArray([
+                boundCoords[0] - margin,
+                boundCoords[1] - margin,
+                boundCoords[2] + margin,
+                boundCoords[3] + margin]);
+            dbkjs.map.zoomToExtent(extendedBounds);
+        }
     },
     getfeatureinfo: function(e) {
         var _obj = dbkjs.modules.feature;

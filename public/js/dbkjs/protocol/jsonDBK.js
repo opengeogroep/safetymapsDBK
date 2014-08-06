@@ -343,6 +343,11 @@ dbkjs.protocol.jsonDBK = {
                 _obj.layerTekstobject.addFeatures(features);
                 _obj.activateSelect(_obj.layerTekstobject);
             }
+
+            if(dbkjs.options.zoomToPandgeometrie) {
+                dbkjs.modules.feature.zoomToPandgeometrie();
+            }
+
             if(dbkjs.viewmode == 'fullscreen') {
                 //dbkjs.util.getModalPopup('infopanel').show();
             } else {
