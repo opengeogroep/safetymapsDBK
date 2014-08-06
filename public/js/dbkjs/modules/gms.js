@@ -51,7 +51,14 @@ dbkjs.modules.gms = {
         this.markers = new OpenLayers.Layer.Markers("GMS Marker");
         dbkjs.map.addLayer(this.markers);
 
-        this.loadGms();
+        this.checkFeaturesLoaded();
+    },
+    checkFeaturesLoaded: function() {
+        if(dbkjs.modules.feature.layer.length === 0) {
+            setTimeout(this.checkFeaturesLoaded, 100);
+        } else {
+            this.loadGms();
+        }
     },
     createPopup: function() {
         var _obj = dbkjs.modules.gms;
