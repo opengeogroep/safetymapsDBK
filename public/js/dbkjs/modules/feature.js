@@ -279,7 +279,10 @@ dbkjs.modules.feature = {
                 if (e.feature.cluster.length === 1) {
                     _obj.zoomToFeature(e.feature.cluster[0]);
                 } else {
-                    _obj.currentCluster = e.feature.cluster;
+                    _obj.currentCluster = e.feature.cluster.slice();
+                    _obj.currentCluster.sort(function(lhs, rhs) {
+                        return lhs.attributes.formeleNaam.localeCompare(rhs.attributes.formeleNaam);
+                    });
                     if(dbkjs.viewmode == 'fullscreen') {
                         var item_ul = $('<ul class="nav nav-pills nav-stacked"></ul>');
                         $('#infopanel_b').html('');
