@@ -54,8 +54,11 @@ dbkjs.modules.gms = {
         this.checkFeaturesLoaded();
     },
     checkFeaturesLoaded: function() {
-        if(dbkjs.modules.feature.layer.length === 0) {
-            setTimeout(this.checkFeaturesLoaded, 100);
+        var me = this;
+        if(dbkjs.modules.feature.features.length === 0) {
+            setTimeout(function() {
+                me.checkFeaturesLoaded();
+            }, 100);
         } else {
             this.loadGms();
         }
@@ -214,7 +217,6 @@ dbkjs.modules.gms = {
             var dbk = null;
 
             $.each(dbkjs.modules.feature.features, function(index, f) {
-
                 var fas = f.attributes.adres;
 
                 $.each(fas, function(index, fa) {
@@ -232,6 +234,10 @@ dbkjs.modules.gms = {
                         }
                     }
                 });
+
+                if(dbk) {
+                    return false;
+                }
             });
 
             if(dbk) {
