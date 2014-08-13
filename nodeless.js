@@ -1,8 +1,8 @@
 /**
  *  Copyright (c) 2014 B3Partners B.V. (info@b3partners.nl)
- * 
+ *
  *  This file is part of safetymapDBK
- *  
+ *
  *  safetymapDBK is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -166,6 +166,8 @@ dbk.getOrganisation(
 }
 );
 
+var totalVerdiepingen = 0;
+
 console.log("Create api/features.json...");
 fs.mkdirSync(outDir + '/api/object');
 dbk.getFeatures(
@@ -183,26 +185,49 @@ dbk.getFeatures(
             var feature = features.features[i];
 
             if(feature.properties.identificatie) {
-                var filename = outDir + '/api/object/' + feature.properties.identificatie + '.json';
 
-                var writeDbkObject = function(filename, identificatie) {
-                    var req = {
+                var writeDbkObject = function(identificatie) {
+                    function req(identif) {
+                        return {
                             query: { srid: 28992 },
-                            params: { id: identificatie }
-                    };
+                            params: { id: identif }
+                        };
+                    }
 
-                    dbk.getObject(req, { json:
+                    var writeDbkJson = function(json) {
+                        var filename = outDir + '/api/object/' + json.DBKObject.identificatie + '.json';
+                        fs.writeFile(filename, JSON.stringify(json), function(err) {
+                            objectsToBeWritten--;
+                            if(err) throw err;
+                        });
+                    }
+                    dbk.getObject(req(identificatie), { json:
                         function(json) {
+
                             // XXX can't detect error...
-                            fs.writeFile(filename, JSON.stringify(json), function(err) {
-                                objectsToBeWritten--;
-                                if(err) throw err;
-                            });
+                            writeDbkJson(json);
+
+                            // export verdiepingen
+                            if(json.DBKObject.verdiepingen) {
+                                for(var i in json.DBKObject.verdiepingen) {
+                                    var verdieping = json.DBKObject.verdiepingen[i];
+                                    if(verdieping.identificatie !== json.DBKObject.identificatie) {
+                                        objectsToBeWritten++;
+                                        totalVerdiepingen++;
+
+                                        dbk.getObject(req(verdieping.identificatie), { json:
+                                            function(json) {
+                                                writeDbkJson(json);
+                                            }
+                                        });
+                                    }
+                                }
+                            }
                         }
                     });
                 }
 
-                writeDbkObject(filename, feature.properties.identificatie);
+                writeDbkObject(feature.properties.identificatie);
 
             } else {
                 console.log("Error: feature has no identificatie property", feature);
@@ -227,6 +252,9 @@ function copyDeploy() {
 }
 function check() {
     if (organisationsDone && featuresDone && (objectsToBeWritten !== null && objectsToBeWritten === 0)) {
+        if(totalVerdiepingen !== 0) {
+            console.log("Verdiepingen: " + totalVerdiepingen);
+        }
         copyDeploy();
         console.log("Done");
         process.exit(0);

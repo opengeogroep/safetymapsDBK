@@ -189,7 +189,7 @@ dbkjs.protocol.jsonDBK = {
             }
         });
     },
-    info: function(data) {
+    info: function(data, noZoom) {
         var _obj = dbkjs.protocol.jsonDBK;
         var objecttype = "object";
         if (data.DBKObject || data.DBKGebied) {
@@ -344,7 +344,7 @@ dbkjs.protocol.jsonDBK = {
                 _obj.activateSelect(_obj.layerTekstobject);
             }
 
-            if(dbkjs.options.zoomToPandgeometrie) {
+            if(!noZoom && dbkjs.options.zoomToPandgeometrie) {
                 dbkjs.modules.feature.zoomToPandgeometrie();
             }
 
@@ -634,7 +634,10 @@ dbkjs.protocol.jsonDBK = {
                             '<td>' + waarde.bouwlaag + sterretje +'</td>' +
                             '</tr>');
                         myrow.click(function(){
-                            _obj.getObject(waarde.identificatie, 'verdiepingen');
+                            _obj.getObject(waarde.identificatie, 'verdiepingen', true);
+                            if(dbkjs.viewmode === 'fullscreen') {
+                                dbkjs.util.getModalPopup('dbkinfopanel').hide();
+                            }
                         });
                 } else {
                     //No hyperlink, current object
@@ -810,7 +813,7 @@ dbkjs.protocol.jsonDBK = {
             _obj.panel_tabs.append('<li><a data-toggle="tab" href="#' + id + '">'+ i18n.t('dbk.tarry')+ '</a></li>');
         }
     },
-    getObject: function(feature, activetab) {
+    getObject: function(feature, activetab, noZoom) {
         var _obj = dbkjs.protocol.jsonDBK;
         if(activetab){
          _obj.active_tab = activetab;
@@ -831,7 +834,7 @@ dbkjs.protocol.jsonDBK = {
             fid = feature;
         }
         $.getJSON('api/object/' + fid + '.json', params).done(function(data) {
-                dbkjs.protocol.jsonDBK.info(data);
+                dbkjs.protocol.jsonDBK.info(data, noZoom);
             }).fail(function( jqxhr, textStatus, error ) {
                 dbkjs.options.feature = null;
                 dbkjs.util.alert(i18n.t('app.error'), i18n.t('dialogs.infoNotFound'), 'alert-danger');
