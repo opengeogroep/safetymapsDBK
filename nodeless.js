@@ -234,7 +234,7 @@ if(!skipObjects) {
                                 }
                             }
                         });
-                    }
+                    };
 
                     writeDbkObject(feature.properties.identificatie);
 
