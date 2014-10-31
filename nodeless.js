@@ -168,77 +168,90 @@ dbk.getOrganisation(
 
 var totalVerdiepingen = 0;
 
-console.log("Create api/features.json...");
-fs.mkdirSync(outDir + '/api/object');
-dbk.getFeatures(
-    { query: { srid: 28992 } },
-    { json: function(json) {
-        var features = json;
-        fs.writeFileSync(outDir + '/api/features.json', JSON.stringify(features));
+var skipObjects = false;
 
-        // write all /api/object/:id.json files
+process.argv.slice(2).forEach(function(val, index, array) {
+    if(val === "--skip-objects") {
+        skipObjects = true;
+    }
+});
 
-        objectsToBeWritten = features.features.length;
-        console.log("DBK objects: " + objectsToBeWritten);
+if(!skipObjects) {
+    console.log("Create api/features.json...");
+    fs.mkdirSync(outDir + '/api/object');
+    dbk.getFeatures(
+        { query: { srid: 28992 } },
+        { json: function(json) {
+            var features = json;
+            fs.writeFileSync(outDir + '/api/features.json', JSON.stringify(features));
 
-        for(var i in features.features) {
-            var feature = features.features[i];
+            // write all /api/object/:id.json files
 
-            if(feature.properties.identificatie) {
+            objectsToBeWritten = features.features.length;
+            console.log("DBK objects: " + objectsToBeWritten);
 
-                var writeDbkObject = function(identificatie) {
-                    function req(identif) {
-                        return {
-                            query: { srid: 28992 },
-                            params: { id: identif }
-                        };
-                    }
+            for(var i in features.features) {
+                var feature = features.features[i];
 
-                    var writeDbkJson = function(json) {
-                        var filename = outDir + '/api/object/' + json.DBKObject.identificatie + '.json';
-                        fs.writeFile(filename, JSON.stringify(json), function(err) {
-                            objectsToBeWritten--;
-                            if(err) throw err;
-                        });
-                    }
-                    dbk.getObject(req(identificatie), { json:
-                        function(json) {
+                if(feature.properties.identificatie) {
 
-                            // XXX can't detect error...
-                            writeDbkJson(json);
+                    var writeDbkObject = function(identificatie) {
+                        function req(identif) {
+                            return {
+                                query: { srid: 28992 },
+                                params: { id: identif }
+                            };
+                        }
 
-                            // export verdiepingen
-                            if(json.DBKObject.verdiepingen) {
-                                for(var i in json.DBKObject.verdiepingen) {
-                                    var verdieping = json.DBKObject.verdiepingen[i];
-                                    if(verdieping.identificatie !== json.DBKObject.identificatie) {
-                                        objectsToBeWritten++;
-                                        totalVerdiepingen++;
+                        var writeDbkJson = function(json) {
+                            var filename = outDir + '/api/object/' + json.DBKObject.identificatie + '.json';
+                            fs.writeFile(filename, JSON.stringify(json), function(err) {
+                                objectsToBeWritten--;
+                                if(err) throw err;
+                            });
+                        }
+                        dbk.getObject(req(identificatie), { json:
+                            function(json) {
 
-                                        dbk.getObject(req(verdieping.identificatie), { json:
-                                            function(json) {
-                                                writeDbkJson(json);
-                                            }
-                                        });
+                                // XXX can't detect error...
+                                writeDbkJson(json);
+
+                                // export verdiepingen
+                                if(json.DBKObject.verdiepingen) {
+                                    for(var i in json.DBKObject.verdiepingen) {
+                                        var verdieping = json.DBKObject.verdiepingen[i];
+                                        if(verdieping.identificatie !== json.DBKObject.identificatie) {
+                                            objectsToBeWritten++;
+                                            totalVerdiepingen++;
+
+                                            dbk.getObject(req(verdieping.identificatie), { json:
+                                                function(json) {
+                                                    writeDbkJson(json);
+                                                }
+                                            });
+                                        }
                                     }
                                 }
                             }
-                        }
-                    });
+                        });
+                    }
+
+                    writeDbkObject(feature.properties.identificatie);
+
+                } else {
+                    console.log("Error: feature has no identificatie property", feature);
+                    objectstoBeWritten--;
                 }
-
-                writeDbkObject(feature.properties.identificatie);
-
-            } else {
-                console.log("Error: feature has no identificatie property", feature);
-                objectstoBeWritten--;
             }
-        }
 
-        featuresDone = true;
+            featuresDone = true;
+        }
     }
+    );
+} else {
+    featuresDone = true;
+    objectsToBeWritten = 0;
 }
-);
 
 // Ignore /api/gebied/ for now
 
