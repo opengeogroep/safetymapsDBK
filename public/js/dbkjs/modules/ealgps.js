@@ -26,7 +26,10 @@ dbkjs.modules.ealgps = {
     gps: null,
     markers: null,
     gpsMarker: null,
+    debug: null,
     register: function(options) {
+        this.debug = !!dbkjs.options.ealgpsDebug;
+
         var _obj = dbkjs.modules.ealgps;
         $('<a></a>')
             .attr({
@@ -61,16 +64,16 @@ dbkjs.modules.ealgps = {
                     var oldLatLon = me.gps && me.gps.Gps ? me.gps.Gps.Latitude + "," + me.gps.Gps.Longitude : null;
                     me.gps = jqXHR.responseJSON.EAL2OGG;
                     if(me.gps.Sequence !== oldSequence) {
-                        console.log("New GPS data sequence = " + me.gps.Sequence);
+                        if(me.debug) console.log("New GPS data sequence = " + me.gps.Sequence);
                         if(me.gps.Gps.Validity !== "1") {
-                            console.log("No valid GPS fix");
+                            if(me.debug) console.log("No valid GPS fix");
                             if(me.gpsMarker) {
                                 me.markers.removeMarker(me.gpsMarker);
                             }
                             $("#btn_ealgps").attr('style', 'color: gray');
                         } else {
                             if(oldLatLon === null || me.gps.Gps.Latitude + "," + me.gps.Gps.Longitude !== oldLatLon) {
-                                console.log("New or updated position at lat/lon " + me.gps.Gps.Latitude + "," + me.gps.Gps.Longitude);
+                                if(me.debug) console.log("New or updated position at lon/lon " + me.gps.Gps.Longitude + "," + me.gps.Gps.Latitude);
                                 if(me.gpsMarker) {
                                     me.markers.removeMarker(me.gpsMarker);
                                 }
@@ -81,7 +84,7 @@ dbkjs.modules.ealgps = {
                         }
                     }
                 } else if(textStatus !== "notmodified") {
-                    me.error = "Fout bij het ophalen van de informatie: " + jqXHR.statusText;
+                    if(me.debug) console.log("Fout bij het ophalen van EAL GPS info: " + jqXHR.statusText);
                     me.gps = null;
                 }
 
@@ -94,13 +97,11 @@ dbkjs.modules.ealgps = {
     reprojectToOpenLayersLonLat: function() {
         var me = this;
         var lon = me.gps.Gps.Longitude, lat = me.gps.Gps.Latitude;
-        lon = 7823868;
-        lat = 91013992;
         if(dbkjs.options.ealgpsProjection && dbkjs.options.ealgpsProjection !== dbkjs.options.projection.code) {
-            console.log("Reprojecting eal GPS lon/lat from " + lon + "," + lat + " (" + dbkjs.options.ealgpsProjection + ") to " + dbkjs.options.projection.code);
+            if(me.debug) console.log("Reprojecting eal GPS lon/lat from " + lon + "," + lat + " (" + dbkjs.options.ealgpsProjection + ") to " + dbkjs.options.projection.code);
             var p = new Proj4js.Point(lon, lat);
             var t = Proj4js.transform(new Proj4js.Proj(dbkjs.options.ealgpsProjection), new Proj4js.Proj(dbkjs.options.projection.code), p);
-            console.log("Reprojected coordinates: " + t.x + "," + t.y);
+            if(me.debug) console.log("Reprojected coordinates: " + t.x + "," + t.y);
             lon = t.x;
             lat = t.y;
         }
