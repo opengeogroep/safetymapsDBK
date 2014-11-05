@@ -166,7 +166,7 @@ dbk.getOrganisation(
 }
 );
 
-var totalVerdiepingen = 0, totalGebieden = 0;
+var totalVerdiepingen = 0;
 
 var skipObjects = false;
 
@@ -179,6 +179,7 @@ process.argv.slice(2).forEach(function(val, index, array) {
 if(!skipObjects) {
     console.log("Create api/features.json...");
     fs.mkdirSync(outDir + '/api/object');
+    fs.mkdirSync(outDir + '/api/gebied');
     dbk.getFeatures(
         { query: { srid: 28992 } },
         { json: function(json) {
@@ -209,9 +210,12 @@ if(!skipObjects) {
                                 objectsToBeWritten--;
                                 return;
                             }
-                            var filename = outDir + '/api/object/'
-                                    + (json.hasOwnProperty("DBKObject") ? json.DBKObject.identificatie : json.DBKGebied.identificatie)
-                                    + '.json';
+                            var filename;
+                            if(json.DBKObject) {
+                                filename = outDir + '/api/object/' + json.DBKObject.identificatie + '.json';
+                            } else {
+                                filename = outDir + '/api/gebied/' + json.DBKGebied.identificatie + '.json';
+                            }
                             fs.writeFile(filename, JSON.stringify(json), function(err) {
                                 objectsToBeWritten--;
                                 if(err) throw err;
@@ -222,7 +226,6 @@ if(!skipObjects) {
                         if(feature.properties.typeFeature === "Object") {
                             getFunction = dbk.getObject;
                         } else {
-                            totalGebieden++;
                             getFunction = dbk.getGebied;
                         }
 
@@ -288,9 +291,6 @@ function check() {
     if (organisationsDone && featuresDone && (objectsToBeWritten !== null && objectsToBeWritten === 0)) {
         if(totalVerdiepingen !== 0) {
             console.log("Verdiepingen: " + totalVerdiepingen);
-        }
-        if(totalGebieden !== 0) {
-            console.log("Gebieden: " + totalGebieden);
         }
         copyDeploy();
         console.log("Done");
