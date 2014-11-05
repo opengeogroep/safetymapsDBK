@@ -97,6 +97,11 @@ dbkjs.modules.ealgps = {
     reprojectToOpenLayersLonLat: function() {
         var me = this;
         var lon = me.gps.Gps.Longitude, lat = me.gps.Gps.Latitude;
+
+        // Converteer van radialen naar graden
+        lon = (lon / (3.14159265359 / 180)) / 100000000;
+        lat = (lat / (3.14159265359 / 180)) / 100000000;
+
         if(dbkjs.options.ealgpsProjection && dbkjs.options.ealgpsProjection !== dbkjs.options.projection.code) {
             if(me.debug) console.log("Reprojecting eal GPS lon/lat from " + lon + "," + lat + " (" + dbkjs.options.ealgpsProjection + ") to " + dbkjs.options.projection.code);
             var p = new Proj4js.Point(lon, lat);
