@@ -1,8 +1,8 @@
 /**
  *  Copyright (c) 2014 Milo van der Linden (milo@dogodigi.net)
- * 
+ *
  *  This file is part of safetymapDBK
- *  
+ *
  *  safetymapDBK is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -43,9 +43,9 @@ exports.getOrganisation = function(req, res) {
 exports.postAnnotation = function(req, res) {
     var point = 'POINT(' + parseFloat(req.body.geometry.coordinates[0]) + ' '+ parseFloat(req.body.geometry.coordinates[1]) + ')';
     console.log(point);
-    var query_str = 'insert into organisation.annotation (subject, name, email, '+ 
-        'municipality, place, address, phone, remarks, permalink, the_geom) values ($1, $2, $3, $4, $5, $6, $7, $8, ST_transform(ST_PointFromText($9, $10),4326))';
-    global.pool.query(query_str, [req.body.subject, req.body.name, req.body.email, 
+    var query_str = 'insert into organisation.annotation (subject, name, email, '+
+        'municipality, place, address, phone, remarks, permalink, the_geom) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, ST_transform(ST_PointFromText($10, $11),4326))';
+    global.pool.query(query_str, [req.body.subject, req.body.name, req.body.email,
         req.body.municipality, req.body.place, req.body.address, req.body.phone, req.body.remarks, req.body.permalink, point, req.body.srid],
         function(err, result){
             if(err) {
@@ -56,7 +56,7 @@ exports.postAnnotation = function(req, res) {
             return;
         }
     );
-    
+
 };
 
 exports.getObject = function(req, res) {
@@ -116,7 +116,7 @@ exports.getFeatures = function(req, res) {
                     res.json(err);
                 } else {
                     var resultset = {"type": "FeatureCollection", "features": []};
-                    
+
                     for (index = 0; index < result.rows.length; ++index) {
                         var item = {type: 'Feature', id: 'DBKFeature.gid--' + result.rows[index].feature.gid};
                         item.geometry = result.rows[index].feature.geometry;
