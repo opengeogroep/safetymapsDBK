@@ -120,27 +120,45 @@ dbkjs.protocol.jsonDBK = {
         });
     },
     getfeatureinfo: function(e){
-        if(e.feature.layer.name !== 'Gevaarlijke stoffen' && e.feature.layer.name !== 'Brandweervoorziening') {
-            return;
-        }
         $('#vectorclickpanel_h').html('<span class="h4"><i class="icon-info-sign">&nbsp;' + e.feature.layer.name + '</span>');
-        var html = $('<div class="table-responsive"></div>'),
-            table = '';
-        if(e.feature.layer.name === 'Gevaarlijke stoffen') {
-            table = dbkjs.protocol.jsonDBK.constructGevaarlijkestofHeader();
-            table.append(dbkjs.protocol.jsonDBK.constructGevaarlijkestofRow(e.feature.attributes));
+
+        if(e.feature.layer.name === 'Gevaarlijke stoffen' || e.feature.layer.name === 'Brandweervoorziening') {
+            var html = $('<div class="table-responsive"></div>'),
+                table = '';
+            if(e.feature.layer.name === 'Gevaarlijke stoffen') {
+                table = dbkjs.protocol.jsonDBK.constructGevaarlijkestofHeader();
+                table.append(dbkjs.protocol.jsonDBK.constructGevaarlijkestofRow(e.feature.attributes));
+                html.append(table);
+            }
+            if(e.feature.layer.name === 'Brandweervoorziening') {
+                table = dbkjs.protocol.jsonDBK.constructBrandweervoorzieningHeader();
+                table.append(dbkjs.protocol.jsonDBK.constructBrandweervoorzieningRow(e.feature.attributes));
+            }
             html.append(table);
+            $('#vectorclickpanel_b').html('').append(html);
+            if(dbkjs.viewmode === 'fullscreen') {
+                $('#vectorclickpanel').show().on('click', function() {
+                    dbkjs.selectControl.unselectAll();
+                    $('#vectorclickpanel').hide();
+                });
+            }
+        } else {
+            // Generic attribute table
+            html = '<div class="table-responsive">';
+                html += '<table class="table table-hover">';
+                for (var j in e.feature.attributes) {
+                    //if ($.inArray(j, ['Omschrijving', 'GEVIcode', 'UNnr', 'Hoeveelheid', 'NaamStof']) > -1) {
+                        if (!dbkjs.util.isJsonNull(e.feature.attributes[j])) {
+                            html += '<tr><td><span>' + j + "</span>: </td><td>" + e.feature.attributes[j] + "</td></tr>";
+                        }
+                    //}
+                }
+                html += "</table>";
+            html += '</div>';
+            //dbkjs.util.appendTab(dbkjs.wms_panel.attr("id"),'Brandcompartiment',html, true, 'br_comp_tab');
+            $('#vectorclickpanel_b').html(html);
+            $('#vectorclickpanel').show();
         }
-        if(e.feature.layer.name === 'Brandweervoorziening') {
-            table = dbkjs.protocol.jsonDBK.constructBrandweervoorzieningHeader();
-            table.append(dbkjs.protocol.jsonDBK.constructBrandweervoorzieningRow(e.feature.attributes));
-        }
-        html.append(table);
-        //dbkjs.util.appendTab(dbkjs.wms_panel.attr("id"),'Brandcompartiment',html, true, 'br_comp_tab');
-        $('#vectorclickpanel_b').html('').append(html);
-        $('#vectorclickpanel').show().on('click', function() {
-            $('#vectorclickpanel').hide();
-        });
     },
     process: function(feature) {
         $('#infopanel_f').html('');
@@ -581,7 +599,6 @@ dbkjs.protocol.jsonDBK = {
                 '</tr>');
     },
     constructGevaarlijkestof: function(gevaarlijkestof){
-        console.log(gevaarlijkestof);
         var _obj = dbkjs.protocol.jsonDBK;
         if(gevaarlijkestof){
             var id = 'collapse_gevaarlijkestof_' + dbkjs.options.feature.identificatie;

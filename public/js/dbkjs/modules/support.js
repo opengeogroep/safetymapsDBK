@@ -1,8 +1,8 @@
 /*!
  *  Copyright (c) 2014 Milo van der Linden (milo@dogodigi.net)
- * 
+ *
  *  This file is part of safetymapDBK
- *  
+ *
  *  safetymapDBK is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -35,8 +35,10 @@ dbkjs.modules.support = {
                     '</div>');
             var supportpanel = dbkjs.util.createDialog('supportpanel', '<i class="icon-envelope-alt"></i> ' + dbkjs.options.organisation.support.button, 'bottom:0;left:0;');
             $('body').append(supportpanel);
-            $('.dialog').drags({handle: '.panel-heading'});
-            $('.btn-group').drags({handle: '.drag-handle'});
+            if(dbkjs.viewmode !== 'fullscreen') {
+                $('.dialog').drags({handle: '.panel-heading'});
+                $('.btn-group').drags({handle: '.drag-handle'});
+            }
             // Foutknop //
 //            var reciever = 'mailto:' + dbkjs.options.organisation.support.mail;
 //            var subject = 'subject=' + dbkjs.options.APPLICATION + ' Melding' + dbkjs.options.VERSION + ' (' + dbkjs.options.RELEASEDATE + ')';
@@ -51,12 +53,12 @@ dbkjs.modules.support = {
                 dbkjs.map.raiseLayer(_obj.layer, dbkjs.map.layers.length);
                 var center = dbkjs.map.getCenter();
                 var feature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(center.lon, center.lat),
-                    {some:'data'}, 
+                    {some:'data'},
                     {externalGraphic: 'images/marker-red.png', graphicHeight:35, graphicWidth:30}
                 );
                 _obj.feature = feature;
                 _obj.layer.addFeatures(feature);
-                _obj.drag = new OpenLayers.Control.DragFeature(_obj.layer,{    
+                _obj.drag = new OpenLayers.Control.DragFeature(_obj.layer,{
                     'onDrag':function(feature, pixel){
                         _obj.feature = feature;
                     }
@@ -70,7 +72,7 @@ dbkjs.modules.support = {
                     if ($.inArray(layer.name, ['hulplijn1', 'hulplijn2', 'Feature', 'Support']) === -1) {
                         //layername mag niet beginnen met OpenLayers_
                         if(layer.name.substring(0,11) !== "OpenLayers_"){
-                            layerarray.push(layer.name); 
+                            layerarray.push(layer.name);
                         }
                     }
                 });
@@ -108,7 +110,7 @@ dbkjs.modules.support = {
                     var isValid = true;
                     var data = {};
                     $('#support-form').find('input, textarea, select').each(function(i, field) {
-                        
+
                         if($(field).hasClass("required") && field.value === ""){
                             isValid = false;
                             $(field).addClass("has-error");
@@ -136,7 +138,7 @@ dbkjs.modules.support = {
                                 _obj.drag.deactivate();
                                 dbkjs.map.removeControl(_obj.drag);
                                 dbkjs.hoverControl.activate();
-                                dbkjs.selectControl.activate()                            
+                                dbkjs.selectControl.activate()
                             }
                         });
                         _obj.layer.destroyFeatures();
