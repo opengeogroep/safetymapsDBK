@@ -91,7 +91,7 @@ dbkjs.modules.support = {
                 p.append(adres_input);
                 var gemeente_input = $('<div class="form-group"><label for="municipality">Gemeente</label><input id="municipality" name="municipality" type="text" class="form-control" placeholder="Gemeente"></div>');
                 p.append(gemeente_input);
-                var plaats_input = $('<div class="form-group"><label for="place">PLaats</label><input id="place" name="municipality" type="text" class="form-control" placeholder="Plaats"></div>');
+                var plaats_input = $('<div class="form-group"><label for="place">Plaats</label><input id="place" name="municipality" type="text" class="form-control" placeholder="Plaats"></div>');
                 p.append(plaats_input);
                 var user_input = $('<div class="form-group"><label for="name">Naam melder *</label><input id="name" name="name" type="text" class="form-control required" placeholder="Naam melder"></div>');
                 p.append(user_input);
@@ -127,9 +127,12 @@ dbkjs.modules.support = {
                         var geoJSON = new OpenLayers.Format.GeoJSON();
                         data.geometry = JSON.parse(geoJSON.write(_obj.feature.geometry));
                         data.srid = dbkjs.options.projection.srid;
+                        var url = (dbkjs.options.urls && dbkjs.options.urls.annotation
+                            ? dbkjs.options.urls.annotation
+                            : dbkjs.basePath + 'api/annotation/');
                         jQuery.ajax({
                             type: "POST",
-                            url: "/api/annotation",
+                            url: url,
                             dataType: "html",
                             data: data,
                             success: function (result) {
