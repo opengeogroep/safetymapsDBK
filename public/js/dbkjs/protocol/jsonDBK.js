@@ -120,21 +120,27 @@ dbkjs.protocol.jsonDBK = {
         });
     },
     getfeatureinfo: function(e){
+        if(e.feature.layer.name !== 'Gevaarlijke stoffen' && e.feature.layer.name !== 'Brandweervoorziening') {
+            return;
+        }
         $('#vectorclickpanel_h').html('<span class="h4"><i class="icon-info-sign">&nbsp;' + e.feature.layer.name + '</span>');
-        html = '<div class="table-responsive">';
-            html += '<table class="table table-hover">';
-            for (var j in e.feature.attributes) {
-                //if ($.inArray(j, ['Omschrijving', 'GEVIcode', 'UNnr', 'Hoeveelheid', 'NaamStof']) > -1) {
-                    if (!dbkjs.util.isJsonNull(e.feature.attributes[j])) {
-                        html += '<tr><td><span>' + j + "</span>: </td><td>" + e.feature.attributes[j] + "</td></tr>";
-                    }
-                //}
-            }
-            html += "</table>";
-        html += '</div>';
+        var html = $('<div class="table-responsive"></div>'),
+            table = '';
+        if(e.feature.layer.name === 'Gevaarlijke stoffen') {
+            table = dbkjs.protocol.jsonDBK.constructGevaarlijkestofHeader();
+            table.append(dbkjs.protocol.jsonDBK.constructGevaarlijkestofRow(e.feature.attributes));
+            html.append(table);
+        }
+        if(e.feature.layer.name === 'Brandweervoorziening') {
+            table = dbkjs.protocol.jsonDBK.constructBrandweervoorzieningHeader();
+            table.append(dbkjs.protocol.jsonDBK.constructBrandweervoorzieningRow(e.feature.attributes));
+        }
+        html.append(table);
         //dbkjs.util.appendTab(dbkjs.wms_panel.attr("id"),'Brandcompartiment',html, true, 'br_comp_tab');
-        $('#vectorclickpanel_b').html(html);
-        $('#vectorclickpanel').show();
+        $('#vectorclickpanel_b').html('').append(html);
+        $('#vectorclickpanel').show().on('click', function() {
+            $('#vectorclickpanel').hide();
+        });
     },
     process: function(feature) {
         $('#infopanel_f').html('');
@@ -523,11 +529,7 @@ dbkjs.protocol.jsonDBK = {
             var id = 'collapse_brandweervoorziening_' + dbkjs.options.feature.identificatie;
             var bv_div = $('<div class="tab-pane" id="' + id + '"></div>');
             var bv_table_div = $('<div class="table-responsive"></div>');
-            var bv_table = $('<table class="table table-hover"></table>');
-            bv_table.append('<tr><th>' +
-                    i18n.t('prevention.type') + '</th><th>' +
-                    i18n.t('prevention.name') + '</th><th>' +
-                    i18n.t('prevention.comment') + '</th></tr>');
+            var bv_table = _obj.constructBrandweervoorzieningHeader();
             var features = [];
             $.each(brandweervoorziening, function(idx, myGeometry){
                 var myFeature = new OpenLayers.Feature.Vector(new OpenLayers.Format.GeoJSON().read(myGeometry.geometry, "Geometry"));
@@ -541,14 +543,7 @@ dbkjs.protocol.jsonDBK = {
                     "radius": myGeometry.radius,
                     "fid": "brandweervoorziening_ft_" + idx
                 };
-                var myrow = $('<tr>' +
-                        '<td><img class="thumb" src="' + dbkjs.basePath + "images/" + myFeature.attributes.namespace + '/' +
-                            myFeature.attributes.type + '.png" alt="'+
-                            myFeature.attributes.type +'" title="'+
-                            myFeature.attributes.type+'"></td>' +
-                        '<td>' + myFeature.attributes.name + '</td>' +
-                        '<td>' + myFeature.attributes.information + '</td>'
-                        + '</tr>');
+                var myrow = _obj.constructBrandweervoorzieningRow(myFeature.attributes);
                 myrow.mouseover(function(){
                     dbkjs.selectControl.select(myFeature);
                 });
@@ -567,19 +562,32 @@ dbkjs.protocol.jsonDBK = {
             _obj.panel_tabs.append('<li><a data-toggle="tab" href="#' + id + '">'+ i18n.t('dbk.prevention')+ '</a></li>');
         }
     },
+    constructBrandweervoorzieningHeader: function() {
+        var bv_table = $('<table class="table table-hover"></table>');
+            bv_table.append('<tr><th>' +
+                    i18n.t('prevention.type') + '</th><th>' +
+                    i18n.t('prevention.name') + '</th><th>' +
+                    i18n.t('prevention.comment') + '</th></tr>');
+        return bv_table;
+    },
+    constructBrandweervoorzieningRow: function(brandweervoorziening) {
+        return $('<tr>' +
+                    '<td><img class="thumb" src="' + dbkjs.basePath + "images/" + brandweervoorziening.namespace + '/' +
+                        brandweervoorziening.type + '.png" alt="'+
+                        brandweervoorziening.type +'" title="'+
+                        brandweervoorziening.type+'"></td>' +
+                    '<td>' + brandweervoorziening.name + '</td>' +
+                    '<td>' + brandweervoorziening.information + '</td>' +
+                '</tr>');
+    },
     constructGevaarlijkestof: function(gevaarlijkestof){
+        console.log(gevaarlijkestof);
         var _obj = dbkjs.protocol.jsonDBK;
         if(gevaarlijkestof){
             var id = 'collapse_gevaarlijkestof_' + dbkjs.options.feature.identificatie;
             var bv_div = $('<div class="tab-pane" id="' + id + '"></div>');
             var bv_table_div = $('<div class="table-responsive"></div>');
-            var bv_table = $('<table class="table table-hover"></table>');
-            bv_table.append('<tr><th>' +
-                i18n.t('chemicals.type') + '</th><th>' +
-                i18n.t('chemicals.indication') + '</th><th>' +
-                i18n.t('chemicals.name') + '</th><th>' +
-                i18n.t('chemicals.quantity') + '</th><th>' +
-                i18n.t('chemicals.information') + '</th></tr>');
+            var bv_table = _obj.constructGevaarlijkestofHeader();
             var features = [];
              $.each(gevaarlijkestof, function(idx, myGeometry){
                 var myFeature = new OpenLayers.Feature.Vector(new OpenLayers.Format.GeoJSON().read(myGeometry.geometry, "Geometry"));
@@ -593,19 +601,7 @@ dbkjs.protocol.jsonDBK = {
                     "unnumber": myGeometry.UNnummer,
                     "fid": "gevaarlijkestof_ft_" + idx
                 };
-                var myrow = $('<tr>' +
-                        '<td><img class="thumb" src="' + dbkjs.basePath + 'images/' + myFeature.attributes.namespace + '/' +
-                            myFeature.attributes.type + '.png" alt="'+
-                            myFeature.attributes.type +'" title="'+
-                            myFeature.attributes.type+'"></td>' +
-                        '<td>' + '<div class="gevicode">' + myFeature.attributes.indication +
-                            '</div><div class="unnummer">' +
-                            myFeature.attributes.unnumber + '</div>' + '</td>' +
-                        '<td>' + myFeature.attributes.name + '</td>' +
-                        '<td>' + myFeature.attributes.quantity + '</td>' +
-
-                        '<td>' + myFeature.attributes.information + '</td>' +
-                        '</tr>');
+                var myrow = _obj.constructGevaarlijkestofRow(myFeature.attributes);
                 myrow.mouseover(function(){
                     dbkjs.selectControl.select(myFeature);
                 });
@@ -622,6 +618,31 @@ dbkjs.protocol.jsonDBK = {
             _obj.panel_group.append(bv_div);
             _obj.panel_tabs.append('<li><a data-toggle="tab" href="#' + id + '">'+ i18n.t('dbk.chemicals')+ '</a></li>');
         }
+    },
+    constructGevaarlijkestofHeader: function() {
+        var bv_table = $('<table class="table table-hover"></table>');
+            bv_table.append('<tr><th>' +
+                i18n.t('chemicals.type') + '</th><th>' +
+                i18n.t('chemicals.indication') + '</th><th>' +
+                i18n.t('chemicals.name') + '</th><th>' +
+                i18n.t('chemicals.quantity') + '</th><th>' +
+                i18n.t('chemicals.information') + '</th></tr>');
+        return bv_table;
+    },
+    constructGevaarlijkestofRow: function(gevaarlijkestof) {
+        return $('<tr>' +
+            '<td><img class="thumb" src="' + dbkjs.basePath + 'images/' + gevaarlijkestof.namespace + '/' +
+                gevaarlijkestof.type + '.png" alt="'+
+                gevaarlijkestof.type +'" title="'+
+                gevaarlijkestof.type+'"></td>' +
+            '<td>' + '<div class="gevicode">' + gevaarlijkestof.indication +
+                '</div><div class="unnummer">' +
+                gevaarlijkestof.unnumber + '</div>' + '</td>' +
+            '<td>' + gevaarlijkestof.name + '</td>' +
+            '<td>' + gevaarlijkestof.quantity + '</td>' +
+
+            '<td>' + gevaarlijkestof.information + '</td>' +
+            '</tr>');
     },
     constructFloors: function(verdiepingen) {
         var _obj = dbkjs.protocol.jsonDBK;
