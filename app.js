@@ -1,8 +1,8 @@
 /**
  *  Copyright (c) 2014 Milo van der Linden (milo@dogodigi.net)
- * 
+ *
  *  This file is part of safetymapDBK
- *  
+ *
  *  safetymapDBK is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
  *  the Free Software Foundation, either version 3 of the License, or
@@ -60,17 +60,17 @@ i18n.init({
     saveMissing: true,
     debug: false
 });
-var dbURL = 'postgres://' + 
-        global.conf.get('database:user') + ':' + 
-        global.conf.get('database:password') + '@' + 
-        global.conf.get('database:host') + ':' + 
-        global.conf.get('database:port') + '/' + 
+var dbURL = 'postgres://' +
+        global.conf.get('database:user') + ':' +
+        global.conf.get('database:password') + '@' +
+        global.conf.get('database:host') + ':' +
+        global.conf.get('database:port') + '/' +
         global.conf.get('database:dbname');
-var bagURL = 'postgres://' + 
-        global.conf.get('bag:user') + ':' + 
-        global.conf.get('bag:password') + '@' + 
-        global.conf.get('bag:host') + ':' + 
-        global.conf.get('bag:port') + '/' + 
+var bagURL = 'postgres://' +
+        global.conf.get('bag:user') + ':' +
+        global.conf.get('bag:password') + '@' +
+        global.conf.get('bag:host') + ':' +
+        global.conf.get('bag:port') + '/' +
         global.conf.get('bag:dbname');
 
 global.pool = anyDB.createPool(dbURL, {min: 2, max: 20});
@@ -132,6 +132,7 @@ app.get('/', routes.index);
 app.get('/batch', emailer.annotationbulk);
 app.get('/api/object/:id.json', dbk.getObject);
 app.post('/api/annotation', dbk.postAnnotation);
+app.post('/api/annotation/mail', dbk.mailAnnotation);
 app.get('/api/gebied/:id.json', dbk.getGebied);
 app.get('/api/features.json', dbk.getFeatures);
 app.get('/api/bag/adres/:id', bag.getAdres);

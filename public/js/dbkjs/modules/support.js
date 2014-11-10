@@ -27,6 +27,20 @@ dbkjs.modules.support = {
         var _obj = dbkjs.modules.support;
         _obj.layer = new OpenLayers.Layer.Vector("Support");
         dbkjs.map.addLayer(_obj.layer);
+
+        var markerStyle = {externalGraphic: 'images/supportmarker.png', graphicHeight:32, graphicWidth:32, graphicXOffset: -16, graphicYOffset: -32};
+
+        var mark = dbkjs.util.getQueryVariable('mark');
+
+        if(mark) {
+            var coords = mark.split(",");
+            var feature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(coords[0], coords[1]),
+                {},
+                markerStyle
+            );
+            _obj.layer.addFeatures(feature);
+        }
+
         if (dbkjs.options.organisation.support) {
             $('body').append('<div id="foutknop" class="btn-group">' +
                     '<a class="btn btn-default navbar-btn">' +
@@ -50,11 +64,12 @@ dbkjs.modules.support = {
             $('#foutknop').click(function(){
                 dbkjs.hoverControl.deactivate();
                 dbkjs.selectControl.deactivate();
+                _obj.layer.destroyFeatures();
                 dbkjs.map.raiseLayer(_obj.layer, dbkjs.map.layers.length);
                 var center = dbkjs.map.getCenter();
                 var feature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(center.lon, center.lat),
                     {some:'data'},
-                    {externalGraphic: 'images/marker-red.png', graphicHeight:35, graphicWidth:30}
+                    markerStyle
                 );
                 _obj.feature = feature;
                 _obj.layer.addFeatures(feature);
@@ -82,17 +97,20 @@ dbkjs.modules.support = {
                 var laag_input = $('<div class="form-group"><label for="subject">Onderwerp</label></div>');
                 var select = $('<select name="subject" class="form-control" MULTIPLE></select>');
                 select.append('<option selected>Algemene melding</option>');
+                var ignoreLayers = ["GMS Marker", "GPS Marker", "search"];
                 $.each(layerarray, function(l_index, name) {
-                    select.append('<option>' + name + '</option>');
+                    if($.inArray(name, ignoreLayers) === -1) {
+                        select.append('<option>' + name + '</option>');
+                    }
                 });
                 laag_input.append(select);
                 p.append(laag_input);
                 var adres_input = $('<div class="form-group"><label for="address">Adres</label><input id="address" name="address" type="text" class="form-control" placeholder="Adres"></div>');
                 p.append(adres_input);
-                var gemeente_input = $('<div class="form-group"><label for="municipality">Gemeente</label><input id="municipality" name="municipality" type="text" class="form-control" placeholder="Gemeente"></div>');
-                p.append(gemeente_input);
-                var plaats_input = $('<div class="form-group"><label for="place">Plaats</label><input id="place" name="municipality" type="text" class="form-control" placeholder="Plaats"></div>');
-                p.append(plaats_input);
+                //var gemeente_input = $('<div class="form-group"><label for="municipality">Gemeente</label><input id="municipality" name="municipality" type="text" class="form-control" placeholder="Gemeente"></div>');
+                //p.append(gemeente_input);
+                //var plaats_input = $('<div class="form-group"><label for="place">Plaats</label><input id="place" name="municipality" type="text" class="form-control" placeholder="Plaats"></div>');
+                //p.append(plaats_input);
                 var user_input = $('<div class="form-group"><label for="name">Naam melder *</label><input id="name" name="name" type="text" class="form-control required" placeholder="Naam melder"></div>');
                 p.append(user_input);
                 var mail_input = $('<div class="form-group"><label for="email">E-mail *</label><input id="email" name="email" type="email" class="form-control required" placeholder="E-mail"></div>');
@@ -123,7 +141,7 @@ dbkjs.modules.support = {
                     }
                     else {
                         //add the permalink
-                        data.permalink = $('#permalink').attr('href');
+                        data.permalink = $('#permalink').attr('href') + "&mark=" + _obj.feature.geometry.x + "," + _obj.feature.geometry.y;
                         var geoJSON = new OpenLayers.Format.GeoJSON();
                         data.geometry = JSON.parse(geoJSON.write(_obj.feature.geometry));
                         data.srid = dbkjs.options.projection.srid;
