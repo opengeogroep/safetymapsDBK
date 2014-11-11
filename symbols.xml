@@ -319,6 +319,27 @@
         <categorie>preventief</categorie>
     </symbol>
     <symbol>
+        <gid>1055</gid>
+        <type>Falck18</type>
+        <naam>Open water deze zijde</naam>
+        <namespace>Other</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <gid>1056</gid>
+        <type>Falck19</type>
+        <naam>Bluswaterriool</naam>
+        <namespace>Other</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
+        <gid>1057</gid>
+        <type>Falck20</type>
+        <naam>Open water bereikbaar</naam>
+        <namespace>Other</namespace>
+        <categorie>preparatief</categorie>
+    </symbol>
+    <symbol>
         <gid>1015</gid>
         <type>Openwater</type>
         <naam>Open water</naam>
