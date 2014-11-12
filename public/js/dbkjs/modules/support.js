@@ -141,7 +141,15 @@ dbkjs.modules.support = {
                     }
                     else {
                         //add the permalink
-                        data.permalink = $('#permalink').attr('href') + "&mark=" + _obj.feature.geometry.x + "," + _obj.feature.geometry.y;
+                        data.permalink = $('#permalink').attr('href');
+                        var i = data.permalink.indexOf("#");
+                        var markParam = (data.permalink.indexOf("?") === -1 ? "?" : "&") + "mark=" + _obj.feature.geometry.x + "," + _obj.feature.geometry.y;
+                        if(i === -1) {
+                            data.permalink += markParam;
+                        } else {
+                            var hash = data.permalink.substring(i);
+                            data.permalink = data.permalink.substring(0,i) + markParam + hash;
+                        }
                         var geoJSON = new OpenLayers.Format.GeoJSON();
                         data.geometry = JSON.parse(geoJSON.write(_obj.feature.geometry));
                         data.srid = dbkjs.options.projection.srid;
