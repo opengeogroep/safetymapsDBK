@@ -160,9 +160,14 @@ dbkjs.protocol.jsonDBK = {
             $('#vectorclickpanel').show();
         }
     },
-    process: function(feature) {
-        $('#infopanel_f').html('');
-        if (feature && feature.attributes && feature.attributes.typeFeature) {
+    process: function(feature, onSuccess) {
+        if (!(feature && feature.attributes && feature.attributes.typeFeature)) {
+            return;
+        }
+
+        var mySuccess = function() {
+
+            $('#infopanel_f').html('');
             var title = "";
             if(feature.attributes.formeleNaam) {
                 title = feature.attributes.formeleNaam;
@@ -183,34 +188,42 @@ dbkjs.protocol.jsonDBK = {
                 .on('click', function() {
                     dbkjs.modules.feature.zoomToFeature(feature);
                 });
-            if (!dbkjs.options.feature || feature.id !== dbkjs.options.feature.id) {
-                if (!dbkjs.protocol.jsonDBK.processing) {
-                    if(dbkjs.viewmode == 'fullscreen') {
-                        dbkjs.util.getModalPopup('infopanel').hide();
-                        dbkjs.util.getModalPopup('dbkinfopanel').hide();
-                    } else {
-                        $('#infopanel').hide();
-                    }
-                    dbkjs.protocol.jsonDBK.processing = true;
-                    dbkjs.util.alert('<i class="icon-spinner icon-spin"></i>', i18n.t('dialogs.running'), 'alert-info');
-                        if(feature.attributes.typeFeature === 'Object'){
-                            dbkjs.protocol.jsonDBK.getObject(feature);
-                        } else if (feature.attributes.typeFeature === 'Gebied') {
-                            dbkjs.protocol.jsonDBK.getGebied(feature);
-                        }
-                }
-            } else {
-                //Check if processing is finished
-                if (!dbkjs.protocol.jsonDBK.processing) {
 
-                    if(dbkjs.viewmode === 'fullscreen') {
-                        $('#dbkinfopanel_b').html(dbkjs.options.feature.div);
-                    } else {
-                        $('#infopanel_b').html(dbkjs.options.feature.div);
-                        $('#infopanel_f').html('');
-                        $('#infopanel').show();
-                    }
+            if(onSuccess) {
+                onSuccess();
+            }
+        }
+
+        if (!dbkjs.options.feature || feature.id !== dbkjs.options.feature.id) {
+            if (!dbkjs.protocol.jsonDBK.processing) {
+                if(dbkjs.viewmode == 'fullscreen') {
+                    dbkjs.util.getModalPopup('infopanel').hide();
+                    dbkjs.util.getModalPopup('dbkinfopanel').hide();
+                } else {
+                    $('#infopanel').hide();
                 }
+                dbkjs.protocol.jsonDBK.processing = true;
+                dbkjs.util.alert('<i class="icon-spinner icon-spin"></i>', i18n.t('dialogs.running'), 'alert-info');
+                    if(feature.attributes.typeFeature === 'Object'){
+                        dbkjs.protocol.jsonDBK.getObject(feature, null, false, mySuccess);
+                    } else if (feature.attributes.typeFeature === 'Gebied') {
+                        dbkjs.protocol.jsonDBK.getGebied(feature, null, mySuccess);
+                    }
+            }
+        } else {
+            console.log("weird process() else");
+            //Check if processing is finished
+            if (!dbkjs.protocol.jsonDBK.processing) {
+                mySuccess();
+
+                if(dbkjs.viewmode === 'fullscreen') {
+                    $('#dbkinfopanel_b').html(dbkjs.options.feature.div);
+                } else {
+                    $('#infopanel_b').html(dbkjs.options.feature.div);
+                    $('#infopanel_f').html('');
+                    $('#infopanel').show();
+                }
+
             }
         }
     },
@@ -865,15 +878,11 @@ dbkjs.protocol.jsonDBK = {
             _obj.panel_tabs.append('<li><a data-toggle="tab" href="#' + id + '">'+ i18n.t('dbk.tarry')+ '</a></li>');
         }
     },
-    getObject: function(feature, activetab, noZoom) {
+    getObject: function(feature, activetab, noZoom, onSuccess) {
         var _obj = dbkjs.protocol.jsonDBK;
         if(activetab){
          _obj.active_tab = activetab;
         }
-        //clear all layers first!
-        $.each(_obj.layers, function(idx, lyr){
-           lyr.destroyFeatures();
-        });
         var params = {
             srid: dbkjs.options.projection.srid,
             timestamp: new Date().getTime()
@@ -886,21 +895,27 @@ dbkjs.protocol.jsonDBK = {
             fid = feature;
         }
         $.getJSON('api/object/' + fid + '.json', params).done(function(data) {
+                //clear all layers first!
+                $.each(_obj.layers, function(idx, lyr){
+                   lyr.destroyFeatures();
+                });
+
+                if(onSuccess) {
+                    onSuccess();
+                }
                 dbkjs.protocol.jsonDBK.info(data, noZoom);
             }).fail(function( jqxhr, textStatus, error ) {
                 dbkjs.options.feature = null;
                 dbkjs.util.alert(i18n.t('app.error'), i18n.t('dialogs.infoNotFound'), 'alert-danger');
+                _obj.processing = false;
             });
+
     },
-    getGebied: function(feature, activetab) {
+    getGebied: function(feature, activetab, onSuccess) {
         var _obj = dbkjs.protocol.jsonDBK;
         if(activetab){
             _obj.active_tab = activetab;
         }
-        //clear all layers first!
-        $.each(_obj.layers, function(idx, lyr){
-           lyr.destroyFeatures();
-        });
         var params = {
             srid: dbkjs.options.projection.srid,
             timestamp: new Date().getTime()
@@ -913,10 +928,18 @@ dbkjs.protocol.jsonDBK = {
             fid = feature;
         }
         $.getJSON('api/gebied/' + fid + '.json', params).done(function(data) {
+            //clear all layers first!
+            $.each(_obj.layers, function(idx, lyr){
+               lyr.destroyFeatures();
+            });
+            if(onSuccess) {
+                onSuccess();
+            }
             dbkjs.protocol.jsonDBK.info(data);
         }).fail(function( jqxhr, textStatus, error ) {
             dbkjs.options.feature = null;
             dbkjs.util.alert(i18n.t('app.error'), i18n.t('dialogs.infoNotFound'), 'alert-danger');
+            _obj.processing = false;
         });
     }
 };

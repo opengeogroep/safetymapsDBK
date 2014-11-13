@@ -166,9 +166,10 @@ dbkjs.modules.feature = {
 
         $(ret_title).click(function() {
             //dbkjs.options.dbk = feature.attributes.identificatie;
-            dbkjs.modules.updateFilter(feature.attributes.identificatie);
-            dbkjs.protocol.jsonDBK.process(feature);
-            _obj.zoomToFeature(feature);
+
+            dbkjs.protocol.jsonDBK.process(feature, function() {
+                _obj.zoomToFeature(feature);
+            });
             return false;
         });
         return ret_title;
@@ -237,9 +238,10 @@ dbkjs.modules.feature = {
     },
     handleDbkOmsSearch: function(object) {
         var _obj = dbkjs.modules.feature;
-        dbkjs.modules.updateFilter(object.id);
-        dbkjs.protocol.jsonDBK.process(object);
-        _obj.zoomToFeature(object);
+
+        dbkjs.protocol.jsonDBK.process(object, function() {
+            _obj.zoomToFeature(object);
+        });
     },
     zoomToFeature: function(feature) {
         dbkjs.options.dbk = feature.attributes.identificatie;
@@ -321,8 +323,9 @@ dbkjs.modules.feature = {
                 }
             } else {
                 _obj.currentCluster = [];
-                dbkjs.protocol.jsonDBK.process(e.feature);
-                _obj.zoomToFeature(e.feature);
+                dbkjs.protocol.jsonDBK.process(e.feature, function() {
+                    _obj.zoomToFeature(e.feature);
+                });
                 if(dbkjs.viewmode == 'fullscreen') {
                     dbkjs.util.getModalPopup('infopanel').hide();
                 } else {
