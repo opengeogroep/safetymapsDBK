@@ -167,7 +167,11 @@ dbkjs.modules.support = {
                                 _obj.drag.deactivate();
                                 dbkjs.map.removeControl(_obj.drag);
                                 dbkjs.hoverControl.activate();
-                                dbkjs.selectControl.activate()
+                                dbkjs.selectControl.activate();
+
+                                setTimeout(function() {
+                                    supportpanel.find(".close").click();
+                                }, 5000);
                             }
                         });
                         _obj.layer.destroyFeatures();
