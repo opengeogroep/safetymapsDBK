@@ -51,7 +51,6 @@ dbkjs.modules.connectionmonitor = {
         $("#connectionicon").attr("style", "color: red");
     },
     onConnectionOK: function() {
-        console.log("connection ok");
         if(!this.connected) {
             $("#connectionicon").attr("class", "icon-refresh");
             $("#connectionicon").attr("style", "color: green");
