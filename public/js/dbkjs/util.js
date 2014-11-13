@@ -419,6 +419,8 @@ OpenLayers.Renderer.SVG.prototype.drawText = function(featureId, style, location
 //    return res;
 //}
 
+var alertTimer;
+
 dbkjs.util = {
     layersLoading: [],
     modalPopupStore: {},
@@ -732,6 +734,8 @@ dbkjs.util = {
         }
     },
     alert: function(title, tekst, type) {
+        clearTimeout(alertTimer);
+
         if (!type) {
             type = 'alert-info';
         }
@@ -750,6 +754,10 @@ dbkjs.util = {
             alert.append(' ' + content);
             alert.show();
         }
+
+        alertTimer = setTimeout(function() {
+            $('#systeem_meldingen').hide();
+        }, 5000);
     },
     htmlEncode: function(value) {
         if (value) {
