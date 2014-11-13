@@ -589,9 +589,10 @@ dbkjs.protocol.jsonDBK = {
         return bv_table;
     },
     constructBrandweervoorzieningRow: function(brandweervoorziening) {
+        var img = "images/" + brandweervoorziening.namespace + '/' +  brandweervoorziening.type + '.png';
+        img = typeof imagesBase64 === 'undefined'  ? dbkjs.basePath + img : imagesBase64[img];
         return $('<tr>' +
-                    '<td><img class="thumb" src="' + dbkjs.basePath + "images/" + brandweervoorziening.namespace + '/' +
-                        brandweervoorziening.type + '.png" alt="'+
+                    '<td><img class="thumb" src="' + img + '" alt="'+
                         brandweervoorziening.type +'" title="'+
                         brandweervoorziening.type+'"></td>' +
                     '<td>' + brandweervoorziening.name + '</td>' +
@@ -647,9 +648,10 @@ dbkjs.protocol.jsonDBK = {
         return bv_table;
     },
     constructGevaarlijkestofRow: function(gevaarlijkestof) {
+        var img = 'images/' + gevaarlijkestof.namespace + '/' +  gevaarlijkestof.type + '.png';
+        img = typeof imagesBase64 === 'undefined'  ? dbkjs.basePath + img : imagesBase64[img];
         return $('<tr>' +
-            '<td><img class="thumb" src="' + dbkjs.basePath + 'images/' + gevaarlijkestof.namespace + '/' +
-                gevaarlijkestof.type + '.png" alt="'+
+            '<td><img class="thumb" src="' + img + '" alt="'+
                 gevaarlijkestof.type +'" title="'+
                 gevaarlijkestof.type+'"></td>' +
             '<td>' + '<div class="gevicode">' + gevaarlijkestof.indication +

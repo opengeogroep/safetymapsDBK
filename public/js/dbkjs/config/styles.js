@@ -158,12 +158,12 @@ dbkjs.config.styles = {
             },
             myicon: function(feature) {
                 if (feature.cluster) {
-                    return dbkjs.basePath + "images/jcartier_city_3.png";
+                    return typeof imagesBase64 === 'undefined' ? dbkjs.basePath + "images/jcartier_city_3.png" : imagesBase64["images/jcartier_city_3.png"];
                 } else {
                     if (feature.attributes.typeFeature === 'Object') {
-                        return dbkjs.basePath + "images/jcartier_building_1.png";
+                        return typeof imagesBase64 === 'undefined'  ? dbkjs.basePath + "images/jcartier_building_1.png" : imagesBase64["images/jcartier_building_1.png"];
                     } else {
-                        return dbkjs.basePath + "images/jcartier_event_1.png";
+                        return typeof imagesBase64 === 'undefined'  ? dbkjs.basePath + "images/jcartier_event_1.png" : imagesBase64["images/jcartier_event_1.png"];
                     }
                 }
             },
@@ -568,7 +568,8 @@ dbkjs.config.styles = {
         }, {
             context: {
                 myicon: function(feature) {
-                    return dbkjs.basePath + "images/" + feature.attributes.namespace + "/" + feature.attributes.type + ".png";
+                    var img = "images/" + feature.attributes.namespace + "/" + feature.attributes.type + ".png";
+                    return typeof imagesBase64 === 'undefined'  ? dbkjs.basePath + img : imagesBase64[img];
                 },
                 myrotation: function(feature) {
                     if(feature.attributes.rotation){
@@ -619,7 +620,8 @@ dbkjs.config.styles = {
                     return dbkjs.scaleStyleValue(12);
                 },
                 myicon: function(feature) {
-                    return dbkjs.basePath + "images/" + feature.attributes.namespace + "/" + feature.attributes.type + ".png";
+                    var img = "images/" + feature.attributes.namespace + "/" + feature.attributes.type + ".png";
+                    return typeof imagesBase64 === 'undefined' ? dbkjs.basePath + img : imagesBase64[img];
                 }
             }
         }), 'select': new OpenLayers.Style({
