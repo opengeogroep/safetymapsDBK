@@ -447,6 +447,9 @@ dbkjs.util = {
 
     },
     onClick: function(e) {
+        if(dbkjs.viewmode === "fullscreen") {
+            return;
+        }
         //controleer of de layer onderdeel is van een module en een getfeatureinfo heeft
         $.each(dbkjs.map.layers, function(lay_index, lay) {
             if (lay.visibility && lay.dbkjsParent && lay.dbkjsParent.getfeatureinfo) {
