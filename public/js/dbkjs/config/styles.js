@@ -65,7 +65,9 @@ dbkjs.config.styles = {
         labelSelect: true,
         labelAlign: "${mylabelalign}",
         labelXOffset: "${mylabelxoffset}",
-        labelYOffset: "${mylabelyoffset}"
+        labelYOffset: "${mylabelyoffset}",
+        labelOutlineWidth: 5,
+        labelOutlineColor: '#000000'
     }, {
         context: {
             mydisplay: function(feature) {
@@ -92,7 +94,7 @@ dbkjs.config.styles = {
                     if (feature.cluster.length < 10) {
                         return feature.cluster.length + 64;
                     } else {
-                        return 65;
+                        return 56;
                     }
                 } else {
                     if (feature.attributes.typeFeature === 'Object') {
@@ -105,14 +107,14 @@ dbkjs.config.styles = {
             },
             mygraphicwidth: function(feature) {
                 if (feature.cluster) {
-                    if (feature.cluster.length < 10) {
-                        return feature.cluster.length + 84;
-                    } else {
-                        return 85;
-                    }
+                    //if (feature.cluster.length < 10) {
+                    //    return feature.cluster.length + 84;
+                    //} else {
+                        return 51;
+                    //}
                 } else {
                     if (feature.attributes.typeFeature === 'Object') {
-                        return 24;
+                        return 21;
                     } else {
                         return 85;
                     }
@@ -126,7 +128,7 @@ dbkjs.config.styles = {
                 }
             },
             myfontsize: function(feature) {
-                return "10.5px";
+                return "16px";
             },
             mylabelalign: function(feature) {
                 if (feature.cluster) {
@@ -158,10 +160,16 @@ dbkjs.config.styles = {
             },
             myicon: function(feature) {
                 if (feature.cluster) {
-                    return typeof imagesBase64 === 'undefined' ? dbkjs.basePath + "images/jcartier_city_3.png" : imagesBase64["images/jcartier_city_3.png"];
+                    return typeof imagesBase64 === 'undefined' ? dbkjs.basePath + "images/cluster.png" : imagesBase64["images/cluster.png"];
                 } else {
                     if (feature.attributes.typeFeature === 'Object') {
-                        return typeof imagesBase64 === 'undefined'  ? dbkjs.basePath + "images/jcartier_building_1.png" : imagesBase64["images/jcartier_building_1.png"];
+                        var img;
+                        if(feature.attributes.verdiepingen || feature.attributes.verdiepingen !== 0) {
+                            img = "images/meerdereverdiepingen.png";
+                        }  else {
+                            img = "images/enkeleverdieping.png";
+                        }
+                        return typeof imagesBase64 === 'undefined'  ? dbkjs.basePath + img : imagesBase64[img];
                     } else {
                         return typeof imagesBase64 === 'undefined'  ? dbkjs.basePath + "images/jcartier_event_1.png" : imagesBase64["images/jcartier_event_1.png"];
                     }
