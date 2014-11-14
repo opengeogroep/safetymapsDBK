@@ -34,8 +34,13 @@ dbkjs.modules.connectionmonitor = {
             "<a id=\"connection\" href=\"#\" title=\"Verbindingsstatus\" class=\"btn navbar-btn btn-default\">" +
             "<i id=\"connectionicon\" class=\"icon-signal\" style=\"color: green\"></i></a>"));
 
+        var me = this;
         $("#connection").click(function() {
-            window.location.href = $('#permalink').attr('href');
+            if(!me.connected) {
+                dbkjs.util.alert("Fout", "Geen verbinding", "alert-danger");
+            } else {
+                window.location.href = $('#permalink').attr('href');
+            }
         });
 
         OpenLayers.IMAGE_RELOAD_ATTEMPTS = 10;
