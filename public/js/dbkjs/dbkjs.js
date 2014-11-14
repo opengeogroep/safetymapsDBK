@@ -46,23 +46,25 @@ dbkjs.init = function() {
     dbkjs.options.omsnummer = dbkjs.util.getQueryVariable(i18n.t('app.queryNumber'));
     dbkjs.options.dbk = dbkjs.util.getQueryVariable(i18n.t('app.queryDBK'));
     dbkjs.challengeAuth();
-    // Show mouseposition
-    var mousePos = new OpenLayers.Control.MousePosition({
-        numDigits: dbkjs.options.projection.coordinates.numDigits,
-        div: OpenLayers.Util.getElement('coords')
-    });
 
-    dbkjs.map.addControl(mousePos);
-    var attribution = new OpenLayers.Control.Attribution({
-        div: OpenLayers.Util.getElement('attribution')
-    });
-    dbkjs.map.addControl(attribution);
+    if(dbkjs.viewmode !== "fullscreen") {
+        // Show mouseposition
+        var mousePos = new OpenLayers.Control.MousePosition({
+            numDigits: dbkjs.options.projection.coordinates.numDigits,
+            div: OpenLayers.Util.getElement('coords')
+        });
 
-    var scalebar = new OpenLayers.Control.Scale(OpenLayers.Util.getElement('scale'));
-    dbkjs.map.addControl(scalebar);
-    dbkjs.naviHis = new OpenLayers.Control.NavigationHistory();
-    dbkjs.map.addControl(dbkjs.naviHis);
-    dbkjs.naviHis.activate();
+        dbkjs.map.addControl(mousePos);
+        var attribution = new OpenLayers.Control.Attribution({
+            div: OpenLayers.Util.getElement('attribution')
+        });
+        dbkjs.map.addControl(attribution);
+        var scalebar = new OpenLayers.Control.Scale(OpenLayers.Util.getElement('scale'));
+        dbkjs.map.addControl(scalebar);
+        dbkjs.naviHis = new OpenLayers.Control.NavigationHistory();
+        dbkjs.map.addControl(dbkjs.naviHis);
+        dbkjs.naviHis.activate();
+    }
 
     var baselayer_ul = $('<ul id="baselayerpanel_ul" class="nav nav-pills nav-stacked">');
     $.each(dbkjs.options.baselayers, function(bl_index, bl) {
@@ -83,33 +85,44 @@ dbkjs.init = function() {
         });
     });
     $('#baselayerpanel_b').append(baselayer_ul);
-    dbkjs.map.events.register("moveend", dbkjs.map, function() {
-        //check if the naviHis has any content
-        if (dbkjs.naviHis.nextStack.length > 0) {
-            //enable next button
-            $('#zoom_next').removeClass('disabled');
-        } else {
-            $('#zoom_next').addClass('disabled');
-        }
-        if (dbkjs.naviHis.previousStack.length > 1) {
-            //enable previous button
-            $('#zoom_prev').removeClass('disabled');
-        } else {
-            $('#zoom_prev').addClass('disabled');
-        }
-    });
 
-    dbkjs.overview = new OpenLayers.Control.OverviewMap({
-        theme: null,
-        div: document.getElementById('minimappanel_b'),
-        size: new OpenLayers.Size(180, 180)
-    });
-    dbkjs.map.addControl(dbkjs.overview);
-    dbkjs.map.addControl(new OpenLayers.Control.Zoom({
-            zoomInId: "zoom_in",
-            zoomOutId: "zoom_out"
-        })
-    );
+
+    if(dbkjs.viewmode !== "fullscreen") {
+        dbkjs.map.events.register("moveend", dbkjs.map, function() {
+            //check if the naviHis has any content
+            if (dbkjs.naviHis.nextStack.length > 0) {
+                //enable next button
+                $('#zoom_next').removeClass('disabled');
+            } else {
+                $('#zoom_next').addClass('disabled');
+            }
+            if (dbkjs.naviHis.previousStack.length > 1) {
+                //enable previous button
+                $('#zoom_prev').removeClass('disabled');
+            } else {
+                $('#zoom_prev').addClass('disabled');
+            }
+        });
+
+        dbkjs.overview = new OpenLayers.Control.OverviewMap({
+            theme: null,
+            div: document.getElementById('minimappanel_b'),
+            size: new OpenLayers.Size(180, 180)
+        });
+        dbkjs.map.addControl(dbkjs.overview);
+        dbkjs.map.addControl(new OpenLayers.Control.Zoom({
+                zoomInId: "zoom_in",
+                zoomOutId: "zoom_out"
+            })
+        );
+    } else {
+        dbkjs.map.addControl(new OpenLayers.Control.TouchNavigation({
+            dragPanOptions: {
+                enableKinetic: false
+            },
+            autoActivate: true
+        }));
+    }
 };
 
 /**
