@@ -25,6 +25,7 @@ dbkjs.modules.connectionmonitor = {
     id: "dbk.module.connectionmonitor",
     connected: null,
     debug: null,
+    okTimer: null,
     register: function(options) {
         this.debug = !!dbkjs.options.connectionmonitorDebug;
 
@@ -56,11 +57,22 @@ dbkjs.modules.connectionmonitor = {
         $("#connectionicon").attr("style", "color: red");
     },
     onConnectionOK: function() {
-        if(!this.connected) {
-            $("#connectionicon").attr("class", "icon-refresh");
-            $("#connectionicon").attr("style", "color: green");
+        if(this.connected) {
+            return;
         }
+
         this.connected = true;
+
+        var me = this;
+        if(me.okTimer === null) {
+            $("#connectionicon").attr("class", "icon-signal");
+            $("#connectionicon").attr("style", "color: gray");
+            me.okTimer = setTimeout(function() {
+                $("#connectionicon").attr("style", "color: green");
+                clearTimeout(me.okTimer);
+                me.okTimer = null;
+            }, 8000);
+        }
     }
 };
 
