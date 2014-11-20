@@ -192,11 +192,11 @@ dbkjs.protocol.jsonDBK = {
             if(onSuccess) {
                 onSuccess();
             }
-        }
+        };
 
         if (!dbkjs.options.feature || feature.id !== dbkjs.options.feature.id) {
             if (!dbkjs.protocol.jsonDBK.processing) {
-                if(dbkjs.viewmode == 'fullscreen') {
+                if(dbkjs.viewmode === 'fullscreen') {
                     dbkjs.util.getModalPopup('infopanel').hide();
                     dbkjs.util.getModalPopup('dbkinfopanel').hide();
                 } else {
@@ -205,9 +205,9 @@ dbkjs.protocol.jsonDBK = {
                 dbkjs.protocol.jsonDBK.processing = true;
                 dbkjs.util.alert('<i class="icon-spinner icon-spin"></i>', i18n.t('dialogs.running'), 'alert-info');
                     if(feature.attributes.typeFeature === 'Object'){
-                        dbkjs.protocol.jsonDBK.getObject(feature, null, false, mySuccess);
+                        dbkjs.protocol.jsonDBK.getObject(feature, 'algemeen', false, mySuccess);
                     } else if (feature.attributes.typeFeature === 'Gebied') {
-                        dbkjs.protocol.jsonDBK.getGebied(feature, null, mySuccess);
+                        dbkjs.protocol.jsonDBK.getGebied(feature, 'algemeen', mySuccess);
                     }
             }
         } else {
