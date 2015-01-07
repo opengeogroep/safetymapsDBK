@@ -38,6 +38,12 @@ dbkjs.init = function() {
     // ensure single '/' between hostname and path
     dbkjs.basePath = dbkjs.basePath + (pathname.charAt(0) === "/" ? pathname : "/" + pathname);
 
+    if(dbkjs.viewmode === "fullscreen" && "ontouchstart" in window) {
+        // Later wordt TouchNavigation toegevoegd, verwijder standaard
+        // navigation control (anders gekke zoom / pan effecten op touchscreen)
+        dbkjs.options.map.options.controls = [];
+    }
+
     dbkjs.map = new OpenLayers.Map(dbkjs.options.map.options);
     dbkjs.options.organisation = {
         id: dbkjs.util.getQueryVariable(i18n.t('app.organisation'), 'demo')
