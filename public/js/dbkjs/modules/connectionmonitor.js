@@ -40,7 +40,7 @@ dbkjs.modules.connectionmonitor = {
             if(!me.connected) {
                 dbkjs.util.alert("Fout", "Geen verbinding", "alert-danger");
             } else {
-                window.location.href = $('#permalink').attr('href');
+                window.location.reload();
             }
         });
 
