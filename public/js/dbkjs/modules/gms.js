@@ -85,23 +85,26 @@ dbkjs.modules.gms = {
                         if(monitor) {
                             monitor.onConnectionOK();
                         }
-                        var oldSequence = me.gms ? me.gms.Sequence : null;
+
+                        var lastModified = moment(jqXHR.getResponseHeader("Last-Modified"));
+                        me.updated = lastModified.isValid() ? lastModified : moment();
+
                         var oldNummer = me.gms && me.gms.Gms && me.gms.Gms.Nummer ? me.gms.Gms.Nummer : null;
                         me.gms = jqXHR.responseJSON.EAL2OGG;
-                        if(me.gms.Sequence !== oldSequence) {
-                            var lastModified = moment(jqXHR.getResponseHeader("Last-Modified"));
-                            me.updated = lastModified.isValid() ? lastModified : moment();
+                        var newNummer = me.gms && me.gms.Gms && me.gms.Gms.Nummer ? me.gms.Gms.Nummer : null;
+                        if(oldNummer === null || oldNummer !== newNummer) {
+                            me.viewed = false;
 
-                            // Alleen unread bij nieuw meldingsnummer
-                            if(oldNummer === null || me.gms.Gms.Nummer !== oldNummer) {
-                                me.viewed = false;
-                            }
-
-                            // Eventueel gewijzigde X en Y doorvoeren
+                            // Verwijder marker zodat DBK wordt geselecteerd
+                            // en naar positie wordt gezoomed
                             if(me.gmsMarker) {
                                 me.markers.removeMarker(me.gmsMarker);
                                 me.gmsMarker = null;
                             }
+                        } else {
+                            // Update voor zelfde melding
+                            // Geen rood icoon tonen
+                            //me.viewed = false;
                         }
                         me.displayGms();
                     } else if(textStatus === "notmodified") {
@@ -124,7 +127,7 @@ dbkjs.modules.gms = {
 
                 window.setTimeout(function() {
                     me.loadGms();
-                }, 5000);
+                }, 4000);
             }
         });
     },
@@ -279,7 +282,7 @@ dbkjs.modules.gms = {
     },
     zoom: function() {
         if(this.gms && this.gms.Gms && this.gms.Gms.IncidentAdres && this.gms.Gms.IncidentAdres.Positie) {
-            var reprojected = this.reprojectToOpenLayersLonLat()
+            var reprojected = this.reprojectToOpenLayersLonLat();
             dbkjs.map.setCenter(reprojected, dbkjs.options.zoom);
         }
     }
