@@ -283,6 +283,8 @@ dbkjs.modules.gms = {
 
             if(dbk) {
                 dbkjs.modules.feature.handleDbkOmsSearch(dbk);
+            } else {
+                dbkjs.modules.feature.handleDbkOmsSearch(null);
             }
         }
 
