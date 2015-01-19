@@ -112,6 +112,7 @@ dbkjs.modules.gms = {
                         var newNummer = me.gms && me.gms.Gms && me.gms.Gms.Nummer ? me.gms.Gms.Nummer : null;
                         if(oldNummer === null || oldNummer !== newNummer) {
                             me.viewed = false;
+                            me.zoomedPos = null;
                         } else {
                             // Update voor zelfde melding
                             // Geen rood icoon tonen
