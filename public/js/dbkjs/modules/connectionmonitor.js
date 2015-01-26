@@ -69,6 +69,7 @@ dbkjs.modules.connectionmonitor = {
             $("#connectionicon").attr("style", "color: gray");
             me.okTimer = setTimeout(function() {
                 $("#connectionicon").attr("style", "color: green");
+                $("#connectionicon").attr("class", "icon-signal");
                 clearTimeout(me.okTimer);
                 me.okTimer = null;
             }, 8000);
