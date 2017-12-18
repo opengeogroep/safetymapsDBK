@@ -179,7 +179,7 @@ dbkjs.modules.brandkranen = {
             rendererOptions: {
             },
             options: {
-                minScale: 7000
+                minScale: 10000
             },
             styleMap: new OpenLayers.StyleMap({
                 'default': new OpenLayers.Style({
