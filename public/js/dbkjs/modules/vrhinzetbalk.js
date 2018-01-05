@@ -93,8 +93,8 @@ dbkjs.modules.vrhinzetbalk = {
             wms: 'Brandweer',
             setTopLayerIndex: true
         },
-        toggleBluswater: {
-            label: 'Bluswatergegevens',
+        toggleWaterwinning: {
+            label: 'Waterwinning',
             img: 'images/brandkraan.png',
             style: 'height: 36px; margin-bottom: 5px',
             layers: [ ],
@@ -261,6 +261,8 @@ dbkjs.modules.vrhinzetbalk = {
                 } else {
                     toggle.addClass('on');
                     me.enableLayers(toggleOptions.layers);
+                    dbkjs.dbkInfoPanel.show();
+                    dbkjs.showTab("waterwinning");
                 }
                 if(toggleOptions.wms) {
                     $.each(me.findConfiguredLayers(toggleOptions.wms).olLayers, function(j,l) {

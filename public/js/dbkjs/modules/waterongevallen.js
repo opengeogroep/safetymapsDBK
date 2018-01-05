@@ -402,8 +402,6 @@ dbkjs.modules.waterongevallen = {
             this.createHtmlTabDiv("symbolen", "Symbolen", false, symb_table);
         }
 
-        dbkjs.showTab("algemeen");
-        
         // Fire handler to put tabs at bottom
         $(window).resize();
 
