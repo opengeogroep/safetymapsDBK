@@ -253,7 +253,7 @@ dbkjs.protocol.jsonDBK.process =  function(feature, onSuccess, noZoom) {
 
     if (!(feature && feature.attributes && feature.attributes.typeFeature)) {
 
-        $('#dbkinfopanel_b').html('Geen DBK geselecteerd.');
+        //$('#dbkinfopanel_b').html('Geen DBK geselecteerd.');
         //$('.dbk-title').css('visibility', 'hidden');
 
         //clear all layers first!
@@ -320,7 +320,7 @@ dbkjs.protocol.jsonDBK.process =  function(feature, onSuccess, noZoom) {
         if (!dbkjs.protocol.jsonDBK.processing) {
             mySuccess();
             if(dbkjs.viewmode === 'fullscreen') {
-                $('#dbkinfopanel_b').html(dbkjs.options.feature.div);
+                //$('#dbkinfopanel_b').html(dbkjs.options.feature.div);
             } else {
                 $('#infopanel_b').html(dbkjs.options.feature.div);
                 $('#infopanel_f').html('');

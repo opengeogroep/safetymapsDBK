@@ -206,7 +206,7 @@ dbkjs.protocol.jsonDBK = {
                 if (!dbkjs.protocol.jsonDBK.processing) {
 
                     if (dbkjs.viewmode === 'fullscreen') {
-                        $('#dbkinfopanel_b').html(dbkjs.options.feature.div);
+                        //$('#dbkinfopanel_b').html(dbkjs.options.feature.div);
                     } else {
                         dbkjs.gui.infoPanelUpdateHtml(dbkjs.options.feature.div);
                         dbkjs.gui.infoPanelUpdateFooterHtml('');
@@ -225,7 +225,7 @@ dbkjs.protocol.jsonDBK = {
         dbkjs.options.feature = null;
         dbkjs.options.dbk = null;
         if(dbkjs.viewmode === 'fullscreen') {
-            $('#dbkinfopanel_b').text(i18n.t("dialogs.noinfo"));
+            dbkjs.noObjectInfoTabs();
         }
         dbkjs.modules.updateFilter(0);
         dbkjs.modules.waterongevallen.deselect();
@@ -287,7 +287,7 @@ dbkjs.protocol.jsonDBK = {
             div.append(_obj.panel_group);
             div.append(_obj.panel_tabs);
             if (dbkjs.viewmode === 'fullscreen') {
-                $('#dbkinfopanel_b').html(div);
+                //$('#dbkinfopanel_b').html(div);
             } else {
                 dbkjs.gui.infoPanelUpdateHtml('');
                 dbkjs.gui.infoPanelAddItems(div);

@@ -331,12 +331,8 @@ dbkjs.modules.waterongevallen = {
         this.symbolen.addFeatures(features);
 
         var j = dbkjs.protocol.jsonDBK;
-        j.panel_group = $('<div class="tab-content"></div>');
-        j.panel_tabs = $('<ul class="nav nav-pills"></ul>');
-        var div = $('<div class="tabbable"></div>');
-        div.append(j.panel_group);
-        div.append(j.panel_tabs);
-        $('#dbkinfopanel_b').html(div);
+        
+        dbkjs.removeTabs("info");
 
         this.createInfoTabDiv("algemeen", "Algemeen", true, data,
             [ "locatie", "adres", "plaatsnaam", "gebruik_bo"],
@@ -406,6 +402,8 @@ dbkjs.modules.waterongevallen = {
             this.createHtmlTabDiv("symbolen", "Symbolen", false, symb_table);
         }
 
+        dbkjs.showTab("algemeen");
+        
         // Fire handler to put tabs at bottom
         $(window).resize();
 
@@ -413,11 +411,7 @@ dbkjs.modules.waterongevallen = {
         $('#systeem_meldingen').hide();
     },
     createHtmlTabDiv: function(id, label, active, content) {
-        id = 'collapse_' + id;
-        var bv_div = $('<div class="tab-pane ' + (active ? "active" : "") + '" id="' + id + '"></div>');
-        bv_div.append(content);
-        dbkjs.protocol.jsonDBK.panel_group.append(bv_div);
-        dbkjs.protocol.jsonDBK.panel_tabs.append('<li class="' + (active ? "active" : "") + '"><a data-toggle="tab" href="#' + id + '">' + label + '</a></li>');
+        dbkjs.addTab(id, label, content, "info");
     },
     createInfoTabDiv: function(id, label, active, data, props, labels) {
         var bv_table_div = $('<div class="table-responsive"></div>');

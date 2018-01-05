@@ -465,72 +465,7 @@ dbkjs.documentReady = function () {
             $('body').append(dbkjs.util.createDialog('infopanel', '<i class="fa fa-info-circle"></i> ' + i18n.t("dialogs.info"), 'right:0;bottom:0;'));
             $('body').append(dbkjs.util.createDialog('vectorclickpanel', '<i class="fa fa-info-circle"></i> ' + i18n.t("dialogs.clickinfo"), 'left:0;bottom:0;margin-bottom:0px;position:fixed'));
         } else {
-            // Create the infopanel
-            dbkjs.util.createModalPopup({name: 'infopanel'}).getView().append($('<div></div>').attr({'id': 'infopanel_b'}));
-
-            // Create the DBK infopanel
-            dbkjs.dbkInfoPanel = new SplitScreenWindow("dbkinfopanel");
-            dbkjs.dbkInfoPanel.createElements();
-
-            // Put tabs at the bottom after width transition has ended
-            var updateContentHeight = function() {
-                var view = dbkjs.dbkInfoPanel.getView();
-                var tabContentHeight = view.height() - view.find(".nav-pills").height();
-                view.find(".tab-content").css("height", tabContentHeight);
-
-                view.find(".pdf-embed").css("height", tabContentHeight - 28);
-            };
-            $(window).resize(updateContentHeight);
-
-            $(dbkjs.dbkInfoPanel).on("show", function() {
-                var event = dbkjs.util.getTransitionEvent();
-                if(event) {
-                    dbkjs.dbkInfoPanel.getView().parent().on(event, updateContentHeight);
-                } else {
-                    updateContentHeight();
-                }
-
-                $.each(dbkjs.dbkInfoPanel.getView().find(".pdf-embed"), function(i, pdf) {
-                    if(pdf.children.length === 0) {
-                        console.log("embedding PDF " + $(pdf).attr("data-url"));
-                        // Add cache buster to avoid unexpected server response (206) on iOS 10 safari webapp
-                        PDFObject.embed($(pdf).attr("data-url") + "?t=" + new Date().getTime(), pdf, {
-                            // Use custom built pdf.js with src/core/network.js function
-                            // PDFNetworkStreamFullRequestReader_validateRangeRequestCapabilities
-                            // always returning false to also avoid 206 error
-                            PDFJS_URL: "js/libs/pdfjs-1.6.210-disablerange-minified/web/viewer.html",
-                            forcePDFJS: !!dbkjs.options.forcePDFJS
-                        });                      
-                        // Remove buttons from PDFJS toolbar
-                        // XXX hack, use PDFJS documentloaded event?
-                        function removeToolbar() {
-                            var iframe = $("iframe").contents();
-                            if(iframe.find("#download")[0] || iframe.find("#secondaryDownload")[0] ) {
-                                console.log("found PDFJS toolbar buttons, removing");
-                                iframe.find("#download").remove();
-                                iframe.find("#openFile").remove();
-                                iframe.find("#print").remove();
-                                iframe.find("#secondaryDownload").remove();
-                                iframe.find("#secondaryOpenFile").remove();
-                                iframe.find("#secondaryPrint").remove();
-                            } else {
-                                console.log("PDFJS toolbar not found, waiting")
-                                window.setTimeout(removeToolbar, 500);
-                            }
-                        }
-                            //this check is needed. If the program is not using PDFJS then we can't remove buttons.
-                            if(PDFObject.supportsPDFs || dbkjs.options.forcePDFJS ){
-                                removeToolbar();
-                            }
-                    }
-                });
-            });
-
-            dbkjs.dbkInfoPanel.getView().append(
-                    $('<div></div>')
-                    .attr({'id': 'dbkinfopanel_b'})
-                    .text(i18n.t("dialogs.noinfo"))
-            );
+            dbkjs.initPanel();
 
             // We are removing / moving some existing DIVS from HTML to convert prev. popups to fullscreen modal popups
             $('#baselayerpanel').remove();
@@ -614,7 +549,9 @@ dbkjs.documentReady = function () {
             if (dbkjs.viewmode !== 'fullscreen') {
                 $('#infopanel').toggle();
             } else {
-                dbkjs.dbkInfoPanel.toggle();
+                dbkjs.dbkInfoPanel.show();
+                // TODO: show algemeen tab
+                dbkjs.showTab("algemeen");
             }
         });
         $("#c_minimap").click(function() {
@@ -650,4 +587,117 @@ dbkjs.documentReady = function () {
         });
         dbkjs.bind_dbkjs_init_complete();
     });
+};
+
+dbkjs.initPanel = function() {
+    // Create the infopanel
+    dbkjs.util.createModalPopup({name: 'infopanel'}).getView().append($('<div></div>').attr({'id': 'infopanel_b'}));
+
+    // Create the DBK infopanel
+    dbkjs.dbkInfoPanel = new SplitScreenWindow("dbkinfopanel");
+    dbkjs.dbkInfoPanel.createElements();
+
+    // Put tabs at the bottom after width transition has ended
+    var updateContentHeight = function() {
+        var view = dbkjs.dbkInfoPanel.getView();
+        var tabContentHeight = view.height() - view.find(".nav-pills").height();
+        view.find(".tab-content").css("height", tabContentHeight);
+
+        view.find(".pdf-embed").css("height", tabContentHeight - 28);
+    };
+    $(window).resize(updateContentHeight);
+
+    $(dbkjs.dbkInfoPanel).on("show", function() {
+        var event = dbkjs.util.getTransitionEvent();
+        if(event) {
+            dbkjs.dbkInfoPanel.getView().parent().on(event, updateContentHeight);
+        } else {
+            updateContentHeight();
+        }
+
+        $.each(dbkjs.dbkInfoPanel.getView().find(".pdf-embed"), function(i, pdf) {
+            if(pdf.children.length === 0) {
+                console.log("embedding PDF " + $(pdf).attr("data-url"));
+                // Add cache buster to avoid unexpected server response (206) on iOS 10 safari webapp
+                PDFObject.embed($(pdf).attr("data-url") + "?t=" + new Date().getTime(), pdf, {
+                    // Use custom built pdf.js with src/core/network.js function
+                    // PDFNetworkStreamFullRequestReader_validateRangeRequestCapabilities
+                    // always returning false to also avoid 206 error
+                    PDFJS_URL: "js/libs/pdfjs-1.6.210-disablerange-minified/web/viewer.html",
+                    forcePDFJS: !!dbkjs.options.forcePDFJS
+                });                      
+                // Remove buttons from PDFJS toolbar
+                // XXX hack, use PDFJS documentloaded event?
+                function removeToolbar() {
+                    var iframe = $("iframe").contents();
+                    if(iframe.find("#download")[0] || iframe.find("#secondaryDownload")[0] ) {
+                        console.log("found PDFJS toolbar buttons, removing");
+                        iframe.find("#download").remove();
+                        iframe.find("#openFile").remove();
+                        iframe.find("#print").remove();
+                        iframe.find("#secondaryDownload").remove();
+                        iframe.find("#secondaryOpenFile").remove();
+                        iframe.find("#secondaryPrint").remove();
+                    } else {
+                        console.log("PDFJS toolbar not found, waiting")
+                        window.setTimeout(removeToolbar, 500);
+                    }
+                }
+                //this check is needed. If the program is not using PDFJS then we can't remove buttons.
+                if(PDFObject.supportsPDFs || dbkjs.options.forcePDFJS ){
+                    removeToolbar();
+                }
+            }
+        });
+    });
+
+    dbkjs.dbkInfoPanel.getView().append(
+            $('<div></div>')
+            .attr({'id': 'dbkinfopanel_b'})
+            .text(i18n.t("dialogs.noinfo"))
+    );
+  
+
+    var div = $('<div class="tabbable"></div>');
+    dbkjs.panel_group = $('<div class="tab-content"></div>');
+    dbkjs.panel_tabs = $('<ul class="nav nav-pills"></ul>');
+    div.append(dbkjs.panel_group);
+    div.append(dbkjs.panel_tabs);
+    
+    dbkjs.addTab("incident", "Incident", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ));
+    dbkjs.addTab("waterwinning", "Waterwinning", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ));
+   
+    dbkjs.noObjectInfoTabs();
+    dbkjs.showTab("incident");    
+
+    $('#dbkinfopanel_b').html(div);
+    
+};
+
+dbkjs.noObjectInfoTabs = function() {
+    dbkjs.removeTabs("info");
+    dbkjs.addTab("algemeen", "Algemeen", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ), "info");
+
+    dbkjs.showTab("incident");
+};
+
+dbkjs.addTab = function(id, title, div, clazz) {
+    $("#tab_" + id).remove();
+    $("#tab_li_" + id).remove();
+    var tab = $('<div class="tab-pane ' + clazz + '" id="tab_' + id + '"></div>');
+    tab.append(div);
+    dbkjs.panel_group.append(tab);
+    dbkjs.panel_tabs.append('<li class="' + clazz + '" id="tab_li_' + id + '"><a data-toggle="tab" href="#tab_' + id + '">' + title + '</a></li>');
+};
+
+dbkjs.showTab = function(id) {
+    $(dbkjs.panel_group).find(".tab-pane.active").removeClass("active");
+    $(dbkjs.panel_tabs).find("li.active").removeClass("active");
+    $(dbkjs.panel_group).find("#tab_" + id).addClass("active");
+    $(dbkjs.panel_tabs).find("#tab_li_" + id).addClass("active");
+};
+
+dbkjs.removeTabs = function(clazz) {
+    $(dbkjs.panel_group).find(".tab-pane." + clazz).remove();
+    $(dbkjs.panel_tabs).find("li." + clazz).remove();
 };

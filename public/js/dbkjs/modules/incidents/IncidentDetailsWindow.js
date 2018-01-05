@@ -26,21 +26,23 @@
  * @returns {IncidentDetailsWindow}
  */
 function IncidentDetailsWindow() {
-    SplitScreenWindow.call(this, "incidentDetails");
-
-    this.ghor = dbkjs.modules.incidents.options.ghor;
-
     this.createStyle();
 
-    $(this).on('elements_created', function() {
-        var v = ModalWindow.prototype.getView.call(this);
-        v.html("Bezig...");
-        this.renderDetailsScreen();
-    });
+    this.renderDetailsScreen();
 }
 
-IncidentDetailsWindow.prototype = Object.create(SplitScreenWindow.prototype);
 IncidentDetailsWindow.prototype.constructor = IncidentDetailsWindow;
+
+IncidentDetailsWindow.prototype.show = function(e) {
+    dbkjs.dbkInfoPanel.show();
+    dbkjs.showTab("incident");
+};
+
+IncidentDetailsWindow.prototype.hide = function(e) {
+    dbkjs.dbkInfoPanel.hide();
+};
+
+IncidentDetailsWindow.prototype.createElements = function() {};
 
 IncidentDetailsWindow.prototype.showError = function(e) {
     this.data(e);
@@ -65,6 +67,10 @@ table td { padding: 3px !important; } \
         style.appendChild(document.createTextNode(css));
     }
     head.appendChild(style);
+};
+
+IncidentDetailsWindow.prototype.getView = function() {
+    return $("#tab_incident");
 };
 
 IncidentDetailsWindow.prototype.renderDetailsScreen = function() {
