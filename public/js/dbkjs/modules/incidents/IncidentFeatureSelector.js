@@ -95,8 +95,8 @@ IncidentFeatureSelector.prototype.findMatches = function() {
                     if(fa) {
                         var matchPostcode = fa.postcode && postcode === fa.postcode;
                         var matchHuisnummer = fa.huisnummer && huisnummer === fa.huisnummer;
-                        var matchHuisletter = !me.matchHuisletter || (fa.huisletter === huisletter);
-                        var matchToevoeging = !me.matchToevoeging || (fa.toevoeging === toevoeging);
+                        var matchHuisletter = !me.matchHuisletter || ((fa.huisletter || "") === huisletter);
+                        var matchToevoeging = !me.matchToevoeging || ((fa.toevoeging || "") === toevoeging);
                         var matchWoonplaats = woonplaats && fa.woonplaatsNaam && fa.woonplaatsNaam.toLowerCase().indexOf(woonplaats.toLowerCase()) !== -1;
                         var matchStraat = straat && fa.openbareRuimteNaam && fa.openbareRuimteNaam.toLowerCase().indexOf(straat.toLowerCase()) !== -1;
 
