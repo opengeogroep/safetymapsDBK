@@ -39,7 +39,7 @@ dbkjs.modules.ealgps = {
                 'title': 'GPS',
                 'style': 'color: gray'
             })
-            .append('<i class="fa fa-location-arrow"></i>')
+            .append('<i class="fa fa-crosshairs"></i>')
             .click(function(e) {
                 e.preventDefault();
                 _obj.click(e);
