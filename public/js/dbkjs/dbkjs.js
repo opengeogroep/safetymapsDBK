@@ -665,9 +665,9 @@ dbkjs.initPanel = function() {
     div.append(dbkjs.panel_tabs);
     
     dbkjs.addTab("incident", "Incident", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ));
-    dbkjs.addTab("waterwinning", "Waterwinning", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ));
-   
     dbkjs.noObjectInfoTabs();
+    dbkjs.addTab("waterwinning", "Waterwinning", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ), "last");
+
     dbkjs.showTab("incident");    
 
     $('#dbkinfopanel_b').html(div);
@@ -687,7 +687,13 @@ dbkjs.addTab = function(id, title, div, clazz) {
     var tab = $('<div class="tab-pane ' + (clazz || '') + '" id="tab_' + id + '"></div>');
     tab.append(div);
     dbkjs.panel_group.append(tab);
-    dbkjs.panel_tabs.append('<li class="' + (clazz || '') + '" id="tab_li_' + id + '"><a data-toggle="tab" href="#tab_' + id + '">' + title + '</a></li>');
+    var li = '<li class="' + (clazz || '') + '" id="tab_li_' + id + '"><a data-toggle="tab" href="#tab_' + id + '">' + title + '</a></li>';
+    var last = $(dbkjs.panel_tabs).find(".last");
+    if(last.length > 0) {
+        $(li).insertBefore(last);
+    } else {
+        dbkjs.panel_tabs.append(li);
+    }
 };
 
 dbkjs.showTab = function(id) {
