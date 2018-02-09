@@ -215,7 +215,7 @@ IncidentDetailsWindow.prototype.showMultipleFeatureMatches = function() {
     $(".incident_tab").hide();
 
     var div = $("<div id='multiple_matches'/>");
-    div.append("<h3>Meerdere informatiekaarten gevonden op de locatie van het incident:</h3>");
+    div.append("<h3>Meerdere informatiekaarten gevonden, maak een keuze:</h3>");
     var item_ul = $('<ul class="nav nav-pills nav-stacked"></ul>');
     $.each(me.multipleFeatureMatches, function(i, m) {
         var info = dbkjs.config.styles.getFeatureStylingInfo(m);
