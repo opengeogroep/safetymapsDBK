@@ -677,6 +677,8 @@ dbkjs.initPanel = function() {
 dbkjs.noObjectInfoTabs = function() {
     dbkjs.removeTabs("info");
     dbkjs.addTab("algemeen", "Algemeen", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ), "info");
+    dbkjs.addTab("brandweer", "Brandweer", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ), "info");
+    dbkjs.addTab("gebouw", "Gebouw", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ), "info");
 
     dbkjs.showTab("incident");
 };

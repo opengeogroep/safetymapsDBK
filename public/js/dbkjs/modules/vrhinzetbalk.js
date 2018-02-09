@@ -67,6 +67,7 @@ dbkjs.modules.vrhinzetbalk = {
             style: 'width: 32px; margin-bottom: 6px',
             layers: [ 'Brandcompartiment', 'Brandcompartiment label', 'Gevaarlijke stoffen' ],
             active: false,
+            showTab: "brandweer",
             css: {
                 'background-color': 'red',
                 color: 'white'
@@ -99,6 +100,7 @@ dbkjs.modules.vrhinzetbalk = {
             style: 'height: 36px; margin-bottom: 5px',
             layers: [ ],
             active: false,
+            showTab: "waterwinning",
             css: {
                 'background-color': '#2D2DFF',
                 color: 'white'
@@ -124,6 +126,7 @@ dbkjs.modules.vrhinzetbalk = {
             icon: 'fa-industry',
             layers: [ ],
             active: false,
+            showTab: "gebouw",
             css: {
                 'background-color': 'black',
                 color: 'white'
@@ -262,7 +265,9 @@ dbkjs.modules.vrhinzetbalk = {
                     toggle.addClass('on');
                     me.enableLayers(toggleOptions.layers);
                     dbkjs.dbkInfoPanel.show();
-                    dbkjs.showTab("waterwinning");
+                    if(toggleOptions.showTab) {
+                        dbkjs.showTab(toggleOptions.showTab);
+                    }
                 }
                 if(toggleOptions.wms) {
                     $.each(me.findConfiguredLayers(toggleOptions.wms).olLayers, function(j,l) {
