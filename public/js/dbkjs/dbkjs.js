@@ -550,7 +550,6 @@ dbkjs.documentReady = function () {
                 $('#infopanel').toggle();
             } else {
                 dbkjs.dbkInfoPanel.show();
-                // TODO: show algemeen tab
                 dbkjs.showTab("algemeen");
             }
         });
@@ -589,6 +588,14 @@ dbkjs.documentReady = function () {
     });
 };
 
+dbkjs.updatePanelContentHeight = function() {
+    var view = dbkjs.dbkInfoPanel.getView();
+    var tabContentHeight = view.height() - view.find(".nav-pills").height();
+    view.find(".tab-content").css("height", tabContentHeight);
+
+    view.find(".pdf-embed").css("height", tabContentHeight - 28);
+};
+
 dbkjs.initPanel = function() {
     // Create the infopanel
     dbkjs.util.createModalPopup({name: 'infopanel'}).getView().append($('<div></div>').attr({'id': 'infopanel_b'}));
@@ -598,21 +605,14 @@ dbkjs.initPanel = function() {
     dbkjs.dbkInfoPanel.createElements();
 
     // Put tabs at the bottom after width transition has ended
-    var updateContentHeight = function() {
-        var view = dbkjs.dbkInfoPanel.getView();
-        var tabContentHeight = view.height() - view.find(".nav-pills").height();
-        view.find(".tab-content").css("height", tabContentHeight);
-
-        view.find(".pdf-embed").css("height", tabContentHeight - 28);
-    };
-    $(window).resize(updateContentHeight);
+    $(window).resize(dbkjs.updatePanelContentHeight);
 
     $(dbkjs.dbkInfoPanel).on("show", function() {
         var event = dbkjs.util.getTransitionEvent();
         if(event) {
-            dbkjs.dbkInfoPanel.getView().parent().on(event, updateContentHeight);
+            dbkjs.dbkInfoPanel.getView().parent().on(event, dbkjs.updatePanelContentHeight);
         } else {
-            updateContentHeight();
+            dbkjs.updatePanelContentHeight();
         }
 
         $.each(dbkjs.dbkInfoPanel.getView().find(".pdf-embed"), function(i, pdf) {
@@ -660,7 +660,7 @@ dbkjs.initPanel = function() {
 
     var div = $('<div class="tabbable"></div>');
     dbkjs.panel_group = $('<div class="tab-content"></div>');
-    dbkjs.panel_tabs = $('<ul class="nav nav-pills"></ul>');
+    dbkjs.panel_tabs = $('<ul class="nav nav-pills nav-pills-bottom"></ul>');
     div.append(dbkjs.panel_group);
     div.append(dbkjs.panel_tabs);
     
@@ -684,10 +684,10 @@ dbkjs.noObjectInfoTabs = function() {
 dbkjs.addTab = function(id, title, div, clazz) {
     $("#tab_" + id).remove();
     $("#tab_li_" + id).remove();
-    var tab = $('<div class="tab-pane ' + clazz + '" id="tab_' + id + '"></div>');
+    var tab = $('<div class="tab-pane ' + (clazz || '') + '" id="tab_' + id + '"></div>');
     tab.append(div);
     dbkjs.panel_group.append(tab);
-    dbkjs.panel_tabs.append('<li class="' + clazz + '" id="tab_li_' + id + '"><a data-toggle="tab" href="#tab_' + id + '">' + title + '</a></li>');
+    dbkjs.panel_tabs.append('<li class="' + (clazz || '') + '" id="tab_li_' + id + '"><a data-toggle="tab" href="#tab_' + id + '">' + title + '</a></li>');
 };
 
 dbkjs.showTab = function(id) {
@@ -695,6 +695,7 @@ dbkjs.showTab = function(id) {
     $(dbkjs.panel_tabs).find("li.active").removeClass("active");
     $(dbkjs.panel_group).find("#tab_" + id).addClass("active");
     $(dbkjs.panel_tabs).find("#tab_li_" + id).addClass("active");
+    dbkjs.updatePanelContentHeight();
 };
 
 dbkjs.removeTabs = function(clazz) {

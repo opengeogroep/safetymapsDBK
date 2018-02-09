@@ -281,7 +281,7 @@ dbkjs.protocol.jsonDBK = {
             }
 
             _obj.panel_group = $('<div class="tab-content"></div>');
-            _obj.panel_tabs = $('<ul class="nav nav-pills"></ul>');
+            _obj.panel_tabs = $('<ul class="nav nav-pills nav-pills-bottom"></ul>');
             _obj.constructInfoDiv(dbkjs.options.feature, objecttype);
             var div = $('<div class="tabbable"></div>');
             div.append(_obj.panel_group);
@@ -292,6 +292,8 @@ dbkjs.protocol.jsonDBK = {
                 dbkjs.gui.infoPanelUpdateHtml('');
                 dbkjs.gui.infoPanelAddItems(div);
             }
+            _obj.active_tab = "algemeen";            
+            dbkjs.showTab(_obj.active_tab);            
             dbkjs.gui.infoPanelUpdateTitle('<i class="fa fa-building"></i> ' + dbkjs.options.feature.formeleNaam);
             $('#systeem_meldingen').hide();
 

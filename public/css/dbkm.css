@@ -689,3 +689,10 @@ input[type="radio"], input[type="checkbox"] {
     font-weight: bold;
     font-size: 14px;
 }
+
+.nav-pills-bottom {
+    position: fixed;
+    bottom: 0;
+    background-color: white;
+    margin-bottom: 10px !important;
+}
