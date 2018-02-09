@@ -83,7 +83,7 @@ dbkjs.modules.waterwinning = {
         var me = this;
         //me.Layer.destroyFeatures();
         var test = this.Layer.getFeatureBy("fid",id);
-        dbkjs.selectControl.select(test);
+        //dbkjs.selectControl.select(test);
         if(me.lineFeature){
             me.Layer.removeFeatures([me.lineFeature]);
         }
