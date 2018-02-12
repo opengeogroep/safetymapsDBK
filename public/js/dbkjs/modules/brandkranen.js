@@ -284,7 +284,7 @@ dbkjs.modules.brandkranen = {
             var brandkraanFeatures =  this.rtBrandkranen.bbox(left,right);
             this.removeAllBrandkranen();
 
-            if(!this.pause && this.brandkranen.maxResolution > currentResolution){
+            if(!this.pause && this.brandkranen.maxResolution >= currentResolution){
                 this.insertIntoVectorlayer(brandkraanFeatures, this.brandkranen);
             }
         }
