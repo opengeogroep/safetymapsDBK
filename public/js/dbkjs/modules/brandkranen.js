@@ -109,7 +109,11 @@ dbkjs.modules.brandkranen = {
         var nummer = a.nummer ? a.nummer : "";
         var huisnummer = a.huisnummer ? a.huisnummer : "";
         var straatnaam = a.straatnaam ? a.straatnaam : "";
+        var plaatsnaam = a.plaatsnaam ? a.plaatsnaam : "";
         var adres = straatnaam ? straatnaam + " " + huisnummer : "";
+        if(plaatsnaam !== ""){
+            adres += ", " + plaatsnaam;
+        }
         var currentStreng = null;
         if (a.streng_id) {
             me.strengen.push(a.streng_id);
@@ -179,7 +183,7 @@ dbkjs.modules.brandkranen = {
             rendererOptions: {
             },
             options: {
-                minScale: 10000
+                "maxResolution": 1.68
             },
             styleMap: new OpenLayers.StyleMap({
                 'default': new OpenLayers.Style({
