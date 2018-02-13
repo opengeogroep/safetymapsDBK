@@ -243,7 +243,6 @@ dbkjs.modules.brandkranen = {
                 'temporary': new OpenLayers.Style({pointRadius: 20})
             })
         });
-        dbkjs.protocol.jsonDBK.layers.push(this.brandkranen);
         this.brandkranen.events.register("featureselected", this, this.brandkraanSelected);
         this.brandkranen.events.register("beforefeatureselected", this, this.beforeBrandkraanSelected);
         this.brandkranen.events.register("featureunselected", this, this.brandkraanUnselected);
@@ -306,6 +305,9 @@ dbkjs.modules.brandkranen = {
         this.strengen = [];
         this.update();
         $('#vectorclickpanel').hide();
+    },
+    toggleLayers:function(on){
+        this.brandkranen.setVisibility(on);
     }
 };
 
