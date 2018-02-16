@@ -37,10 +37,7 @@ dbkjs.modules.waterwinning = {
         $(dbkjs).one("dbkjs_init_complete", function () {
             if (dbkjs.modules.incidents && dbkjs.modules.incidents.controller) {
                 $(dbkjs.modules.incidents.controller).on("new_incident", function (event, incident) {
-                    console.log("new incident", incident);
-                    me.incident = incident;
-                    //me.requestData(incident);
-                    me.constructWaterwinning();
+                    me.newIncident(incident);
                 });
                 $(dbkjs.modules.incidents.controller).on("end_incident", function () {
                     me.resetTab();
@@ -97,9 +94,24 @@ dbkjs.modules.waterwinning = {
             
         }
     },
-    constructWaterwinning: function () {
-        var _obj = dbkjs.protocol.jsonDBK;
-        //_obj.constructWW();
+    newIncident: function(incident) {
+        var me = this;
+
+        me.resetTab();
+        $("#tab_waterwinning").html("<i>Ophalen gegevens...</i>");
+
+        me.requestData(incident)
+        .done(function(data) {
+            me.renderData(data);
+        })
+        .fail(function(error) {
+            console.log("error requesting waterwinning data", arguments);
+            $("#tab_waterwinning").html("<i>Fout bij ophalen gegevens: " + Mustache.escape(error) + "</i>");
+        });
+    },
+    renderData: function(data) {
+        console.log("rendering waterwinning data", data);
+
         var me = this;
         var ww_table_div = $('<div class="table-responsive"></div>');
         var ww_table = $('<table id="wwlist" class="table table-hover"></table>');
@@ -110,7 +122,7 @@ dbkjs.modules.waterwinning = {
                 '<th>' + "Extra info" + '</th>' +
                 '</tr>'
                 );
-        $.each(me.dummy.values, function (i, ww) {
+        $.each(data, function (i, ww) {
             var myrow = $('<tr id="test'+i+'">' +
                     '<td><img class="thumb" src="' + dbkjs.basePath + "images/nen1414/" + ww.soort + '"</td>' +
                     '<td>' + ww.afstand + 'm' + '</td>' +
@@ -131,11 +143,12 @@ dbkjs.modules.waterwinning = {
         });
         ww_table_div.append(ww_table);
         $("#tab_waterwinning").html(ww_table_div);
-        _obj.addMouseoverHandler("#wwlist",me.Layer);
+        dbkjs.protocol.jsonDBK.addMouseoverHandler("#wwlist",me.Layer);
     },
 
     resetTab: function () {
         $("#tab_waterwinning").html($('<i> ' + i18n.t("dialogs.noinfo") + '</i>'));
+        this.Layer.removeFeatures();
     },
 
     zoomToOverview: function () {
@@ -148,7 +161,14 @@ dbkjs.modules.waterwinning = {
     },
     
     requestData:function(incident){
-        var d = $.Deferred;
+        var me = this;
+        var d = $.Deferred();
+        console.log("requesting waterwinning data", incident);
+        window.setTimeout(function() {
+            console.log("resolving waterwinning data promise");
+            d.resolve(me.dummy.values);
+        });
+        /*
         var incidentObject = {
             "straal": 2500, // moet configureerbaar worden
             "aantal": 3, // moet configureerbaar worden
@@ -168,7 +188,7 @@ dbkjs.modules.waterwinning = {
             } else {
                 
             }
-        });
+        });*/
         return d.promise();
     }
 };
