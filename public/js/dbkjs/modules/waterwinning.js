@@ -125,7 +125,7 @@ dbkjs.modules.waterwinning = {
         $.each(data, function (i, ww) {
             var myrow = $('<tr id="test'+i+'">' +
                     '<td><img class="thumb" src="' + dbkjs.basePath + "images/nen1414/" + ww.soort + '"</td>' +
-                    '<td>' + ww.afstand + 'm' + '</td>' +
+                    '<td>' + ww.afstand.toFixed() + 'm' + '</td>' +
                     '<td>' + ww.extra_info + '</td> +'
                     + '</tr>'
                     ).click(function (e) {
@@ -164,31 +164,23 @@ dbkjs.modules.waterwinning = {
         var me = this;
         var d = $.Deferred();
         console.log("requesting waterwinning data", incident);
-        window.setTimeout(function() {
-            console.log("resolving waterwinning data promise");
-            d.resolve(me.dummy.values);
-        });
-        /*
-        var incidentObject = {
-            "straal": 2500, // moet configureerbaar worden
-            "aantal": 3, // moet configureerbaar worden
-            "x":incident.x,
-            "y":incident.y
-        };
-        $.ajax("url naar api", {
-            dataType: "json",
-            data: incidentObject
+
+        $.ajax("api/vrh/waterwinning.json", {
+            data: {
+                x: incident.x,
+                y: incident.y
+            }
+        })
+        .done(function(data) {
+            if(data.success) {
+                d.resolve(data.values);
+            } else {
+                d.reject(data.error);
+            }
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
-            
-        })
-        .done(function(data, textStatus, jqXHR) {
-            if(data.success) {
-                
-            } else {
-                
-            }
-        });*/
+            d.reject("Ajax error: HTTP status " + jqXHR.status + " " + jqXHR.statusText + ", " + jqXHR.responseText);
+        });
         return d.promise();
     }
 };
