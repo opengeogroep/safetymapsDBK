@@ -96,7 +96,7 @@ dbkjs.modules.waterwinning = {
     },
     newIncident: function(incident) {
         var me = this;
-
+        me.incident =incident;
         me.resetTab();
         $("#tab_waterwinning").html("<i>Ophalen gegevens...</i>");
 
@@ -136,7 +136,7 @@ dbkjs.modules.waterwinning = {
                     + '</tr>'
                     ).click(function (e) {
                 me.drawLine(ww,"test"+i);
-                me.zoomToOverview();
+                me.zoomToOverview(ww);
             });
             ww_table.append(myrow);
             var location = new OpenLayers.Geometry.Point(ww.x, ww.y);
@@ -157,11 +157,11 @@ dbkjs.modules.waterwinning = {
         this.Layer.removeFeatures();
     },
 
-    zoomToOverview: function () {
+    zoomToOverview: function (ww) {
         var me = this;
-        if (me.wwData && me.incident){
-            var x = (parseInt(me.wwData.x,10)+parseInt(me.incident.x,10))/2;
-            var y = (parseInt(me.wwData.y,10)+parseInt(me.incident.y,10))/2;
+        if (ww && me.incident){
+            var x = (parseInt(ww.x,10)+parseInt(me.incident.x,10))/2;
+            var y = (parseInt(ww.y,10)+parseInt(me.incident.y,10))/2;
             dbkjs.map.setCenter(new OpenLayers.LonLat(x, y), dbkjs.options.zoom);
         }
     },
