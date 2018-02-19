@@ -54,7 +54,7 @@ dbkjs.modules.waterwinning = {
                 }, {
                     context: {
                         myIcon: function (feature) {
-                            return dbkjs.basePath + "images/nen1414/" + feature.attributes.soort;
+                            return dbkjs.basePath + feature.attributes.img;
                         },
                         myradius: function (feature) {
                             return dbkjs.scaleStyleValue(12, 10);
@@ -123,10 +123,16 @@ dbkjs.modules.waterwinning = {
                 '</tr>'
                 );
         $.each(data, function (i, ww) {
+            var img = "images/nen1414/Tb4.002blau.png";
+            if(ww.soort === "bovengronds") {
+                img = "images/nen1414/Tb4.001blau.png";
+            } else if(ww.soort === "open_water") {
+                img = "images/other/Falck20.png";
+            }
             var myrow = $('<tr id="test'+i+'">' +
-                    '<td><img class="thumb" src="' + dbkjs.basePath + "images/nen1414/" + ww.soort + '"</td>' +
-                    '<td>' + ww.afstand.toFixed() + 'm' + '</td>' +
-                    '<td>' + ww.extra_info + '</td> +'
+                    '<td><img class="thumb" src="' + dbkjs.basePath + img + '"></td>' +
+                    '<td>' + ww.distance.toFixed() + 'm' + '</td>' +
+                    '<td>' + ww.info + '<br><i>' + ww.tabel + '</i></td> +'
                     + '</tr>'
                     ).click(function (e) {
                 me.drawLine(ww,"test"+i);
@@ -136,7 +142,7 @@ dbkjs.modules.waterwinning = {
             var location = new OpenLayers.Geometry.Point(ww.x, ww.y);
             var marker = new OpenLayers.Feature.Vector(location, {});
             marker.attributes ={
-                "soort":ww.soort,
+                "img": img,
                 "fid":"test" +i
             };
             me.Layer.addFeatures([marker]);
