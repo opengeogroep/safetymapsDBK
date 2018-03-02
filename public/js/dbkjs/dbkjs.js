@@ -676,9 +676,6 @@ dbkjs.initPanel = function() {
 
 dbkjs.noObjectInfoTabs = function() {
     dbkjs.removeTabs("info");
-    dbkjs.addTab("algemeen", "Algemeen", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ), "info");
-    dbkjs.addTab("brandweer", "Brandweer", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ), "info");
-    dbkjs.addTab("gebouw", "Gebouw", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ), "info");
 
     dbkjs.showTab("incident");
 };
@@ -699,9 +696,14 @@ dbkjs.addTab = function(id, title, div, clazz) {
 };
 
 dbkjs.showTab = function(id) {
+    var tab = $(dbkjs.panel_group).find("#tab_" + id);
+    if(tab.length === 0) {
+        return;
+    }
+
     $(dbkjs.panel_group).find(".tab-pane.active").removeClass("active");
     $(dbkjs.panel_tabs).find("li.active").removeClass("active");
-    $(dbkjs.panel_group).find("#tab_" + id).addClass("active");
+    tab.addClass("active");
     $(dbkjs.panel_tabs).find("#tab_li_" + id).addClass("active");
     dbkjs.updatePanelContentHeight();
 };
