@@ -47,10 +47,17 @@ dbkjs.modules.waterwinning = {
     },
     createLayer: function () {
         this.Layer = new OpenLayers.Layer.Vector("waterwinning", {
+            rendererOptions: {
+                zIndexing: true
+            },
+            options: {
+                minScale: 10000
+            },
             styleMap: new OpenLayers.StyleMap({
                 default: new OpenLayers.Style({
+                    cursor:"pointer",
                     externalGraphic: "${myIcon}",
-                    pointRadius: "${myradius}"
+                    pointRadius: 18
                 }, {
                     context: {
                         myIcon: function (feature) {
@@ -90,8 +97,8 @@ dbkjs.modules.waterwinning = {
             var line = new OpenLayers.Geometry.LineString([startPt, endPt]);
             var style = {strokeColor: "#0500bd", strokeWidth: 3};
             me.lineFeature = new OpenLayers.Feature.Vector(line, {}, style);
-            this.Layer.addFeatures([me.lineFeature]);
-            
+            dbkjs.map.setLayerIndex(this.Layer,99);
+            this.Layer.addFeatures([me.lineFeature]);      
         }
     },
     newIncident: function(incident) {
@@ -123,9 +130,9 @@ dbkjs.modules.waterwinning = {
                 '</tr>'
                 );
         $.each(data, function (i, ww) {
-            var img = "images/nen1414/Tb4.002blau.png";
+            var img = "images/nen1414/Tb4.002.png";
             if(ww.soort === "bovengronds") {
-                img = "images/nen1414/Tb4.001blau.png";
+                img = "images/nen1414/Tb4.001.png";
             } else if(ww.soort === "open_water") {
                 img = "images/other/Falck20.png";
             }
@@ -163,7 +170,28 @@ dbkjs.modules.waterwinning = {
             var x = (parseInt(ww.x,10)+parseInt(me.incident.x,10))/2;
             var y = (parseInt(ww.y,10)+parseInt(me.incident.y,10))/2;
             dbkjs.map.setCenter(new OpenLayers.LonLat(x, y), dbkjs.options.zoom);
+            me.checkIfPointsInScreen(ww);
         }
+    },
+    
+    checkIfPointsInScreen: function(destination){
+        var me = this;
+        var pointsInScreen = false;
+        var i = 0;
+        while(!pointsInScreen){
+            var bounds = dbkjs.map.calculateBounds();
+            if(bounds.containsLonLat({lon:destination.x, lat:destination.y}) && bounds.containsLonLat({lon:me.incident.x, lat:me.incident.y})){
+                pointsInScreen = true;
+            }else {
+                i++;
+                dbkjs.map.zoomOut();
+            }
+            if(i>25){
+                console.log("points are not found");
+                pointsInScreen = true;
+            }
+        }
+        return pointsInScreen; 
     },
     
     requestData:function(incident){
