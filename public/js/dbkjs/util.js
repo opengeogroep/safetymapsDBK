@@ -949,13 +949,18 @@ dbkjs.util = {
         $('#' + parent_id + ' ul').first().children().first().addClass('active');
         $('#' + parent_id + ' .tab-content').first().children().first().addClass('active');
     },
-    createDialog: function (id, title, styleoptions) {
+    createDialog: function (id, title, styleoptions, closeLink) {
         if (!styleoptions) {
             styleoptions = '';
         }
         var dialog = $('<div class="panel dialog" id="' + id + '" style="display:none;' + styleoptions + '"></div>');
         var heading = $('<div id="' + id + '_h" class="panel-heading"></div>');
-        var close_button = $('<button type="button" class="close" aria-hidden="true">&times;</button>');
+        var close_button;
+        if(closeLink) {
+            close_button = $('<a class="closeit modal-popup-close" aria-hidden="true"><i class="fa fa-close"></i> Sluiten</a>');
+        } else {
+            close_button = $('<button type="button" class="close" aria-hidden="true">&times;</button>');
+        }
         heading.append(close_button);
         heading.append('<span class="h4">' + title + '</span>');
         var dg_body = $('<div id="' + id + '_b" class="panel-body"></div>');

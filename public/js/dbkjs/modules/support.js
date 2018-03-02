@@ -55,13 +55,14 @@ dbkjs.modules.support = {
                     '<span><i class="fa fa-envelope-o"></i> ' + dbkjs.options.organisation.support.button + '</span>' +
                     '</a>' +
                     '</div>');
-            var supportpanel = dbkjs.util.createDialog('supportpanel', '<i class="fa fa-envelope-o"></i> ' + dbkjs.options.organisation.support.button, 'bottom:0;left:0;');
+            var supportpanel = dbkjs.util.createDialog('supportpanel', '<i class="fa fa-envelope-o"></i> ' + dbkjs.options.organisation.support.button, 'bottom:0;left:0;', true);
             $('body').append(supportpanel);
             if (dbkjs.viewmode !== 'fullscreen') {
                 $('.dialog').drags({handle: '.panel-heading'});
                 $('.btn-group').drags({handle: '.drag-handle'});
             }
             $('#foutknop').click(function () {
+                $(dbkjs).triggerHandler('modal_popup_show', {popupName: 'support'});
                 dbkjs.hoverControl.deactivate();
                 dbkjs.selectControl.deactivate();
                 _obj.layer.destroyFeatures();
@@ -212,7 +213,7 @@ dbkjs.modules.support = {
                             dbkjs.selectControl.activate();
 
                             setTimeout(function () {
-                                supportpanel.find(".close").click();
+                                supportpanel.find(".closeit").click();
                             }, 5000);
                         });
                         _obj.layer.destroyFeatures();
@@ -225,7 +226,7 @@ dbkjs.modules.support = {
                     }
                 });
             });
-            supportpanel.find('.close').click(function () {
+            supportpanel.find('.closeit').click(function () {
                 _obj.layer.destroyFeatures();
                 _obj.drag.deactivate();
                 dbkjs.map.removeControl(_obj.drag);
