@@ -139,7 +139,7 @@ dbkjs.modules.waterwinning = {
             var myrow = $('<tr id="test'+i+'">' +
                     '<td><img class="thumb" src="' + dbkjs.basePath + img + '"></td>' +
                     '<td>' + ww.distance.toFixed() + 'm' + '</td>' +
-                    '<td>' + ww.info + '<br><i>' + ww.tabel + '</i></td> +'
+                    '<td>' + (ww.info ? ww.info : '') + '<br><i>' + ww.tabel + '</i></td> +'
                     + '</tr>'
                     ).click(function (e) {
                 me.drawLine(ww,"test"+i);
