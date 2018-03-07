@@ -10,29 +10,16 @@ window.dbkjs = dbkjs;
 dbkjs.modules = dbkjs.modules || {};
 dbkjs.modules.waterwinning = {
     id: "dbk.module.waterwinning",
+    options: null,
     incident: null,
     lineFeature:null,
-    dummy: {
-        "succes": true,
-        "values": [
-            {
-                "soort": "Tb4.001blau.png",
-                "afstand": 20,
-                "extra_info": "blablalbla",
-                "x": 78200,
-                "y": 457250
-            },
-            {
-                "soort": "Tb4.002blau.png",
-                "afstand": 38,
-                "extra_info": "test1",
-                "x": 78250,
-                "y": 457300
-            }
-        ]
-    },
     register: function () {
         var me = this;
+
+        if(window.location.hostname.endsWith(".local")) {
+            this.options.url = "api/vrh/waterwinning.json";
+        }
+
         me.createLayer();
         $(dbkjs).one("dbkjs_init_complete", function () {
             if (dbkjs.modules.incidents && dbkjs.modules.incidents.controller) {
@@ -199,7 +186,7 @@ dbkjs.modules.waterwinning = {
         var d = $.Deferred();
         console.log("requesting waterwinning data", incident);
 
-        $.ajax("api/vrh/waterwinning.json", {
+        $.ajax(me.options.url, {
             data: {
                 x: incident.x,
                 y: incident.y
