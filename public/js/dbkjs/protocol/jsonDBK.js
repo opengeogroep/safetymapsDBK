@@ -169,6 +169,7 @@ dbkjs.protocol.jsonDBK = {
         dbkjs.gui.detailsPanelUpdateHtml(html);
         dbkjs.gui.detailsPanelShow();
     },
+    /* nodeless override:
     process: function (feature) {
         var _obj = dbkjs.protocol.jsonDBK;
         _obj.active_tab = 'algemeen';
@@ -216,6 +217,7 @@ dbkjs.protocol.jsonDBK = {
             }
         }
     },
+    */
     /* Restore state to before any DBK was selected */
     deselect: function() {
         var _obj = dbkjs.protocol.jsonDBK;
@@ -1436,7 +1438,7 @@ dbkjs.protocol.jsonDBK = {
             dbkjs.util.alert(i18n.t('app.error'), i18n.t('dialogs.infoNotFound'), 'alert-danger');
         });
     },
-    getGebied: function (feature, activetab) {
+    getGebied: function (feature, activetab, noZoom) {
         var _obj = dbkjs.protocol.jsonDBK;
         if (activetab) {
             _obj.active_tab = activetab;
@@ -1457,7 +1459,7 @@ dbkjs.protocol.jsonDBK = {
             fid = feature;
         }
         $.getJSON(dbkjs.dataPath + 'gebied/' + fid + '.json', params).done(function (data) {
-            dbkjs.protocol.jsonDBK.info(data);
+            dbkjs.protocol.jsonDBK.info(data, noZoom);
         }).fail(function (jqxhr, textStatus, error) {
             dbkjs.options.feature = null;
             dbkjs.util.alert(i18n.t('app.error'), i18n.t('dialogs.infoNotFound'), 'alert-danger');

@@ -246,7 +246,7 @@ dbkjs.protocol.jsonDBK.getObject = function(feature, activetab, noZoom, onSucces
     });
 };
 
-dbkjs.protocol.jsonDBK.process =  function(feature, onSuccess, noZoom) {
+dbkjs.protocol.jsonDBK.process =  function(feature, onSuccess, noZoom, activeTab) {
     var _obj = dbkjs.protocol.jsonDBK;
 
     dbkjs.modules.waterongevallen.deselect();
@@ -309,10 +309,12 @@ dbkjs.protocol.jsonDBK.process =  function(feature, onSuccess, noZoom) {
             };
             dbkjs.protocol.jsonDBK.processing = true;
             dbkjs.util.alert('<i class="fa fa-spinner fa-spin"></i>', i18n.t('dialogs.running'), 'alert-info');
+
+            activeTab = activeTab ? activeTab : "algemeen";
             if(feature.attributes.typeFeature === 'WO') {
-                dbkjs.modules.waterongevallen.selected(feature, mySuccess);
+                dbkjs.modules.waterongevallen.selected(feature, mySuccess, noZoom, activeTab);
             } else {
-                dbkjs.protocol.jsonDBK.getObject(feature, 'algemeen', !!noZoom, mySuccess);
+                dbkjs.protocol.jsonDBK.getObject(feature, activeTab, noZoom, mySuccess);
             }
         }
     } else {

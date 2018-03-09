@@ -18,6 +18,8 @@
  *
  */
 
+/* global dbkjs, Mustache, OpenLayers, imagesBase64 */
+
 var dbkjs = dbkjs || {};
 window.dbkjs = dbkjs;
 dbkjs.modules = dbkjs.modules || {};
@@ -91,8 +93,12 @@ dbkjs.modules.waterongevallen = {
             }
         });
     },
-    selected: function(feature, successFunction) {
+    selected: function(feature, successFunction, noZoom, activeTab) {
         var me = this;
+
+        dbkjs.selectControl.unselectAll();
+        dbkjs.protocol.jsonDBK.deselect();
+
         $.ajax("api/wbbk/" + feature.attributes.id + ".json", {
             dataType: "json"
         }).fail(function(jqXHR, textStatus, errorThrown) {
@@ -102,9 +108,10 @@ dbkjs.modules.waterongevallen = {
                 dbkjs.gui.showError("Fout bij inladen waterongevallenkaart: " + data.error);
                 return;
             }
-            dbkjs.selectControl.unselectAll();
-            me.loadLayers(data);
-            dbkjs.modules.feature.zoomToFeature(feature)
+            me.loadLayers(data, activeTab);
+            if(!noZoom) {
+                dbkjs.modules.feature.zoomToFeature(feature);
+            }
             if(typeof successFunction === "function") {
                 successFunction();
             }
@@ -165,7 +172,7 @@ dbkjs.modules.waterongevallen = {
             return "#0000de";
         } else if(type === "Dieptevlak 4 tot 9 meter") {
             return "#0f80ff";
-        } else if(type == "Dieptevlak tot 4 meter") {
+        } else if(type === "Dieptevlak tot 4 meter") {
             return "#7ddafb";
         } else if(type === "Gevaarlijk, overhangende grond") {
             return "red";
@@ -201,7 +208,7 @@ dbkjs.modules.waterongevallen = {
                                 return "#667eff";
                             } else if(type === "Dieptevlak 4 tot 9 meter") {
                                 return "#7bbeff";
-                            } else if(type == "Dieptevlak tot 4 meter") {
+                            } else if(type === "Dieptevlak tot 4 meter") {
                                 return "#97b9d4";
                             } else if(type === "Gevaarlijk, overhangende grond") {
                                 return "white";
@@ -287,7 +294,7 @@ dbkjs.modules.waterongevallen = {
                     }
                 }),
                 'select': new OpenLayers.Style({
-                    pointRadius: "${radius}",
+                    pointRadius: "${radius}"
                 }, {
                     context: {
                         radius: function(feature) {
@@ -296,7 +303,7 @@ dbkjs.modules.waterongevallen = {
                     }
                 }),
                 'temporary': new OpenLayers.Style({
-                    pointRadius: "${radius}",
+                    pointRadius: "${radius}"
                 }, {
                     context: {
                         radius: function(feature) {
@@ -319,8 +326,7 @@ dbkjs.modules.waterongevallen = {
         dbkjs.selectControl.layers.push(this.vlakken);
         dbkjs.selectControl.activate();
     },
-    loadLayers: function(data) {
-        this.vlakken.removeAllFeatures();
+    loadLayers: function(data, activeTab) {
         var features = new OpenLayers.Format.GeoJSON().read(data.vlakken);
         this.vlakken.addFeatures(features);
         features = new OpenLayers.Format.GeoJSON().read(data.lijnen);
@@ -402,8 +408,9 @@ dbkjs.modules.waterongevallen = {
             this.createHtmlTabDiv("symbolen", "Symbolen", false, symb_table);
         }
 
-        dbkjs.showTab("algemeen");
-        
+        activeTab = activeTab ? activeTab : "algemeen";
+        dbkjs.showTab(activeTab);
+
         // Fire handler to put tabs at bottom
         $(window).resize();
 

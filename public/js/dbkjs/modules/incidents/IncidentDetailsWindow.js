@@ -223,10 +223,10 @@ IncidentDetailsWindow.prototype.showMultipleFeatureMatches = function() {
         item_ul.append($('<li><a href="#"><img src="' + info.icon + '" style="width: 25px; margin-right: 10px">' + (m.attributes.locatie || m.attributes.formeleNaam) + (m.attributes.informeleNaam ? ' (' + m.attributes.informeleNaam + ')' : '') + '</a></li>').on('click', function(e) {
             e.preventDefault();
             me.hideMultipleFeatureMatches();
-            if(me.incidentLonLat) {
-                dbkjs.map.setCenter(me.incidentLonLat, dbkjs.options.zoom);
-            }
-            dbkjs.protocol.jsonDBK.process(m, null, true);
+            //if(me.incidentLonLat) {
+            //    dbkjs.map.setCenter(me.incidentLonLat, dbkjs.options.zoom);
+            //}
+            dbkjs.protocol.jsonDBK.process(m, null, true, "incident");
         }));
     });
     div.append(item_ul);
