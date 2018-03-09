@@ -1,9 +1,4 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+/* global OpenLayers, Mustache, i18n*/
 
 var dbkjs = dbkjs || {};
 window.dbkjs = dbkjs;
@@ -110,47 +105,20 @@ dbkjs.modules.waterwinning = {
         var ww_table_div = $('<div class="table-responsive"></div>');
         var ww_table = $('<table id="wwlist" class="table table-hover"></table>');
         ww_table.append('<tr><th>Soort</th><th>Afstand</th><th>Extra info</th></tr>');
-        ww_table.append('<tr><th colspan="3" style="font-weight: bold">Primair</th></tr>');
-        if(data.primary.length === 0) {
-            ww_table.append('<tr><td colspan="3" style="font-style: itaqlic">Geen primaire waterwinning binnen 500 meter gevonden!</td></tr>');
-        }
-        $.each(data.primary, function (i, ww) {
+        var all = data.primary.concat(data.secondary);
+        all.sort(function(lhs, rhs) {
+            return lhs.distance - rhs.distance;
+        });
+        $.each(all, function (i, ww) {
             var img = "images/nen1414/Tb4.002.png";
             if(ww.type === "bovengronds") {
                 img = "images/nen1414/Tb4.001.png";
-            } else if(ww.soort === "open_water") {
+            } else if(ww.type === "open_water") {
                 img = "images/other/Falck20.png";
-            }
-            var fid = "ww_primary_" + i;
-            var myrow = $('<tr id="test'+i+'">' +
-                    '<td><img style="width: 42px" src="' + dbkjs.basePath + img + '"></td>' +
-                    '<td>' + ww.distance.toFixed() + 'm' + '</td>' +
-                    '<td>' + (ww.info ? ww.info : '') + '</i></td> +'
-                    + '</tr>'
-            ).click(function (e) {
-                me.drawLine(ww, fid);
-                me.zoomToOverview(ww);
-            });
-            ww_table.append(myrow);
-            var location = new OpenLayers.Geometry.Point(ww.x, ww.y);
-            var marker = new OpenLayers.Feature.Vector(location, {});
-            marker.attributes ={
-                "img": img,
-                "fid": fid
-            };
-            me.Layer.addFeatures([marker]);
-        });
-        ww_table.append('<tr><th colspan="3" style="font-weight: bold">Secundair</th></tr>');
-        if(data.secondary.length === 0) {
-            ww_table.append('<tr><td colspan="3" style="font-style: itaqlic">Geen primaire waterwinning binnen 500 meter gevonden!</td></tr>');
-        }
-        $.each(data.secondary, function (i, ww) {
-            if(ww.type === "bluswaterriool") {
+            } else if(ww.type === "bluswaterriool") {
                 img = "images/other/Falck19.png";
-            } else {
-                img = "images/other/Falck20.png"; // open water
             }
-            var fid = "ww_secondary_" + i;
+            var fid = "ww_" + i;
             var myrow = $('<tr id="test'+i+'">' +
                     '<td><img style="width: 42px" src="' + dbkjs.basePath + img + '"></td>' +
                     '<td>' + ww.distance.toFixed() + 'm' + '</td>' +
@@ -169,6 +137,13 @@ dbkjs.modules.waterwinning = {
             };
             me.Layer.addFeatures([marker]);
         });
+        if(data.primary.length === 0) {
+            ww_table.append('<tr><td colspan="3" style="font-style: italic">Geen primaire waterwinning binnen 500 meter gevonden!</td></tr>');
+        }
+        if(data.secondary.length === 0) {
+            ww_table.append('<tr><td colspan="3" style="font-style: italic">Geen secondaire waterwinning binnen 3000 meter gevonden!</td></tr>');
+        }
+
         ww_table_div.append(ww_table);
         $("#tab_waterwinning").html(ww_table_div);
         dbkjs.protocol.jsonDBK.addMouseoverHandler("#wwlist",me.Layer);
