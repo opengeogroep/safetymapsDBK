@@ -79,7 +79,6 @@ dbkjs.modules.waterwinning = {
             var line = new OpenLayers.Geometry.LineString([startPt, endPt]);
             var style = {strokeColor: "#0500bd", strokeWidth: 3};
             me.lineFeature = new OpenLayers.Feature.Vector(line, {}, style);
-            dbkjs.map.setLayerIndex(this.Layer,99);
             this.Layer.addFeatures([me.lineFeature]);      
         }
     },
@@ -146,6 +145,7 @@ dbkjs.modules.waterwinning = {
 
         ww_table_div.append(ww_table);
         $("#tab_waterwinning").html(ww_table_div);
+        dbkjs.map.setLayerIndex(this.Layer,99);
         dbkjs.protocol.jsonDBK.addMouseoverHandler("#wwlist",me.Layer);
     },
 
