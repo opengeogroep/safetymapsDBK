@@ -109,27 +109,26 @@ dbkjs.modules.waterwinning = {
         var me = this;
         var ww_table_div = $('<div class="table-responsive"></div>');
         var ww_table = $('<table id="wwlist" class="table table-hover"></table>');
-        ww_table.append(
-                '<tr>' +
-                '<th>' + "Soort" + '</th>' +
-                '<th>' + "Afstand" + '</th>' +
-                '<th>' + "Extra info" + '</th>' +
-                '</tr>'
-                );
-        $.each(data, function (i, ww) {
+        ww_table.append('<tr><th>Soort</th><th>Afstand</th><th>Extra info</th></tr>');
+        ww_table.append('<tr><th colspan="3" style="font-weight: bold">Primair</th></tr>');
+        if(data.primary.length === 0) {
+            ww_table.append('<tr><td colspan="3" style="font-style: itaqlic">Geen primaire waterwinning binnen 500 meter gevonden!</td></tr>');
+        }
+        $.each(data.primary, function (i, ww) {
             var img = "images/nen1414/Tb4.002.png";
-            if(ww.soort === "bovengronds") {
+            if(ww.type === "bovengronds") {
                 img = "images/nen1414/Tb4.001.png";
             } else if(ww.soort === "open_water") {
                 img = "images/other/Falck20.png";
             }
+            var fid = "ww_primary_" + i;
             var myrow = $('<tr id="test'+i+'">' +
-                    '<td><img class="thumb" src="' + dbkjs.basePath + img + '"></td>' +
+                    '<td><img style="width: 42px" src="' + dbkjs.basePath + img + '"></td>' +
                     '<td>' + ww.distance.toFixed() + 'm' + '</td>' +
-                    '<td>' + (ww.info ? ww.info : '') + '<br><i>' + ww.tabel + '</i></td> +'
+                    '<td>' + (ww.info ? ww.info : '') + '</i></td> +'
                     + '</tr>'
-                    ).click(function (e) {
-                me.drawLine(ww,"test"+i);
+            ).click(function (e) {
+                me.drawLine(ww, fid);
                 me.zoomToOverview(ww);
             });
             ww_table.append(myrow);
@@ -137,7 +136,36 @@ dbkjs.modules.waterwinning = {
             var marker = new OpenLayers.Feature.Vector(location, {});
             marker.attributes ={
                 "img": img,
-                "fid":"test" +i
+                "fid": fid
+            };
+            me.Layer.addFeatures([marker]);
+        });
+        ww_table.append('<tr><th colspan="3" style="font-weight: bold">Secundair</th></tr>');
+        if(data.secondary.length === 0) {
+            ww_table.append('<tr><td colspan="3" style="font-style: itaqlic">Geen primaire waterwinning binnen 500 meter gevonden!</td></tr>');
+        }
+        $.each(data.secondary, function (i, ww) {
+            if(ww.type === "bluswaterriool") {
+                img = "images/other/Falck19.png";
+            } else {
+                img = "images/other/Falck20.png"; // open water
+            }
+            var fid = "ww_secondary_" + i;
+            var myrow = $('<tr id="test'+i+'">' +
+                    '<td><img style="width: 42px" src="' + dbkjs.basePath + img + '"></td>' +
+                    '<td>' + ww.distance.toFixed() + 'm' + '</td>' +
+                    '<td>' + (ww.info ? ww.info : '') + '</i></td> +'
+                    + '</tr>'
+            ).click(function (e) {
+                me.drawLine(ww, fid);
+                me.zoomToOverview(ww);
+            });
+            ww_table.append(myrow);
+            var location = new OpenLayers.Geometry.Point(ww.x, ww.y);
+            var marker = new OpenLayers.Feature.Vector(location, {});
+            marker.attributes ={
+                "img": img,
+                "fid": fid
             };
             me.Layer.addFeatures([marker]);
         });
@@ -194,7 +222,7 @@ dbkjs.modules.waterwinning = {
         })
         .done(function(data) {
             if(data.success) {
-                d.resolve(data.values);
+                d.resolve(data.value);
             } else {
                 d.reject(data.error);
             }
