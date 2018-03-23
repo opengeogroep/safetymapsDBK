@@ -74,10 +74,27 @@ dbkjs.modules.waterwinning = {
             me.Layer.removeFeatures([me.lineFeature]);
         }
         if (me.incident) {
-            var endPt = new OpenLayers.Geometry.Point(destination.x, destination.y);
-            var startPt = new OpenLayers.Geometry.Point(me.incident.x, me.incident.y);
-            var line = new OpenLayers.Geometry.LineString([startPt, endPt]);
-            var style = {strokeColor: "#0500bd", strokeWidth: 3};
+            var line;
+            if(destination.route) {
+                console.log("Using route for waterwinning point", destination);
+                line = new OpenLayers.Format.GeoJSON().read(destination.route.data.features[0].geometry)[0].geometry;
+                console.log("Line to point", line);   
+                var points = line.getVertices();
+                var reprojected = [];
+                reprojected.push(new OpenLayers.Geometry.Point(me.incident.x, me.incident.y));
+                for(var i = 0; i < points.length; i++) {
+                    var p = new Proj4js.Point(points[i].x, points[i].y);
+                    var t = Proj4js.transform(new Proj4js.Proj("EPSG:4326"), new Proj4js.Proj(dbkjs.options.projection.code), p);                
+                    reprojected.push(new OpenLayers.Geometry.Point(t.x, t.y));
+                }
+                line = new OpenLayers.Geometry.LineString(reprojected);
+                console.log("Reprojected line to point", line);
+            } else {
+                var endPt = new OpenLayers.Geometry.Point(destination.x, destination.y);
+                var startPt = new OpenLayers.Geometry.Point(me.incident.x, me.incident.y);            
+                line = new OpenLayers.Geometry.LineString([startPt, endPt]);
+            }
+            var style = {strokeColor: "#0500bd", strokeOpacity: 0.5, strokeWidth: 10};
             me.lineFeature = new OpenLayers.Feature.Vector(line, {}, style);
             this.Layer.addFeatures([me.lineFeature]);      
         }
@@ -118,9 +135,13 @@ dbkjs.modules.waterwinning = {
                 img = "images/other/Falck19.png";
             }
             var fid = "ww_" + i;
+            var routeDist = "";
+            if(ww.route) {
+                routeDist = "<span style='color:red'>" + Math.round(ww.route.distance) + "m</span><br>";
+            }
             var myrow = $('<tr id="test'+i+'">' +
                     '<td><img style="width: 42px" src="' + dbkjs.basePath + img + '"></td>' +
-                    '<td>' + ww.distance.toFixed() + 'm' + '</td>' +
+                    '<td>' + routeDist + ww.distance.toFixed() + 'm' + '</td>' +
                     '<td>' + (ww.info ? ww.info : '') + '</i></td> +'
                     + '</tr>'
             ).click(function (e) {
