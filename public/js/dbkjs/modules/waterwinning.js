@@ -1,4 +1,4 @@
-/* global OpenLayers, Mustache, i18n*/
+/* global OpenLayers, Mustache, i18n, Proj4js */
 
 var dbkjs = dbkjs || {};
 window.dbkjs = dbkjs;
@@ -187,16 +187,25 @@ dbkjs.modules.waterwinning = {
     
     checkIfPointsInScreen: function(destination){
         var me = this;
+
+        if(me.lineFeature) {
+            dbkjs.map.zoomToExtent(me.lineFeature.geometry.getBounds(), true);
+            if(dbkjs.map.getZoom() > dbkjs.options.zoom) {
+                dbkjs.map.setCenter(dbkjs.map.getCenter(), dbkjs.options.zoom);
+            }
+            return;
+        }
+
         var pointsInScreen = false;
         var i = 0;
         while(!pointsInScreen){
             var bounds = dbkjs.map.calculateBounds();
-            if(bounds.containsLonLat({lon:destination.x, lat:destination.y}) && bounds.containsLonLat({lon:me.incident.x, lat:me.incident.y})){
+                if(bounds.containsLonLat({lon:destination.x, lat:destination.y}) && bounds.containsLonLat({lon:me.incident.x, lat:me.incident.y})){
                 pointsInScreen = true;
             }else {
                 i++;
-                dbkjs.map.zoomOut();
-            }
+                    dbkjs.map.zoomOut();
+                }
             if(i>25){
                 console.log("points are not found");
                 pointsInScreen = true;
