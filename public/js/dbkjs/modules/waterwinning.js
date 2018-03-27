@@ -67,11 +67,12 @@ dbkjs.modules.waterwinning = {
 
     drawLine: function (destination, id) {
         var me = this;
-        //me.Layer.destroyFeatures();
-        var test = this.Layer.getFeatureBy("fid",id);
         //dbkjs.selectControl.select(test);
         if(me.lineFeature){
             me.Layer.removeFeatures([me.lineFeature]);
+        }
+        if(me.endOfRouteToDestLineFeature) {
+            me.Layer.removeFeatures([me.endOfRouteToDestLineFeature]);
         }
         if (me.incident) {
             var line;
@@ -89,6 +90,12 @@ dbkjs.modules.waterwinning = {
                 }
                 line = new OpenLayers.Geometry.LineString(reprojected);
                 console.log("Reprojected line to point", line);
+                var lastRoutePoint = reprojected[reprojected.length-1];
+                var coords = [new OpenLayers.Geometry.Point(lastRoutePoint.x, lastRoutePoint.y), new OpenLayers.Geometry.Point(destination.x, destination.y)];
+                me.endOfRouteToDestLineFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(coords), {}, {
+                    strokeColor: "blue", strokeOpacity: 0.8, strokeWidth: 3, strokeDashstyle: "dash"
+                });
+                this.Layer.addFeatures(me.endOfRouteToDestLineFeature);
             } else {
                 var endPt = new OpenLayers.Geometry.Point(destination.x, destination.y);
                 var startPt = new OpenLayers.Geometry.Point(me.incident.x, me.incident.y);            
