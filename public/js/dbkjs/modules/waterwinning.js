@@ -41,6 +41,7 @@ dbkjs.modules.waterwinning = {
         }
     },
     createLayer: function () {
+        var me = this;
         this.Layer = new OpenLayers.Layer.Vector("waterwinning", {
             rendererOptions: {
                 zIndexing: true
@@ -74,8 +75,12 @@ dbkjs.modules.waterwinning = {
                 })
             })
         });
+        this.Layer.events.register("featureselected", me, me.selectFeature);
         dbkjs.map.addLayer(this.Layer);
         dbkjs.selectControl.setLayer((dbkjs.selectControl.layers || dbkjs.selectControl.layer).concat([this.Layer]));
+    },
+    selectFeature: function(feature){
+        this.drawLine(feature.feature.attributes.ww);
     },
     drawLine: function (destination, id) {
         var me = this;
@@ -158,7 +163,15 @@ dbkjs.modules.waterwinning = {
         ww_table.append('<tr><th>Soort</th><th>Afstand</th><th>Extra info</th></tr>');
         var all = data.primary.concat(data.secondary);
         all.sort(function(lhs, rhs) {
-            return lhs.distance - rhs.distance;
+            var ld = lhs.distance;
+            if(lhs.route && lhs.route.success) {
+                ld = lhs.route.distance;
+            }
+            var rd = rhs.distance;
+            if(rhs.route && rhs.route.success) {
+                rd = rhs.route.distance;
+            }
+            return ld - rd;
         });
         $.each(all, function (i, ww) {
             var img = "images/nen1414/Tb4.002.png";
@@ -188,7 +201,8 @@ dbkjs.modules.waterwinning = {
             var marker = new OpenLayers.Feature.Vector(location, {});
             marker.attributes ={
                 "img": img,
-                "fid": fid
+                "fid": fid,
+                "ww": ww
             };
             me.testMarker = marker;
             me.Layer.addFeatures([marker]);
