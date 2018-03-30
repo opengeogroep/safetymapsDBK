@@ -39,6 +39,7 @@ dbkjs.modules.waterwinning = {
         }
     },
     createLayer: function () {
+        var me = this;
         this.Layer = new OpenLayers.Layer.Vector("waterwinning", {
             rendererOptions: {
                 zIndexing: true
@@ -72,10 +73,15 @@ dbkjs.modules.waterwinning = {
                 })
             })
         });
+        this.Layer.events.register("featureselected", me, me.selectFeature);
         dbkjs.map.addLayer(this.Layer);
         dbkjs.selectControl.setLayer((dbkjs.selectControl.layers || dbkjs.selectControl.layer).concat([this.Layer]));
     },
-
+    
+    selectFeature: function(feature){
+        this.drawLine(feature.feature.attributes.ww);
+    },
+    
     drawLine: function (destination, id) {
         var me = this;
         //dbkjs.selectControl.select(test);
@@ -187,7 +193,8 @@ dbkjs.modules.waterwinning = {
             var marker = new OpenLayers.Feature.Vector(location, {});
             marker.attributes ={
                 "img": img,
-                "fid": fid
+                "fid": fid,
+                "ww": ww
             };
             me.testMarker = marker;
             me.Layer.addFeatures([marker]);
