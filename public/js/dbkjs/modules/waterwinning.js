@@ -10,6 +10,7 @@ dbkjs.modules.waterwinning = {
     lineFeature:null,
     test: null,
     testMarker: null,
+    noRouteSort: null,
     register: function () {
         var me = this;
 
@@ -21,6 +22,7 @@ dbkjs.modules.waterwinning = {
 
         var params = OpenLayers.Util.getParameters();
         me.test = params.ww === "test";
+        me.noRouteSort = params.wwnoroutesort === "true";
         if(me.test) {
             $(dbkjs).one("dbkjs_init_complete", function () {
                 me.newIncident({x: params.wwx, y: params.wwy}, true, true);
@@ -75,7 +77,6 @@ dbkjs.modules.waterwinning = {
         dbkjs.map.addLayer(this.Layer);
         dbkjs.selectControl.setLayer((dbkjs.selectControl.layers || dbkjs.selectControl.layer).concat([this.Layer]));
     },
-
     drawLine: function (destination, id) {
         var me = this;
         //dbkjs.selectControl.select(test);
@@ -270,7 +271,8 @@ dbkjs.modules.waterwinning = {
         $.ajax(me.options.url, {
             data: {
                 x: Number(incident.x).toFixed(),
-                y: Number(incident.y).toFixed()
+                y: Number(incident.y).toFixed(),
+                noRouteSort: me.noRouteSort
             }
         })
         .done(function(data) {
