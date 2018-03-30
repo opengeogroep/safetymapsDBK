@@ -10,7 +10,7 @@ dbkjs.modules.waterwinning = {
     lineFeature:null,
     test: null,
     testMarker: null,
-    noRouteSort: null,
+    noRouteTrim: null,
     register: function () {
         var me = this;
 
@@ -22,7 +22,7 @@ dbkjs.modules.waterwinning = {
 
         var params = OpenLayers.Util.getParameters();
         me.test = params.ww === "test";
-        me.noRouteSort = params.wwnoroutesort === "true";
+        me.noRouteTrim = params.wwnoroutetrim === "true";
         if(me.test) {
             $(dbkjs).one("dbkjs_init_complete", function () {
                 me.newIncident({x: params.wwx, y: params.wwy}, true, true);
@@ -156,7 +156,7 @@ dbkjs.modules.waterwinning = {
         var ww_table_div = $('<div class="table-responsive"></div>');
         if(me.test) {
             ww_table_div.append('<input type="button" class="btn btn-primary" id="ww_test_btn" value="Test nieuwe locatie door klik op kaart"><p>');
-            ww_table_div.append('<a href="?ww=test&wwx=' + me.incident.x + '&wwy=' + me.incident.y + '">Permalink test waterwinning op deze locatie</a><p>');
+            ww_table_div.append('<a href="?ww=test&wwx=' + me.incident.x + '&wwy=' + me.incident.y + '&wwnoroutetrim=' + me.noRouteTrim + '">Permalink test waterwinning op deze locatie</a><p>');
         }
 
         var ww_table = $('<table id="wwlist" class="table table-hover"></table>');
@@ -286,7 +286,7 @@ dbkjs.modules.waterwinning = {
             data: {
                 x: Number(incident.x).toFixed(),
                 y: Number(incident.y).toFixed(),
-                noRouteSort: me.noRouteSort
+                noRouteTrim: me.noRouteTrim
             }
         })
         .done(function(data) {
