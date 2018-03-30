@@ -8,6 +8,8 @@ dbkjs.modules.waterwinning = {
     options: null,
     incident: null,
     lineFeature:null,
+    test: null,
+    testMarker: null,
     register: function () {
         var me = this;
 
@@ -16,16 +18,25 @@ dbkjs.modules.waterwinning = {
         }
 
         me.createLayer();
-        $(dbkjs).one("dbkjs_init_complete", function () {
-            if (dbkjs.modules.incidents && dbkjs.modules.incidents.controller) {
-                $(dbkjs.modules.incidents.controller).on("new_incident", function (event, incident) {
-                    me.newIncident(incident);
-                });
-                $(dbkjs.modules.incidents.controller).on("end_incident", function () {
-                    me.resetTab();
-                });
-            }
-        });
+
+        var params = OpenLayers.Util.getParameters();
+        me.test = params.ww === "test";
+        if(me.test) {
+            $(dbkjs).one("dbkjs_init_complete", function () {
+                me.newIncident({x: params.wwx, y: params.wwy}, true, true);
+            });
+        } else  {
+            $(dbkjs).one("dbkjs_init_complete", function () {
+                if (dbkjs.modules.incidents && dbkjs.modules.incidents.controller) {
+                    $(dbkjs.modules.incidents.controller).on("new_incident", function (event, incident) {
+                        me.newIncident(incident);
+                    });
+                    $(dbkjs.modules.incidents.controller).on("end_incident", function () {
+                        me.resetTab();
+                    });
+                }
+            });
+        }
     },
     createLayer: function () {
         this.Layer = new OpenLayers.Layer.Vector("waterwinning", {
@@ -106,15 +117,26 @@ dbkjs.modules.waterwinning = {
             this.Layer.addFeatures([me.lineFeature]);      
         }
     },
-    newIncident: function(incident) {
+    newIncident: function(incident, zoom, addTestMarker) {
         var me = this;
-        me.incident =incident;
+        me.incident = incident;
         me.resetTab();
         $("#tab_waterwinning").html("<i>Ophalen gegevens...</i>");
 
+        if(addTestMarker) {
+            var location = new OpenLayers.Geometry.Point(me.incident.x, me.incident.y);
+            var marker = new OpenLayers.Feature.Vector(location, {});
+            marker.attributes ={
+                "img": "images/marker-red.png"
+            };
+            me.Layer.addFeatures([marker]);
+        }
         me.requestData(incident)
         .done(function(data) {
             me.renderData(data);
+            if(zoom) {
+                dbkjs.map.setCenter(new OpenLayers.LonLat(me.incident.x, me.incident.y), dbkjs.options.zoom);
+            }
         })
         .fail(function(error) {
             console.log("error requesting waterwinning data", arguments);
@@ -126,6 +148,11 @@ dbkjs.modules.waterwinning = {
 
         var me = this;
         var ww_table_div = $('<div class="table-responsive"></div>');
+        if(me.test) {
+            ww_table_div.append('<input type="button" class="btn btn-primary" id="ww_test_btn" value="Test nieuwe locatie door klik op kaart"><p>');
+            ww_table_div.append('<a href="?ww=test&wwx=' + me.incident.x + '&wwy=' + me.incident.y + '">Permalink test waterwinning op deze locatie</a><p>');
+        }
+
         var ww_table = $('<table id="wwlist" class="table table-hover"></table>');
         ww_table.append('<tr><th>Soort</th><th>Afstand</th><th>Extra info</th></tr>');
         var all = data.primary.concat(data.secondary);
@@ -162,6 +189,7 @@ dbkjs.modules.waterwinning = {
                 "img": img,
                 "fid": fid
             };
+            me.testMarker = marker;
             me.Layer.addFeatures([marker]);
         });
         if(data.primary.length === 0) {
@@ -173,15 +201,28 @@ dbkjs.modules.waterwinning = {
 
         ww_table_div.append(ww_table);
         $("#tab_waterwinning").html(ww_table_div);
+
+        if(me.test) {
+            $("#ww_test_btn").click(function() {
+                $("#ww_test_btn").attr("disabled");
+                $("#ww_test_btn").val("Klik op de kaart...");
+                dbkjs.map.events.register('click', me, me.mapClickTest);
+            });
+        }
         dbkjs.map.setLayerIndex(this.Layer,99);
         dbkjs.protocol.jsonDBK.addMouseoverHandler("#wwlist",me.Layer);
     },
+    mapClickTest: function(e) {
+        var me = this;
+        dbkjs.map.events.unregister('click', me, me.mapClickTest);
 
+        var pos = dbkjs.map.getLonLatFromPixel(e.xy);
+        me.newIncident({x: pos.lon, y: pos.lat}, true, true);
+    },
     resetTab: function () {
         $("#tab_waterwinning").html($('<i> ' + i18n.t("dialogs.noinfo") + '</i>'));
-        this.Layer.removeFeatures();
+        this.Layer.removeAllFeatures();
     },
-
     zoomToOverview: function (ww) {
         var me = this;
         if (ww && me.incident){
@@ -228,8 +269,8 @@ dbkjs.modules.waterwinning = {
 
         $.ajax(me.options.url, {
             data: {
-                x: incident.x,
-                y: incident.y
+                x: Number(incident.x).toFixed(),
+                y: Number(incident.y).toFixed()
             }
         })
         .done(function(data) {
