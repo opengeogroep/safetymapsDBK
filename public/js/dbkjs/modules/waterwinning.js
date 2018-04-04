@@ -95,7 +95,11 @@ dbkjs.modules.waterwinning = {
             var line;
             if(destination.route) {
                 console.log("Using route for waterwinning point", destination);
-                line = new OpenLayers.Format.GeoJSON().read(destination.route.data.features[0].geometry)[0].geometry;
+                if(destination.route.data.features) {
+                    line = new OpenLayers.Format.GeoJSON().read(destination.route.data.features[0].geometry)[0].geometry;
+                } else {
+                    line = new OpenLayers.Format.GeoJSON().read(destination.route.data.paths[0].points)[0].geometry;
+                }
                 console.log("Line to point", line);   
                 var points = line.getVertices();
                 var reprojected = [];
