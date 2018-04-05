@@ -191,10 +191,11 @@ dbkjs.modules.waterwinning = {
             if(ww.route) {
                 routeDist = "<span style='color:red'>" + Math.round(ww.route.distance) + "m</span><br>";
             }
+            var eigenTerrein = ww.tabel === "brandkranen_eigen_terrein" ? "<br>Brandkraan eigen terrein" : "";
             var myrow = $('<tr id="test'+i+'">' +
                     '<td><img style="width: 42px" src="' + dbkjs.basePath + img + '"></td>' +
                     '<td>' + routeDist + ww.distance.toFixed() + 'm' + '</td>' +
-                    '<td>' + (ww.info ? ww.info : '') + '</i></td> +'
+                    '<td>' + (ww.info ? ww.info : '') + eigenTerrein + '</i></td> +'
                     + '</tr>'
             ).click(function (e) {
                 me.drawLine(ww, fid);
