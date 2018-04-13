@@ -698,12 +698,12 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 /* Remove :focus style, confusing in touch UI */
-.btn-default:focus {
+#btngrp_3 .btn-default:focus {
     background-color: #fff !important;
     border-color: #ccc !important;
 }
 /* Do apply alternate style when active */
-.btn-default.active {
+#btngrp_3 .btn-default.active {
     background-color: #e6e6e6 !important;
     border-color: #adadad !important;
 }
