@@ -81,6 +81,8 @@ dbkjs.modules.waterwinning = {
     },
     selectFeature: function(feature){
         this.drawLine(feature.feature.attributes.ww);
+        $("#wwlist tr").removeClass("active");
+        $("#wwrow_" + feature.feature.attributes.fid).addClass("active");
     },
     drawLine: function (destination, id) {
         var me = this;
@@ -192,15 +194,19 @@ dbkjs.modules.waterwinning = {
                 routeDist = "<span style='color:red'>" + Math.round(ww.route.distance) + "m</span><br>";
             }
             var eigenTerrein = ww.tabel === "brandkranen_eigen_terrein" ? "<br>Brandkraan eigen terrein" : "";
-            var myrow = $('<tr id="wwrow'+i+'">' +
+            var myrow = $('<tr id="wwrow_' + fid + '">' +
                     '<td><img style="width: 42px" src="' + dbkjs.basePath + img + '"></td>' +
                     '<td>' + routeDist + ww.distance.toFixed() + 'm' + '</td>' +
                     '<td>' + (ww.info ? ww.info : '') + eigenTerrein + '</i></td> +'
                     + '</tr>'
             ).click(function (e) {
-                $("#wwlist tr").removeClass("active");
-                $("#wwrow" + i).addClass("active");
-                me.drawLine(ww, fid);
+                var feature = me.Layer.getFeaturesByAttribute("fid", fid)[0];
+
+                dbkjs.selectControl.unselectAll();
+                // Calls drawLine() and updates selected row in tab
+                dbkjs.selectControl.select(feature);
+
+                // Select feature does not zoom
                 me.zoomToOverview(ww);
             });
             ww_table.append(myrow);
@@ -231,7 +237,7 @@ dbkjs.modules.waterwinning = {
                 dbkjs.map.events.register('click', me, me.mapClickTest);
             });
         }
-        $("#wwrow0").click();
+        $("#wwrow_ww_0").click();
         dbkjs.map.setLayerIndex(this.Layer,99);
         dbkjs.protocol.jsonDBK.addMouseoverHandler("#wwlist",me.Layer);
     },
