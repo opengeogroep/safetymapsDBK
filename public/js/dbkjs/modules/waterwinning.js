@@ -25,7 +25,9 @@ dbkjs.modules.waterwinning = {
         me.noRouteTrim = params.wwnoroutetrim === "true";
         if(me.test) {
             $(dbkjs).one("dbkjs_init_complete", function () {
-                me.newIncident({x: params.wwx, y: params.wwy}, true, true);
+                window.setTimeout(function() {
+                    me.newIncident({x: params.wwx, y: params.wwy}, true, true);
+                }, 3000);
             });
         } else  {
             $(dbkjs).one("dbkjs_init_complete", function () {
