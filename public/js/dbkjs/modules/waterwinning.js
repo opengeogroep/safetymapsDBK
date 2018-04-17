@@ -189,6 +189,8 @@ dbkjs.modules.waterwinning = {
                 img = "images/other/Falck20.png";
             } else if(ww.type === "bluswaterriool") {
                 img = "images/other/Falck19.png";
+            } else if(ww.type === "geboorde_put") {
+                img = "images/nen1414/Tb4003.png";
             }
             var fid = "ww_" + i;
             var routeDist = "";
