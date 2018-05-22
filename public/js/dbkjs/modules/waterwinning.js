@@ -191,6 +191,8 @@ dbkjs.modules.waterwinning = {
                 img = "images/other/Falck19.png";
             } else if(ww.type === "geboorde_put") {
                 img = "images/nen1414/Tb4003.png";
+            } else if(ww.type === "ondergronds schroef") {
+                img = "images/nen1414/Tb4002_s.png";
             }
             var fid = "ww_" + i;
             var routeDist = "";
@@ -270,7 +272,7 @@ dbkjs.modules.waterwinning = {
         var me = this;
 
         if(me.lineFeature) {
-            dbkjs.map.zoomToExtent(me.lineFeature.geometry.getBounds(), true);
+            dbkjs.map.zoomToExtent(dbkjs.util.extendBounds(me.lineFeature.geometry.getBounds(), 100), true);
             if(dbkjs.map.getZoom() > dbkjs.options.zoom) {
                 dbkjs.map.setCenter(dbkjs.map.getCenter(), dbkjs.options.zoom);
             }
