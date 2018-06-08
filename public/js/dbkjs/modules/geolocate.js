@@ -246,6 +246,11 @@ dbkjs.modules.geolocate = {
             nmeaUpdateInterval: 5000
         }, _obj.options);
 
+        var params = OpenLayers.Util.getParameters();
+        if(params.geoprovider && ["geolocate", "nmea"].indexOf(params.geoprovider) !== -1) {
+            _obj.options.provider = params.geoprovider;
+        }
+
         if(_obj.options.provider === "geolocate") {
             _obj.control = new OpenLayers.Control.Geolocate({
                 bind: true,
