@@ -666,8 +666,6 @@ dbkjs.initPanel = function() {
     
     dbkjs.addTab("incident", "Incident", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ));
     dbkjs.noObjectInfoTabs();
-    dbkjs.addTab("waterwinning", "Waterwinning", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ), "last");
-
     dbkjs.showTab("incident");    
 
     $('#dbkinfopanel_b').html(div);

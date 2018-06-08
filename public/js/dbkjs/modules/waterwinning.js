@@ -14,6 +14,8 @@ dbkjs.modules.waterwinning = {
     register: function () {
         var me = this;
 
+        dbkjs.addTab("waterwinning", "Waterwinning", $('<i> '+ i18n.t("dialogs.noinfo") + '</i>' ), "last");
+
         if(window.location.hostname.endsWith(".local")) {
             this.options.url = "api/vrh/waterwinning.json";
         }
