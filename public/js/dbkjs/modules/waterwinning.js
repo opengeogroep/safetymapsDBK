@@ -91,23 +91,28 @@ dbkjs.modules.waterwinning = {
     drawLine: function (destination, id) {
         var me = this;
         //dbkjs.selectControl.select(test);
-        if(me.lineFeature){
-            me.Layer.removeFeatures([me.lineFeature]);
+        if(me.routingFeatures){
+            me.Layer.removeFeatures(me.routingFeatures);
         }
-        if(me.endOfRouteToDestLineFeature) {
-            me.Layer.removeFeatures([me.endOfRouteToDestLineFeature]);
-        }
+        me.routingFeatures = [];
         if (me.incident) {
-            var line;
+
+            // As the crow flies line, black
+            var endPt = new OpenLayers.Geometry.Point(destination.x, destination.y);
+            var startPt = new OpenLayers.Geometry.Point(me.incident.x, me.incident.y);
+            var geom = new OpenLayers.Geometry.LineString([startPt, endPt]);
+            var style = {strokeColor: "black", strokeOpacity: 0.5, strokeWidth: 3};
+            me.routingFeatures.push(new OpenLayers.Feature.Vector(geom, {}, style));
+
             if(destination.route) {
                 console.log("Using route for waterwinning point", destination);
                 if(destination.route.data.features) {
-                    line = new OpenLayers.Format.GeoJSON().read(destination.route.data.features[0].geometry)[0].geometry;
+                    geom = new OpenLayers.Format.GeoJSON().read(destination.route.data.features[0].geometry)[0].geometry;
                 } else {
-                    line = new OpenLayers.Format.GeoJSON().read(destination.route.data.paths[0].points)[0].geometry;
+                    geom = new OpenLayers.Format.GeoJSON().read(destination.route.data.paths[0].points)[0].geometry;
                 }
-                console.log("Line to point", line);   
-                var points = line.getVertices();
+                console.log("Line to point", geom);
+                var points = geom.getVertices();
                 var reprojected = [];
                 reprojected.push(new OpenLayers.Geometry.Point(me.incident.x, me.incident.y));
                 for(var i = 0; i < points.length; i++) {
@@ -115,22 +120,20 @@ dbkjs.modules.waterwinning = {
                     var t = Proj4js.transform(new Proj4js.Proj("EPSG:4326"), new Proj4js.Proj(dbkjs.options.projection.code), p);                
                     reprojected.push(new OpenLayers.Geometry.Point(t.x, t.y));
                 }
-                line = new OpenLayers.Geometry.LineString(reprojected);
-                console.log("Reprojected line to point", line);
+                geom = new OpenLayers.Geometry.LineString(reprojected);
+                console.log("Reprojected line to point", geom);
+                var style = {strokeColor: "red", strokeOpacity: 0.5, strokeWidth: 10};
+                me.routingFeatures.push(new OpenLayers.Feature.Vector(geom, {}, style));
+
                 var lastRoutePoint = reprojected[reprojected.length-1];
                 var coords = [new OpenLayers.Geometry.Point(lastRoutePoint.x, lastRoutePoint.y), new OpenLayers.Geometry.Point(destination.x, destination.y)];
-                me.endOfRouteToDestLineFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(coords), {}, {
-                    strokeColor: "blue", strokeOpacity: 0.8, strokeWidth: 3, strokeDashstyle: "dash"
-                });
-                this.Layer.addFeatures(me.endOfRouteToDestLineFeature);
-            } else {
-                var endPt = new OpenLayers.Geometry.Point(destination.x, destination.y);
-                var startPt = new OpenLayers.Geometry.Point(me.incident.x, me.incident.y);            
-                line = new OpenLayers.Geometry.LineString([startPt, endPt]);
+                // Line from end of route to incident
+                me.routingFeatures.push(new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(coords), {}, {
+                    strokeColor: "red", strokeOpacity: 0.8, strokeWidth: 3, strokeDashstyle: "dash"
+                }));
             }
-            var style = {strokeColor: "#0500bd", strokeOpacity: 0.5, strokeWidth: 10};
-            me.lineFeature = new OpenLayers.Feature.Vector(line, {}, style);
-            this.Layer.addFeatures([me.lineFeature]);      
+
+            this.Layer.addFeatures(me.routingFeatures);
         }
     },
     newIncident: function(incident, zoom, addTestMarker) {
@@ -199,12 +202,12 @@ dbkjs.modules.waterwinning = {
             var fid = "ww_" + i;
             var routeDist = "";
             if(ww.route) {
-                routeDist = "<span style='color:red'>" + Math.round(ww.route.distance) + "m</span><br>";
+                routeDist = "<span style='color:rgb(255,0,0,0.5)'>" + Math.round(ww.route.distance) + "m</span><br>";
             }
             var eigenTerrein = ww.tabel === "brandkranen_eigen_terrein" ? "<br>Brandkraan eigen terrein" : "";
             var myrow = $('<tr id="wwrow_' + fid + '">' +
                     '<td><img style="width: 42px" src="' + dbkjs.basePath + img + '"></td>' +
-                    '<td>' + routeDist + ww.distance.toFixed() + 'm' + '</td>' +
+                    '<td style="color(0,0,0,0.5)">' + routeDist + ww.distance.toFixed() + 'm' + '</td>' +
                     '<td>' + (ww.info ? ww.info : '') + eigenTerrein + '</i></td> +'
                     + '</tr>'
             ).click(function (e) {
