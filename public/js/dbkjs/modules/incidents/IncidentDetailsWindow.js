@@ -42,6 +42,10 @@ IncidentDetailsWindow.prototype.hide = function(e) {
     dbkjs.dbkInfoPanel.hide();
 };
 
+IncidentDetailsWindow.prototype.isVisible = function() {
+    return dbkjs.dbkInfoPanel.isVisible();
+};
+
 IncidentDetailsWindow.prototype.createElements = function() {};
 
 IncidentDetailsWindow.prototype.showError = function(e) {
