@@ -481,7 +481,7 @@ FalckIncidentsController.prototype.updateIncident = function(incidentId) {
             me.markerLayer.addIncident(incident, false, true);
             me.markerLayer.setZIndexFix();
 
-            me.updateBalkrechtsonder();
+            me.featureSelector.updateBalkrechtsonder();
         }
 
         // Check if position updated
