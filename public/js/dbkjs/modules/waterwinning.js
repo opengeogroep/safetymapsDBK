@@ -18,6 +18,11 @@ dbkjs.modules.waterwinning = {
 
         if(window.location.hostname.endsWith(".local")) {
             this.options.url = "api/vrh/waterwinning.json";
+        } else {
+            // Keep same protocol, http://localhost/... onboard and https://vrh-safetymaps.nl/...
+            // for online
+            this.options.url = window.location.protocol + this.options.url.substring(this.options.url.indexOf("//"));
+            console.log("Using waterwinning URL: " + this.options.url);
         }
 
         me.createLayer();
