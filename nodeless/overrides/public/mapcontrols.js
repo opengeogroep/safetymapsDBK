@@ -19,11 +19,12 @@ dbkjs.mapcontrols.createMapControls = function() {
 
         $("#zoom_in").css({"display": "block", "font-size": "24px"}).removeClass("navbar-btn").appendTo(zoomContainer).show();
         $("#zoom_out").css({"display": "block", "font-size": "24px"}).removeClass("navbar-btn").appendTo(zoomContainer).show();
-        dbkjs.map.addControl(new OpenLayers.Control.Zoom({
-                zoomInId: "zoom_in",
-                zoomOutId: "zoom_out"
-            })
-        );
+	$("#zoom_in").on("click", function () {
+		dbkjs.map.zoomIn();
+	});
+	$("#zoom_out").on("click", function () {
+		dbkjs.map.zoomOut();
+	});
     }
 };
 
