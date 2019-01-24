@@ -19,10 +19,8 @@ dbkjs.modules.waterwinning = {
         if(window.location.hostname.endsWith(".local")) {
             this.options.url = "api/vrh/waterwinning.json";
         } else {
-            // Keep same protocol, http://localhost/... onboard and https://vrh-safetymaps.nl/...
-            // for online
-            this.options.url = window.location.protocol + this.options.url.substring(this.options.url.indexOf("//"));
-            console.log("Using waterwinning URL: " + this.options.url);
+            this.options.alternateUrl = "http://localhost/waterwinning/api/vrh/waterwinning.json";
+            console.log("vrh-waterwinning: using URL " + this.options.url + " and alternate URL " + this.options.alternateUrl);
         }
 
         me.createLayer();
@@ -310,7 +308,42 @@ dbkjs.modules.waterwinning = {
     requestData:function(incident){
         var me = this;
         var d = $.Deferred();
-        console.log("requesting waterwinning data", incident);
+        console.log("vrh-waterwinning: requesting data", incident);
+
+        var startTime = new Date().getTime();
+        var succeeded = false;
+        var pending = 1;
+
+        var failMessage = "";
+
+        function ajaxDone(url, data) {
+            var time = (new Date().getTime() - startTime) / 1000;
+            console.log("vrh-waterwinning: " + (succeeded ? "no longer needed " : "") + "Ajax response in " + time + "s, success: " + data.success + " from URL " + url);
+            if(data.success) {
+                if(!succeeded) {
+                    succeeded = true;
+                    d.resolve(data.value);
+                }
+            } else {
+                failMessage += failMessage.length > 0 ? ", " : "";
+                failMessage += "Foutmelding ontvangen van URL " + url + ": " + data.error;
+                if(pending === 0 && !succeeded) {
+                    console.log("No other requests are pending, failing with message: " + failMessage);
+                    d.reject(failMessage);
+                }
+            }
+        };
+        function ajaxFail(url, jqXHR, textStatus, errorThrown) {
+            var time = (new Date().getTime() - startTime) / 1000;
+            console.log("vrh-waterwinning: " + (succeeded ? "no longer needed " : "") + "Ajax request FAILED in " + time + "s, from URL " + url);
+            failMessage += failMessage.length > 0 ? ", " : "";
+            failMessage += "Ajax request mislukt naar URL " + url + ": HTTP status " + jqXHR.status + " " + jqXHR.statusText + (jqXHR.responseText ? ", " : "") + jqXHR.responseText;
+
+            if(pending === 0 && !succeeded) {
+                console.log("No other requests are pending, failing with message: " + failMessage);
+                d.reject(failMessage);
+            }
+        };
 
         $.ajax(me.options.url, {
             data: {
@@ -319,16 +352,37 @@ dbkjs.modules.waterwinning = {
                 noRouteTrim: me.noRouteTrim
             }
         })
+        .always(function() {
+            pending--;
+        })
         .done(function(data) {
-            if(data.success) {
-                d.resolve(data.value);
-            } else {
-                d.reject(data.error);
-            }
+            ajaxDone(me.options.url, data);
         })
         .fail(function(jqXHR, textStatus, errorThrown) {
-            d.reject("Ajax error: HTTP status " + jqXHR.status + " " + jqXHR.statusText + ", " + jqXHR.responseText);
+            ajaxFail(me.options.url, jqXHR);
         });
+
+        if(me.options.alternateUrl) {
+            pending++;
+
+            $.ajax(me.options.alternateUrl, {
+                data: {
+                    x: Number(incident.x).toFixed(),
+                    y: Number(incident.y).toFixed(),
+                    noRouteTrim: me.noRouteTrim
+                }
+            })
+            .always(function() {
+                pending--;
+            })
+            .done(function(data) {
+                ajaxDone(me.options.alternateUrl, data);
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                ajaxFail(me.options.alternateUrl, jqXHR, textStatus, errorThrown);
+            });
+        }
+
         return d.promise();
     }
 };
